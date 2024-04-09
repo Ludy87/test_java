@@ -10,7 +10,7 @@
         {
             "moduleName": "ch.qos.logback:logback-core",
             "moduleUrl": "http://www.qos.ch",
-            "moduleVersion": "1.5.1",
+            "moduleVersion": "1.5.3",
             "moduleLicense": "GNU Lesser General Public License",
             "moduleLicenseUrl": "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"
         },
@@ -262,21 +262,21 @@
         {
             "moduleName": "io.swagger.core.v3:swagger-annotations-jakarta",
             "moduleUrl": "https://github.com/swagger-api/swagger-core/modules/swagger-annotations",
-            "moduleVersion": "2.2.15",
+            "moduleVersion": "2.2.21",
             "moduleLicense": "Apache License, Version 2.0",
             "moduleLicenseUrl": "https://www.apache.org/licenses/LICENSE-2.0"
         },
         {
             "moduleName": "io.swagger.core.v3:swagger-core-jakarta",
             "moduleUrl": "https://github.com/swagger-api/swagger-core/modules/swagger-core",
-            "moduleVersion": "2.2.15",
+            "moduleVersion": "2.2.21",
             "moduleLicense": "Apache License, Version 2.0",
             "moduleLicenseUrl": "https://www.apache.org/licenses/LICENSE-2.0"
         },
         {
             "moduleName": "io.swagger.core.v3:swagger-models-jakarta",
             "moduleUrl": "https://github.com/swagger-api/swagger-core/modules/swagger-models",
-            "moduleVersion": "2.2.15",
+            "moduleVersion": "2.2.21",
             "moduleLicense": "Apache License, Version 2.0",
             "moduleLicenseUrl": "https://www.apache.org/licenses/LICENSE-2.0"
         },
@@ -563,19 +563,19 @@
         },
         {
             "moduleName": "org.springdoc:springdoc-openapi-starter-common",
-            "moduleVersion": "2.2.0",
+            "moduleVersion": "2.5.0",
             "moduleLicense": "The Apache License, Version 2.0",
             "moduleLicenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt"
         },
         {
             "moduleName": "org.springdoc:springdoc-openapi-starter-webmvc-api",
-            "moduleVersion": "2.2.0",
+            "moduleVersion": "2.5.0",
             "moduleLicense": "The Apache License, Version 2.0",
             "moduleLicenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt"
         },
         {
             "moduleName": "org.springdoc:springdoc-openapi-starter-webmvc-ui",
-            "moduleVersion": "2.2.0",
+            "moduleVersion": "2.5.0",
             "moduleLicense": "The Apache License, Version 2.0",
             "moduleLicenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt"
         },
@@ -851,7 +851,7 @@
         {
             "moduleName": "org.webjars:swagger-ui",
             "moduleUrl": "http://webjars.org",
-            "moduleVersion": "5.2.0",
+            "moduleVersion": "5.13.0",
             "moduleLicense": "Apache 2.0",
             "moduleLicenseUrl": "https://github.com/swagger-api/swagger-ui"
         },
