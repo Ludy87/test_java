@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     def appVersion = sh(returnStdout: true, script: './gradlew printVersion -q').trim()
-                    def image = "frooodle/s-pdf:$appVersion"
+                    def image = "ludy87/s-pdf:$appVersion"
                     sh "docker build -t $image ."
                 }
             }
@@ -20,9 +20,9 @@ pipeline {
             steps {
                 script {
                     def appVersion = sh(returnStdout: true, script: './gradlew printVersion -q').trim()
-                    def image = "frooodle/s-pdf:$appVersion"
+                    def image = "ludy87/s-pdf:$appVersion"
                     withCredentials([string(credentialsId: 'docker_hub_access_token', variable: 'DOCKER_HUB_ACCESS_TOKEN')]) {
-				        sh "docker login --username frooodle --password $DOCKER_HUB_ACCESS_TOKEN"
+				        sh "docker login --username ludy87 --password $DOCKER_HUB_ACCESS_TOKEN"
                         sh "docker push $image"
                     }
                 }
@@ -34,9 +34,9 @@ pipeline {
                     //TODO: Read chartVersion from Chart.yaml
                     def chartVersion = '1.0.0'
                     withCredentials([string(credentialsId: 'docker_hub_access_token', variable: 'DOCKER_HUB_ACCESS_TOKEN')]) {
-				        sh "docker login --username frooodle --password $DOCKER_HUB_ACCESS_TOKEN"
+				        sh "docker login --username ludy87 --password $DOCKER_HUB_ACCESS_TOKEN"
 				        sh "helm package chart/stirling-pdf"
-                        sh "helm push stirling-pdf-chart-1.0.0.tgz oci://registry-1.docker.io/frooodle"
+                        sh "helm push stirling-pdf-chart-1.0.0.tgz oci://registry-1.docker.io/ludy87"
                     }
                 }
             }
