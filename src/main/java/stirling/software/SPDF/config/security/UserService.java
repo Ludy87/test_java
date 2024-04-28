@@ -206,4 +206,9 @@ public class UserService implements UserServiceInterface {
     public boolean isUsernameValid(String username) {
         return username.matches("[a-zA-Z0-9]+");
     }
+
+    public void changeUserBlocked(User user, boolean b) {
+        // TODO Auto-generated method stub
+        //throw new UnsupportedOperationException("Unimplemented method 'changeUserBlocked'");
+    }
 }
