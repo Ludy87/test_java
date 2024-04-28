@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
+      # - master
       - main
 
 permissions:
@@ -22,19 +23,17 @@ jobs:
           distribution: "temurin"
 
       - uses: gradle/actions/setup-gradle@v3
-        env:
-          DOCKER_ENABLE_SECURITY: false
         with:
           gradle-version: 7.6
 
       - name: Run Gradle Command
-        run: ./gradlew clean build --scan
+        run: ./gradlew clean build
+        env:
+          DOCKER_ENABLE_SECURITY: false
 
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
-        with:
-          install: true
 
       - name: Get version number
         id: versionNumber
@@ -45,7 +44,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_API }}
-          # logout: false
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -53,7 +51,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
-          # logout: false
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -118,40 +115,3 @@ jobs:
         run: |
           docker pull ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest-ultra-lite
           docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest-ultra-lite
-
-      # - name: Inspect ${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite
-      #   run: |
-      #     docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite
-
-      # - name: Generate tags lite
-      #   id: meta3
-      #   uses: docker/metadata-action@v5
-      #   # if: github.ref != 'refs/heads/main'
-      #   with:
-      #     images: |
-      #       ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
-      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
-      #     tags: |
-      #       type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-lite,enable=${{ github.ref == 'refs/heads/main' }}
-      #       type=raw,value=latest-lite,enable=${{ github.ref == 'refs/heads/main' }}
-
-      # - name: Build and push Dockerfile-lite
-      #   uses: docker/build-push-action@v5
-      #   # if: github.ref != 'refs/heads/main'
-      #   with:
-      #     context: .
-      #     file: ./Dockerfile-lite
-      #     push: true
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
-      #     tags: ${{ steps.meta3.outputs.tags }}
-      #     labels: ${{ steps.meta3.outputs.labels }}
-      #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
-      #     platforms: linux/amd64,linux/arm64/v8
-
-      - name: Delete untagged Package Versions
-        uses: actions/delete-package-versions@v5
-        with: 
-          package-name: 's-pdf'
-          package-type: 'container'
-          delete-only-untagged-versions: 'true'

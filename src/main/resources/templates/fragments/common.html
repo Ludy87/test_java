@@ -60,17 +60,9 @@
 
     <!-- Help Modal -->
     <link rel="stylesheet" href="css/errorBanner.css">
-
+    <script src="js/cacheFormInputs.js"></script>
     <script src="js/tab-container.js"></script>
     <script src="js/darkmode.js"></script>
-    <th:block th:if="${currentPage != 'home' and currentPage != 'login' and currentPage != 'change-creds'}">
-    <script th:inline="javascript">
-      const pdfPasswordPrompt = /*[[#{error.pdfPassword}]]*/ '';
-      const multiple = /*[[${multiple}? ${multiple} : false]]*/ '';
-      const remoteCall = /*[[${remoteCall}? ${remoteCall} : true]]*/ '';
-    </script>
-    <script src="js/downloader.js"></script>
-    </th:block>
   </th:block>
 
 <th:block th:fragment="game">
@@ -145,6 +137,13 @@
 </th:block>
 
 <th:block th:fragment="fileSelector(name, multiple)" th:with="accept=${accept} ?: '*/*', inputText=${inputText} ?: #{pdfPrompt}, remoteCall=${remoteCall} ?: true, notRequired=${notRequired} ?: false">
+                <script th:inline="javascript">
+                  const pdfPasswordPrompt = /*[[#{error.pdfPassword}]]*/ '';
+                  const multiple = [[${multiple}]] || false;
+                  const remoteCall = [[${remoteCall}]] || true;
+                </script>
+                <script src="js/downloader.js"></script>
+
                 <div class="custom-file-chooser" th:attr="data-bs-unique-id=${name}, data-bs-element-id=${name+'-input'}, data-bs-files-selected=#{filesSelected}, data-bs-pdf-prompt=#{pdfPrompt}">
                   <div class="mb-3">
                     <input type="file" class="form-control" th:name="${name}" th:id="${name}+'-input'" th:accept="${accept}" multiple th:required="${notRequired} ? null : 'required'">

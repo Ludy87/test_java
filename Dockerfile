@@ -6,7 +6,7 @@ COPY scripts /scripts
 COPY pipeline /pipeline
 COPY src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto
 COPY src/main/resources/static/fonts/*.otf /usr/share/fonts/opentype/noto
-COPY build/libs/*.jar app.jar
+COPY build/libs/*.jar /app.jar
 
 ARG VERSION_TAG
 
@@ -15,8 +15,8 @@ ARG VERSION_TAG
 ENV DOCKER_ENABLE_SECURITY=false \
     VERSION_TAG=$VERSION_TAG \
     JAVA_TOOL_OPTIONS="$JAVA_TOOL_OPTIONS -XX:MaxRAMPercentage=75" \
-	HOME=/home/stirlingpdfuser \
-	PUID=1000 \
+    HOME=/home/stirlingpdfuser \
+    PUID=1000 \
     PGID=1000 \
     UMASK=022
 
@@ -31,10 +31,6 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         tini \
         bash \
         curl \
-        # gcc \
-        # musl \
-        # libffi \
-        py3-pip \
         openjdk17-jre \
         su-exec \
         font-noto-cjk \
@@ -50,7 +46,7 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         py3-opencv \
 # python3/pip
         python3 && \
-    # wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
+    wget https://bootstrap.pypa.io/get-pip.py -qO - | python3 - --break-system-packages --no-cache-dir --upgrade && \
 # uno unoconv and HTML
     pip install --break-system-packages --no-cache-dir --upgrade unoconv WeasyPrint && \
     mv /usr/share/tessdata /usr/share/tessdata-original && \

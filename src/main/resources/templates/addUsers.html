@@ -26,8 +26,6 @@
                     <th th:text="#{username}">Username</th>
                     <th th:text="#{adminUserSettings.roles}">Roles</th>
                     <th th:text="#{adminUserSettings.actions}">Actions</th>
-                    <th>Blocked</th>
-                    <th>Enabled</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -39,8 +37,6 @@
                         <button type="submit" th:text="#{delete}">Delete</button>
                       </form>
                     </td>
-                    <td th:text="${user.isUserBlocked}? #{yes} : #{no}"></td>
-                    <td th:text="${user.enabled}? #{yes} : #{no}"></td>
                   </tr>
                 </tbody>
               </table>

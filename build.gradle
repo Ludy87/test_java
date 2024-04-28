@@ -1,22 +1,18 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.4'
-    id 'io.spring.dependency-management' version '1.1.3'
+    id 'io.spring.dependency-management' version '1.1.4'
     id 'org.springdoc.openapi-gradle-plugin' version '1.8.0'
     id "io.swagger.swaggerhub" version "1.3.2"
     id 'edu.sc.seis.launch4j' version '3.0.5'
     id 'com.diffplug.spotless' version '6.25.0'
-    id 'com.github.jk1.dependency-license-report' version '2.6'
+    id 'com.github.jk1.dependency-license-report' version '2.7'
 }
 
 import com.github.jk1.license.render.*
-import java.text.SimpleDateFormat
-
-def dateFormat = new SimpleDateFormat("yyyyMMddHHmmss")
-def timestamp = dateFormat.format(new Date())
 
 group = 'stirling.software'
-version = "0.22.8-${timestamp}"
+version = "0.23.1"
 sourceCompatibility = '17'
 
 repositories {
@@ -30,6 +26,7 @@ licenseReport {
 sourceSets {
     main {
         java {
+            // if (System.getProperty('DOCKER_ENABLE_SECURITY') == 'false') {
             if (System.getenv('DOCKER_ENABLE_SECURITY') == 'false') {
                 exclude 'stirling/software/SPDF/config/security/**'
                 exclude 'stirling/software/SPDF/controller/api/UserController.java'
@@ -51,25 +48,25 @@ openApi {
 }
 
 launch4j {
-  icon = "${projectDir}/src/main/resources/static/favicon.ico"
+    icon = "${projectDir}/src/main/resources/static/favicon.ico"
 
-  outfile="Stirling-PDF.exe"
-  headerType="console"
-  jarTask = tasks.bootJar
+    outfile="Stirling-PDF.exe"
+    headerType="console"
+    jarTask = tasks.bootJar
 
-  errTitle="Encountered error, Do you have Java 17?"
-  downloadUrl="https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.exe"
-  variables=["BROWSER_OPEN=true", "ENDPOINTS_GROUPS_TO_REMOVE=CLI"]
-  jreMinVersion="17"
+    errTitle="Encountered error, Do you have Java 17?"
+    downloadUrl="https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.exe"
+    variables=["BROWSER_OPEN=true", "ENDPOINTS_GROUPS_TO_REMOVE=CLI"]
+    jreMinVersion="17"
 
-  mutexName="Stirling-PDF"
-  windowTitle="Stirling-PDF"
+    mutexName="Stirling-PDF"
+    windowTitle="Stirling-PDF"
 
-  messagesStartupError="An error occurred while starting Stirling-PDF"
-  //messagesJreNotFoundError="This application requires a Java Runtime Environment, Please download Java 17."
-  messagesJreVersionError="You are running the wrong version of Java, Please download Java 17."
-  messagesLauncherError="Java is corrupted. Please uninstall and then install  Java 17."
-  messagesInstanceAlreadyExists="Stirling-PDF is already running."
+    messagesStartupError="An error occurred while starting Stirling-PDF"
+    //messagesJreNotFoundError="This application requires a Java Runtime Environment, Please download Java 17."
+    messagesJreVersionError="You are running the wrong version of Java, Please download Java 17."
+    messagesLauncherError="Java is corrupted. Please uninstall and then install  Java 17."
+    messagesInstanceAlreadyExists="Stirling-PDF is already running."
 }
 
 spotless {
@@ -98,6 +95,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:3.2.4'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.2.4'
 
+    // if (System.getProperty('DOCKER_ENABLE_SECURITY') != 'false') {
     if (System.getenv('DOCKER_ENABLE_SECURITY') != 'false') {
         implementation 'org.springframework.boot:spring-boot-starter-security:3.2.4'
         implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.1.2.RELEASE'
@@ -148,8 +146,8 @@ dependencies {
         exclude group: 'commons-logging', module: 'commons-logging'
     }
 
-    implementation 'org.bouncycastle:bcprov-jdk18on:1.78'
-    implementation 'org.bouncycastle:bcpkix-jdk18on:1.78'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.78.1'
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.78.1'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:3.2.4'
     implementation 'io.micrometer:micrometer-core:1.12.5'
     implementation group: 'com.google.zxing', name: 'core', version: '3.5.3'

@@ -237,7 +237,6 @@ const DraggableUtils = {
       const draggablesData = pagesMap[pageIdx];
       const offsetWidth = pagesMap[pageIdx + "-offsetWidth"];
       const offsetHeight = pagesMap[pageIdx + "-offsetHeight"];
-      const rotate = page.getRotation().angle;
 
       for (const draggableData of draggablesData) {
         // embed the draggable canvas
@@ -249,40 +248,32 @@ const DraggableUtils = {
         // calculate the position in the pdf document
         const tansform = draggableElement.style.transform.replace(/[^.,-\d]/g, "");
         const transformComponents = tansform.split(",");
-        const xPixels = parseFloat(transformComponents[0]);
-        const yPixels = parseFloat(transformComponents[1]);
-  
         const draggablePositionPixels = {
           x: parseFloat(transformComponents[0]),
           y: parseFloat(transformComponents[1]),
           width: draggableData.offsetWidth,
           height: draggableData.offsetHeight,
         };
-        console.log(draggablePositionPixels)
         const draggablePositionRelative = {
           x: draggablePositionPixels.x / offsetWidth,
           y: draggablePositionPixels.y / offsetHeight,
           width: draggablePositionPixels.width / offsetWidth,
           height: draggablePositionPixels.height / offsetHeight,
         };
-        console.log(draggablePositionRelative)
-        const  draggablePositionPdf = {
-          x: (1 - (yPixels + draggableData.offsetHeight) / offsetHeight) * page.getWidth(),
-          y: (xPixels / offsetWidth) * page.getHeight(),
-          width: draggableData.offsetHeight / offsetHeight * page.getWidth(),
-          height: draggableData.offsetWidth / offsetWidth * page.getHeight(),
+        const draggablePositionPdf = {
+          x: draggablePositionRelative.x * page.getWidth(),
+          y: draggablePositionRelative.y * page.getHeight(),
+          width: draggablePositionRelative.width * page.getWidth(),
+          height: draggablePositionRelative.height * page.getHeight(),
         };
-        console.log(draggablePositionPdf)
-        const draggablePositionImage = {
+
+        // draw the image
+        page.drawImage(pdfImageObject, {
           x: draggablePositionPdf.x,
           y: page.getHeight() - draggablePositionPdf.y - draggablePositionPdf.height,
           width: draggablePositionPdf.width,
           height: draggablePositionPdf.height,
-          rotate: PDFLib.degrees(rotate),
-        };
-        console.log(draggablePositionImage)
-        // draw the image
-        page.drawImage(pdfImageObject, draggablePositionImage);
+        });
       }
     }
 

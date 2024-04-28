@@ -28,13 +28,17 @@ jobs:
           distribution: "temurin"
 
       - uses: gradle/actions/setup-gradle@v3
-        env:
-          DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
         with:
           gradle-version: 7.6
 
       - name: Generate jar (With Security=${{ matrix.enable_security }})
         run: ./gradlew clean createExe
+        env:
+          DOCKER_ENABLE_SECURITY: ${{ matrix.enable_security }}
+
+      - name: Get version number
+        id: versionNumber
+        run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
 
       - name: Rename binarie
         if: matrix.file_suffix != ''
@@ -52,10 +56,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
-
-      - name: Get version number
-        id: versionNumber
-        run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
 
       - name: Rename jar binaries
         run: cp ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar

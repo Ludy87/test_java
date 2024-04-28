@@ -22,9 +22,6 @@ $(document).ready(function () {
       }
     }
     const override = $("#override").val() || "";
-    if (override == "") {
-      return;
-    }
     const originalButtonText = $("#submitBtn").text();
     $("#submitBtn").text("Processing...");
     console.log(override);
