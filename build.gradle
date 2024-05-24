@@ -100,7 +100,7 @@ dependencies {
     if (System.getenv('DOCKER_ENABLE_SECURITY') != 'false') {
         implementation 'org.springframework.boot:spring-boot-starter-security:3.3.0'
         implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.1.2.RELEASE'
-        implementation "org.springframework.boot:spring-boot-starter-data-jpa:3.2.5"
+        implementation "org.springframework.boot:spring-boot-starter-data-jpa:3.3.0"
         implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.3.0'
 
         //2.2.x requires rebuild of DB file.. need migration path
