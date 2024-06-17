@@ -71,7 +71,7 @@ jobs:
             type=raw,value=alpha,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Build and push main Dockerfile
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
@@ -97,7 +97,7 @@ jobs:
             type=raw,value=latest-ultra-lite,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Build and push Dockerfile-ultra-lite
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         # if: github.ref != 'refs/heads/main'
         with:
           context: .
@@ -128,7 +128,7 @@ jobs:
             type=raw,value=latest-fat,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Build and push main Dockerfile fat
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         # if: github.ref != 'refs/heads/main'
         with:
           builder: ${{ steps.buildx.outputs.name }}
