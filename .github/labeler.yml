@@ -1,3 +1,0 @@
-translation:
-  - changed-files:
-    - any-glob-to-any-file: 'src/main/resources/messages_*_*.properties'
