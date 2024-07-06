@@ -18,7 +18,7 @@ FROM alpine:3.20.0
 COPY scripts /scripts
 COPY pipeline /pipeline
 COPY src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
-COPY --from=build /app/build/libs/*.jar app.jar
+COPY --from=build /app/build/libs/*.jar /app.jar
 
 ARG VERSION_TAG
 
