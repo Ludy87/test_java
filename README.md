@@ -5,7 +5,7 @@
 | English (English) (en_GB)                   | ![100%](https://geps.dev/progress/100) |
 | English (US) (en_US)                        | ![100%](https://geps.dev/progress/100) |
 | Arabic (العربية) (ar_AR)                    | ![45%](https://geps.dev/progress/45)   |
-| German (Deutsch) (de_DE)                    | ![100%](https://geps.dev/progress/100)   |
+| German (Deutsch) (de_DE)                    | ![1%](https://geps.dev/progress/1)   |
 | French (Français) (fr_FR)                   | ![91%](https://geps.dev/progress/91)   |
 | Spanish (Español) (es_ES)                   | ![92%](https://geps.dev/progress/92)   |
 | Simplified Chinese (简体中文) (zh_CN)       | ![98%](https://geps.dev/progress/98)   |
