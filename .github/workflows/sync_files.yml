@@ -8,6 +8,7 @@ on:
       - "build.gradle"
       - "src/main/resources/messages_*.properties"
       - "scripts/translation_status.toml"
+      - "scripts/ignore_translation.toml"
 
 permissions:
   contents: write
