@@ -24,14 +24,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.servlet.http.HttpServletRequest;
 import stirling.software.SPDF.model.ApplicationProperties;
-import stirling.software.SPDF.model.ApplicationProperties.GithubProvider;
-import stirling.software.SPDF.model.ApplicationProperties.GoogleProvider;
-import stirling.software.SPDF.model.ApplicationProperties.KeycloakProvider;
 import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2;
 import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client;
 import stirling.software.SPDF.model.Authority;
 import stirling.software.SPDF.model.Role;
 import stirling.software.SPDF.model.User;
+import stirling.software.SPDF.model.provider.GithubProvider;
+import stirling.software.SPDF.model.provider.GoogleProvider;
+import stirling.software.SPDF.model.provider.KeycloakProvider;
 import stirling.software.SPDF.repository.UserRepository;
 
 @Controller
@@ -43,6 +43,7 @@ public class AccountWebController {
 
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model, Authentication authentication) {
+
         if (authentication != null && authentication.isAuthenticated()) {
             return "redirect:/";
         }
@@ -72,6 +73,10 @@ public class AccountWebController {
                 }
             }
         }
+        // Remove any null keys/values from the providerList
+        providerList
+                .entrySet()
+                .removeIf(entry -> entry.getKey() == null || entry.getValue() == null);
         model.addAttribute("providerlist", providerList);
 
         model.addAttribute("loginMethod", applicationProperties.getSecurity().getLoginMethod());

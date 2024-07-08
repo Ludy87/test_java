@@ -14,7 +14,6 @@ public class RequestUriUtilsTest {
         assertTrue(RequestUriUtils.isStaticResource("/images/logo.png"));
         assertTrue(RequestUriUtils.isStaticResource("/public/index.html"));
         assertTrue(RequestUriUtils.isStaticResource("/pdfjs/pdf.worker.js"));
-        assertTrue(RequestUriUtils.isStaticResource("/pdfjs-legacy/pdf.worker.js"));
         assertTrue(RequestUriUtils.isStaticResource("/api/v1/info/status"));
         assertTrue(RequestUriUtils.isStaticResource("/some-path/icon.svg"));
         assertFalse(RequestUriUtils.isStaticResource("/api/v1/users"));

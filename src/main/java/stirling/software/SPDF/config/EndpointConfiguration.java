@@ -97,6 +97,7 @@ public class EndpointConfiguration {
         // Adding endpoints to "Convert" group
         addEndpointToGroup("Convert", "pdf-to-img");
         addEndpointToGroup("Convert", "img-to-pdf");
+        addEndpointToGroup("Convert", "pdf-to-webp");
         addEndpointToGroup("Convert", "pdf-to-pdfa");
         addEndpointToGroup("Convert", "file-to-pdf");
         addEndpointToGroup("Convert", "xlsx-to-pdf");
@@ -193,6 +194,7 @@ public class EndpointConfiguration {
         addEndpointToGroup("Java", "rotate-pdf");
         addEndpointToGroup("Java", "pdf-to-img");
         addEndpointToGroup("Java", "img-to-pdf");
+        addEndpointToGroup("Java", "pdf-to-webp");
         addEndpointToGroup("Java", "add-password");
         addEndpointToGroup("Java", "remove-password");
         addEndpointToGroup("Java", "change-permissions");
