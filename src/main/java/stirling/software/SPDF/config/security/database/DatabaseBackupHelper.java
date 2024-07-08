@@ -35,10 +35,6 @@ public class DatabaseBackupHelper implements DatabaseBackupInterface {
 
     private Path backupPath = Paths.get("configs/db/backup/");
 
-    public Path getBackupPath() {
-        return backupPath;
-    }
-
     @Override
     public boolean hasBackup() {
         // Check if there is at least one backup
