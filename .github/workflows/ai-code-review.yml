@@ -60,10 +60,12 @@ jobs:
           git fetch origin "${{ env.PULL_REQUEST_HEAD_REF }}"
           git fetch origin "${{ env.PULL_REQUEST_BASE_REF }}"
           git checkout "${{ env.PULL_REQUEST_HEAD_REF }}"
-          git diff "origin/${{ env.PULL_REQUEST_BASE_REF }}" > "diff.txt"
+          # Filter the diff for specific files
+          grep '^diff --git a/src/main/resources/messages_' diff.txt | grep -v 'en_GB' | grep '.properties' > filtered_diff.txt
+
           {
             echo "pull_request_diff<<EOF";
-            cat "diff.txt";
+            cat filtered_diff.txt;
             echo 'EOF';
           } >> $GITHUB_OUTPUT
       - uses: ludy87/action/check_language@main
