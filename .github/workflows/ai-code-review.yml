@@ -50,6 +50,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
+
       - name: "Get diff of the pull request"
         id: get_diff
         shell: bash
@@ -60,16 +61,20 @@ jobs:
           git fetch origin "${{ env.PULL_REQUEST_HEAD_REF }}"
           git fetch origin "${{ env.PULL_REQUEST_BASE_REF }}"
           git checkout "${{ env.PULL_REQUEST_HEAD_REF }}"
-          git diff "origin/${{ env.PULL_REQUEST_BASE_REF }}" > diff.txt
-
-          # Filter the diff for specific files
-          grep '^diff --git a/src/main/resources/messages_' diff.txt | grep -v 'en_GB' | grep '.properties' > filtered_diff.txt
-
+          git diff "origin/${{ env.PULL_REQUEST_BASE_REF }}" > "diff.txt"
           {
             echo "pull_request_diff<<EOF";
-            cat filtered_diff.txt;
+            cat "diff.txt";
             echo 'EOF';
           } >> $GITHUB_OUTPUT
+
+      - name: "Read messages_en_GB.properties"
+        id: read_en_gb
+        run: |
+          echo "extra_prompt<<EOF" >> $GITHUB_OUTPUT
+          cat src/main/resources/messages_en_GB.properties >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - uses: ludy87/action/check_language@main
         name: "Code Review by Gemini AI"
         id: language
@@ -80,9 +85,7 @@ jobs:
           github_pull_request_number: ${{ github.event.pull_request.number }}
           git_commit_hash: ${{ github.event.pull_request.head.sha }}
           model: "gemini-1.5-pro-latest"
-          pull_request_diff: |-
-            ${{ steps.get_diff.outputs.pull_request_diff }}
-          pull_request_chunk_size: "35000"
-          extra_prompt: |-
-            Always answer in American English!
+          pull_request_diff: ${{ steps.get_diff.outputs.pull_request_diff }}
+          pull_request_chunk_size: "3500"
+          extra_prompt: ${{ steps.read_en_gb.outputs.extra_prompt }}
           log_level: "DEBUG"
