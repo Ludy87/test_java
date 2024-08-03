@@ -5,11 +5,11 @@
 | English (English) (en_GB)                   | ![100%](https://geps.dev/progress/100) |
 | English (US) (en_US)                        | ![100%](https://geps.dev/progress/100) |
 | Arabic (العربية) (ar_AR)                    | ![45%](https://geps.dev/progress/45)   |
-| German (Deutsch) (de_DE)                    | ![1%](https://geps.dev/progress/1)   |
+| German (Deutsch) (de_DE)                    | ![100%](https://geps.dev/progress/100)   |
 | French (Français) (fr_FR)                   | ![91%](https://geps.dev/progress/91)   |
-| Spanish (Español) (es_ES)                   | ![92%](https://geps.dev/progress/92)   |
-| Simplified Chinese (简体中文) (zh_CN)       | ![98%](https://geps.dev/progress/98)   |
-| Traditional Chinese (繁體中文) (zh_TW)      | ![96%](https://geps.dev/progress/96)   |
+| Spanish (Español) (es_ES)                   | ![98%](https://geps.dev/progress/98)   |
+| Simplified Chinese (简体中文) (zh_CN)       | ![99%](https://geps.dev/progress/99)   |
+| Traditional Chinese (繁體中文) (zh_TW)      | ![98%](https://geps.dev/progress/98)   |
 | Catalan (Català) (ca_CA)                    | ![48%](https://geps.dev/progress/48)   |
 | Italian (Italiano) (it_IT)                  | ![99%](https://geps.dev/progress/99)   |
 | Swedish (Svenska) (sv_SE)                   | ![39%](https://geps.dev/progress/39)   |
@@ -22,7 +22,7 @@
 | Japanese (日本語) (ja_JP)                   | ![90%](https://geps.dev/progress/90)   |
 | Dutch (Nederlands) (nl_NL)                  | ![95%](https://geps.dev/progress/95)   |
 | Greek (Ελληνικά) (el_GR)                    | ![82%](https://geps.dev/progress/82)   |
-| Turkish (Türkçe) (tr_TR)                    | ![94%](https://geps.dev/progress/94)   |
+| Turkish (Türkçe) (tr_TR)                    | ![99%](https://geps.dev/progress/99)   |
 | Indonesia (Bahasa Indonesia) (id_ID)        | ![76%](https://geps.dev/progress/76)   |
 | Hindi (हिंदी) (hi_IN)                          | ![77%](https://geps.dev/progress/77)   |
 | Hungarian (Magyar) (hu_HU)                  | ![76%](https://geps.dev/progress/76)   |

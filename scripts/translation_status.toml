@@ -18,6 +18,11 @@ ignore = [
     'language.direction',
 ]
 
+[da_DK]
+ignore = [
+    'language.direction',
+]
+
 [de_DE]
 ignore = [
     'AddStampRequest.alphabet',
@@ -56,6 +61,11 @@ ignore = [
 ]
 
 [fr_FR]
+ignore = [
+    'language.direction',
+]
+
+[ga_IE]
 ignore = [
     'language.direction',
 ]
@@ -153,12 +163,22 @@ ignore = [
     'language.direction',
 ]
 
+[th_TH]
+ignore = [
+    'language.direction',
+]
+
 [tr_TR]
 ignore = [
     'language.direction',
 ]
 
 [uk_UA]
+ignore = [
+    'language.direction',
+]
+
+[vi_VN]
 ignore = [
     'language.direction',
 ]
