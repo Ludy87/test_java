@@ -13,7 +13,7 @@ COPY ./src /app/src
 RUN gradle build
 
 # Main stage
-FROM alpine:3.20.0
+FROM alpine:3.20.2
 
 # Copy necessary files from the build stage
 COPY --from=build /app/build/libs/*.jar /app.jar
