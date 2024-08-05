@@ -1,0 +1,33 @@
+name: 'PR Title Check'
+on:
+  # pull_request:
+  #   types:
+  #     - opened
+  #     - edited
+  #     - synchronize
+  #     - labeled
+  #     - unlabeled
+  issues:
+
+  issue_comment:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PR Title Verify
+        uses: Ludy87/action/pr-issues-title-check@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # issues_pattern: '^(\[Feature Request\]|\[Bug\]): (?:\w+\b\W*){3,8}$'
+          issues_min_length: 2
+          actor_without_restriction: |
+            dependabot[bot]
+          #   Ludy87
+          # issues_pattern_flags: gmi
+          # issues_comment: |
+          #   Hier steht ein Text
+          #   mit zwei Absätzen @${{ github.actor }} und einer leeren Zeile
+
+          #   Hier ist das Ende vom Gelände!

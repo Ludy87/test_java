@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - Dockerfile*
 
 permissions:
   contents: read
@@ -23,10 +25,10 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: 8.7
+          gradle-version: 8.9
 
       - name: Run Gradle Command
-        run: ./gradlew clean build
+        run: gradle clean build --no-daemon
         env:
           DOCKER_ENABLE_SECURITY: false
 
@@ -58,34 +60,119 @@ jobs:
         id: repoowner
         run: echo "lowercase=$(echo ${{ github.repository_owner }} | awk '{print tolower($0)}')" >> $GITHUB_OUTPUT
 
-      - name: Generate tags
-        id: meta
+      # - name: Generate tags
+      #   id: meta
+      #   uses: docker/metadata-action@v5
+      #   with:
+      #     images: |
+      #       ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
+      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
+      #     tags: |
+      #       type=raw,value=${{ steps.versionNumber.outputs.versionNumber }},enable=${{ github.ref == 'refs/heads/main' }}
+      #       type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+      #       type=raw,value=alpha,enable=${{ github.ref == 'refs/heads/main' }}
+
+      # - name: Build and push main Dockerfile
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     context: .
+      #     file: ./Dockerfile
+      #     push: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     labels: ${{ steps.meta.outputs.labels }}
+      #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+      #     platforms: linux/amd64,linux/arm64/v8
+
+      # - name: Generate tags ultra-lite
+      #   id: meta2
+      #   uses: docker/metadata-action@v5
+      #   # if: github.ref != 'refs/heads/main'
+      #   with:
+      #     images: |
+      #       ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
+      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
+      #     tags: |
+      #       type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite,enable=${{ github.ref == 'refs/heads/main' }}
+      #       type=raw,value=latest-ultra-lite,enable=${{ github.ref == 'refs/heads/main' }}
+
+      # - name: Build and push Dockerfile-ultra-lite
+      #   uses: docker/build-push-action@v5
+      #   # if: github.ref != 'refs/heads/main'
+      #   with:
+      #     context: .
+      #     file: ./Dockerfile-ultra-lite
+      #     push: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+      #     tags: ${{ steps.meta2.outputs.tags }}
+      #     labels: ${{ steps.meta2.outputs.labels }}
+      #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+      #     platforms: linux/amd64,linux/arm64/v8
+
+      # - name: Inspect latest
+      #   run: |
+      #     docker pull ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest-ultra-lite
+      #     docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest-ultra-lite
+
+      # - name: Generate tags fat
+      #   id: meta3
+      #   uses: docker/metadata-action@v5
+      #   # if: github.ref != 'refs/heads/main'
+      #   with:
+      #     images: |
+      #       ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
+      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
+      #     tags: |
+      #       type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-fat,enable=${{ github.ref == 'refs/heads/main' }}
+      #       type=raw,value=latest-fat,enable=${{ github.ref == 'refs/heads/main' }}
+
+      # - name: Build and push main Dockerfile fat
+      #   uses: docker/build-push-action@v6
+      #   # if: github.ref != 'refs/heads/main'
+      #   with:
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     context: .
+      #     file: ./Dockerfile-fat
+      #     push: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+      #     tags: ${{ steps.meta3.outputs.tags }}
+      #     labels: ${{ steps.meta3.outputs.labels }}
+      #     build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+      #     platforms: linux/amd64,linux/arm64/v8
+
+      - name: Generate tags fat self build
+        id: meta4
         uses: docker/metadata-action@v5
+        # if: github.ref != 'refs/heads/main'
         with:
           images: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
             ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
           tags: |
-            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }},enable=${{ github.ref == 'refs/heads/main' }}
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-            type=raw,value=alpha,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-fat-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=latest-fat-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
 
-      - name: Build and push main Dockerfile
-        uses: docker/build-push-action@v5
+      - name: Build and push main Dockerfile fat self build
+        uses: docker/build-push-action@v6
+        # if: github.ref != 'refs/heads/main'
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
-          file: ./Dockerfile
+          file: ./Dockerfile-fat-Self-Build
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta4.outputs.tags }}
+          labels: ${{ steps.meta4.outputs.labels }}
           build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
           platforms: linux/amd64,linux/arm64/v8
 
-      - name: Generate tags ultra-lite
-        id: meta2
+      - name: Generate tags self build
+        id: meta5
         uses: docker/metadata-action@v5
         # if: github.ref != 'refs/heads/main'
         with:
@@ -93,51 +180,47 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
             ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
           tags: |
-            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite,enable=${{ github.ref == 'refs/heads/main' }}
-            type=raw,value=latest-ultra-lite,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=latest-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
 
-      - name: Build and push Dockerfile-ultra-lite
-        uses: docker/build-push-action@v5
-        # if: github.ref != 'refs/heads/main'
-        with:
-          context: .
-          file: ./Dockerfile-ultra-lite
-          push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: ${{ steps.meta2.outputs.tags }}
-          labels: ${{ steps.meta2.outputs.labels }}
-          build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
-          platforms: linux/amd64,linux/arm64/v8
-
-      - name: Inspect latest
-        run: |
-          docker pull ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest-ultra-lite
-          docker image inspect ${{ steps.repoowner.outputs.lowercase }}/s-pdf:latest-ultra-lite
-
-      - name: Generate tags fat
-        id: meta3
-        uses: docker/metadata-action@v5
-        # if: github.ref != 'refs/heads/main'
-        with:
-          images: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
-            ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
-          tags: |
-            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-fat,enable=${{ github.ref == 'refs/heads/main' }}
-            type=raw,value=latest-fat,enable=${{ github.ref == 'refs/heads/main' }}
-
-      - name: Build and push main Dockerfile fat
-        uses: docker/build-push-action@v5
+      - name: Build and push main Dockerfile self build
+        uses: docker/build-push-action@v6
         # if: github.ref != 'refs/heads/main'
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
-          file: ./Dockerfile-fat
+          file: ./Dockerfile-Self-Build
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ steps.meta3.outputs.tags }}
-          labels: ${{ steps.meta3.outputs.labels }}
+          tags: ${{ steps.meta5.outputs.tags }}
+          labels: ${{ steps.meta5.outputs.labels }}
+          build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
+          platforms: linux/amd64,linux/arm64/v8
+
+      - name: Generate tags ultra lite Self Build
+        id: meta6
+        uses: docker/metadata-action@v5
+        # if: github.ref != 'refs/heads/main'
+        with:
+          images: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/s-pdf
+            ghcr.io/${{ steps.repoowner.outputs.lowercase }}/s-pdf
+          tags: |
+            type=raw,value=${{ steps.versionNumber.outputs.versionNumber }}-ultra-lite-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=latest-ultra-lite-Self-Build,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build and push main Dockerfile ultra lite Self Build
+        uses: docker/build-push-action@v6
+        # if: github.ref != 'refs/heads/main'
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: ./Dockerfile-ultra-lite-Self-Build
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ${{ steps.meta6.outputs.tags }}
+          labels: ${{ steps.meta6.outputs.labels }}
           build-args: VERSION_TAG=${{ steps.versionNumber.outputs.versionNumber }}
           platforms: linux/amd64,linux/arm64/v8

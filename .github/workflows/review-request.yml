@@ -1,0 +1,76 @@
+name: Request Reviewers
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  request-reviewers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 20  # Stellt sicher, dass die letzten zwei Commits abgerufen werden
+
+      - name: Parse CODEOWNERS and request reviews
+        id: codeowners
+        run: |
+          echo "Parsing CODEOWNERS file..."
+          # Pfad zur CODEOWNERS-Datei
+          CODEOWNERS_FILE=CODEOWNERS
+          # Geänderte Dateien im Pull Request
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+
+          REVIEWERS=""
+
+          # Parse CODEOWNERS Datei
+          while IFS= read -r line; do
+            # Zeilen mit Kommentaren oder leere Zeilen ignorieren
+            [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+
+            # Extrahiere Pfadmuster und Benutzer
+            PATTERN=$(echo $line | awk '{print $1}')
+            USERS=$(echo $line | awk '{$1=""; print $0}' | tr ' ' ',')
+
+            # Überprüfe, ob geänderte Dateien dem aktuellen Pfadmuster entsprechen
+            for FILE in $CHANGED_FILES; do
+              if [[ "$FILE" == $PATTERN* ]]; then
+                if [[ -z "$REVIEWERS" ]]; then
+                  REVIEWERS="$USERS"
+                else
+                  REVIEWERS="$REVIEWERS,$USERS"
+                fi
+              fi
+            done
+          done < $CODEOWNERS_FILE
+
+          # Entferne doppelte Reviewer und führende/trailing Kommata
+          REVIEWERS=$(echo $REVIEWERS | tr ',' '\n' | sort | uniq | tr '\n' ',' | sed 's/^,*//;s/,*$//')
+
+          echo "Reviewers to be requested: $REVIEWERS"
+
+          echo "reviewers=$REVIEWERS" >> $GITHUB_OUTPUT
+
+      - name: Comment with Review Request
+        uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const reviewers = "${{ steps.codeowners.outputs.reviewers }}".split(',');
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.pull_request.number;
+            const prCreator = context.payload.pull_request.user.login;
+
+            for (const reviewer of reviewers) {
+              if (reviewer.trim().startsWith('@') && reviewer.trim() !== `@${prCreator}`) {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: prNumber,
+                  body: `${reviewer.trim()}, could you please review this change?`
+                });
+              }
+            }
