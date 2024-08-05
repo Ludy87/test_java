@@ -48,10 +48,10 @@ check_health() {
 # Function to build and test a Docker Compose configuration
 build_and_test() {
     local version_tag="alpha"
-    local dockerfile_name="./Dockerfile"
-    local image_base="frooodle/s-pdf"
+    local dockerfile_name="./Dockerfile-Self-Build"
+    local image_base="ludy87/s-pdf"
     local security_suffix=""
-    local docker_compose_base="./exampleYmlFiles/docker-compose-latest"
+    local docker_compose_base="./exampleYmlFiles/docker-compose-latest-Self-Build"
     local compose_suffix=".yml"
     local service_name_base="Stirling-PDF"
 
@@ -62,15 +62,15 @@ build_and_test() {
 
     case "$build_type" in
         full)
-            dockerfile_name="./Dockerfile"
+            dockerfile_name="./Dockerfile-Self-Build"
             ;;
         ultra-lite)
-            dockerfile_name="./Dockerfile-ultra-lite"
+            dockerfile_name="./Dockerfile-ultra-lite-Self-Build"
             ;;
     esac
 
     # Dynamic image tag and service name based on build type and security
-    local image_tag="${image_base}:latest${build_type}${security_suffix}"
+    local image_tag="${image_base}:latest-Self-Build${build_type}${security_suffix}"
     local service_name="${service_name_base}${build_type^}${security_suffix}"
     local compose_file="${docker_compose_base}${build_type}${compose_suffix}"
 
