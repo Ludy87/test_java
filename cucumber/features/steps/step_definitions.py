@@ -19,7 +19,7 @@ from PIL import Image, ImageDraw
 # GIVEN #
 #########
 
-@given('I generate a PDF file as "{fileInput}"')
+@given(u'I generate a PDF file as "{fileInput}"')
 def step_generate_pdf(context, fileInput):
     context.param_name = fileInput
     context.file_name = "genericNonCustomisableName.pdf"
@@ -32,7 +32,7 @@ def step_generate_pdf(context, fileInput):
     context.files[context.param_name] = open(context.file_name, 'rb')
 
 
-@given('I use an example file at "{filePath}" as parameter "{fileInput}"')
+@given(u'I use an example file at "{filePath}" as parameter "{fileInput}"')
 def step_use_example_file(context, filePath, fileInput):
     context.param_name = fileInput
     context.file_name = filePath.split('/')[-1]
@@ -46,7 +46,7 @@ def step_use_example_file(context, filePath, fileInput):
     except FileNotFoundError:
         raise FileNotFoundError(f"The example file '{filePath}' does not exist.")
 
-@given('the pdf contains {page_count:d} pages')
+@given(u'the pdf contains {page_count:d} pages')
 def step_pdf_contains_pages(context, page_count):
     writer = PdfWriter()
     for i in range(page_count):
@@ -57,7 +57,7 @@ def step_pdf_contains_pages(context, page_count):
     context.files[context.param_name] = open(context.file_name, 'rb')
 
 # Duplicate for now...
-@given('the pdf contains {page_count:d} blank pages')
+@given(u'the pdf contains {page_count:d} blank pages')
 def step_pdf_contains_blank_pages(context, page_count):
     writer = PdfWriter()
     for i in range(page_count):
@@ -144,7 +144,7 @@ def create_pdf_with_images_and_boxes(file_name, image_count, page_count, image_w
         if os.path.exists(temp_image_path):
             os.remove(temp_image_path)
 
-@given('the pdf contains {image_count:d} images on {page_count:d} pages')
+@given(u'the pdf contains {image_count:d} images on {page_count:d} pages')
 def step_pdf_contains_images(context, image_count, page_count):
     if not hasattr(context, 'param_name'):
         context.param_name = "default"
@@ -156,7 +156,7 @@ def step_pdf_contains_images(context, image_count, page_count):
         context.files[context.param_name].close()
     context.files[context.param_name] = open(context.file_name, 'rb')
 
-@given('the pdf contains {page_count:d} pages with random text')
+@given(u'the pdf contains {page_count:d} pages with random text')
 def step_pdf_contains_pages_with_random_text(context, page_count):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
@@ -175,7 +175,7 @@ def step_pdf_contains_pages_with_random_text(context, page_count):
     context.files[context.param_name].close()
     context.files[context.param_name] = open(context.file_name, 'rb')
 
-@given('the pdf pages all contain the text "{text}"')
+@given(u'the pdf pages all contain the text "{text}"')
 def step_pdf_pages_contain_text(context, text):
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
@@ -193,7 +193,7 @@ def step_pdf_pages_contain_text(context, text):
     context.files[context.param_name].close()
     context.files[context.param_name] = open(context.file_name, 'rb')
 
-@given('the pdf is encrypted with password "{password}"')
+@given(u'the pdf is encrypted with password "{password}"')
 def step_encrypt_pdf(context, password):
     writer = PdfWriter()
     reader = PdfReader(context.file_name)
@@ -205,15 +205,15 @@ def step_encrypt_pdf(context, password):
     context.files[context.param_name].close()
     context.files[context.param_name] = open(context.file_name, 'rb')
 
-@given('the request data is')
+@given(u'the request data is')
 def step_request_data(context):
     context.request_data = eval(context.text)
 
-@given('the request data includes')
+@given(u'the request data includes')
 def step_request_data_table(context):
     context.request_data = {row['parameter']: row['value'] for row in context.table}
 
-@given('save the generated PDF file as "{filename}" for debugging')
+@given(u'save the generated PDF file as "{filename}" for debugging')
 def save_generated_pdf(context, filename):
     with open(filename, 'wb') as f:
         f.write(context.files[context.param_name].read())
@@ -223,14 +223,14 @@ def save_generated_pdf(context, filename):
 # WHEN #
 ########
 
-@when('I send a GET request to "{endpoint}"')
+@when(u'I send a GET request to "{endpoint}"')
 def step_send_get_request(context, endpoint):
     base_url = "http://localhost:8080"
     full_url = f"{base_url}{endpoint}"
     response = requests.get(full_url)
     context.response = response
 
-@when('I send a GET request to "{endpoint}" with parameters')
+@when(u'I send a GET request to "{endpoint}" with parameters')
 def step_send_get_request_with_params(context, endpoint):
     base_url = "http://localhost:8080"
     params = {row['parameter']: row['value'] for row in context.table}
@@ -238,7 +238,7 @@ def step_send_get_request_with_params(context, endpoint):
     response = requests.get(full_url, params=params)
     context.response = response
 
-@when(' "{endpoint}"')
+@when(u' "{endpoint}"')
 def step_send_api_request(context, endpoint):
     url = f"http://localhost:8080{endpoint}"
     files = context.files if hasattr(context, 'files') else {}
@@ -263,23 +263,23 @@ def step_send_api_request(context, endpoint):
 # THEN #
 ########
 
-@then('the response content type should be "{content_type}"')
+@then(u'the response content type should be "{content_type}"')
 def step_check_response_content_type(context, content_type):
     actual_content_type = context.response.headers.get('Content-Type', '')
     assert actual_content_type.startswith(content_type), f"Expected {content_type} but got {actual_content_type}. Response content: {context.response.content}"
 
-@then('the response file should have size greater than {size:d}')
+@then(u'the response file should have size greater than {size:d}')
 def step_check_response_file_size(context, size):
     response_file = io.BytesIO(context.response.content)
     assert len(response_file.getvalue()) > size
 
-@then('the response PDF is not passworded')
+@then(u'the response PDF is not passworded')
 def step_check_response_pdf_not_passworded(context):
     response_file = io.BytesIO(context.response.content)
     reader = PdfReader(response_file)
     assert not reader.is_encrypted
 
-@then('the response PDF is passworded')
+@then(u'the response PDF is passworded')
 def step_check_response_pdf_passworded(context):
     response_file = io.BytesIO(context.response.content)
     try:
@@ -290,29 +290,29 @@ def step_check_response_pdf_passworded(context):
     except Exception as e:
         raise AssertionError(f"An error occurred: {str(e)}. Response content: {context.response.content}")
 
-@then('the response status code should be {status_code:d}')
+@then(u'the response status code should be {status_code:d}')
 def step_check_response_status_code(context, status_code):
     assert context.response.status_code == status_code, f"Expected status code {status_code} but got {context.response.status_code}"
 
-@then('the response should contain error message "{message}"')
+@then(u'the response should contain error message "{message}"')
 def step_check_response_error_message(context, message):
     response_json = context.response.json()
     assert response_json.get('error') == message, f"Expected error message '{message}' but got '{response_json.get('error')}'"
 
-@then('the response PDF should contain {page_count:d} pages')
+@then(u'the response PDF should contain {page_count:d} pages')
 def step_check_response_pdf_page_count(context, page_count):
     response_file = io.BytesIO(context.response.content)
     reader = PdfReader(response_file)
     assert len(reader.pages) == page_count, f"Expected {page_count} pages but got {len(reader.pages)} pages"
 
-@then('the response PDF metadata should include "{metadata_key}" as "{metadata_value}"')
+@then(u'the response PDF metadata should include "{metadata_key}" as "{metadata_value}"')
 def step_check_response_pdf_metadata(context, metadata_key, metadata_value):
     response_file = io.BytesIO(context.response.content)
     reader = PdfReader(response_file)
     metadata = reader.metadata
     assert metadata.get("/" + metadata_key) == metadata_value, f"Expected {metadata_key} to be '{metadata_value}' but got '{metadata.get(metadata_key)}'"
 
-@then('the response file should have extension "{extension}"')
+@then(u'the response file should have extension "{extension}"')
 def step_check_response_file_extension(context, extension):
     content_disposition = context.response.headers.get('Content-Disposition', '')
     filename = ""
@@ -324,27 +324,27 @@ def step_check_response_file_extension(context, extension):
                 break
     assert filename.endswith(extension), f"Expected file extension {extension} but got {filename}. Response content: {context.response.content}"
 
-@then('save the response file as "{filename}" for debugging')
+@then(u'save the response file as "{filename}" for debugging')
 def step_save_response_file(context, filename):
     with open(filename, 'wb') as f:
         f.write(context.response.content)
     print(f"Saved response content to {filename}")
 
-@then('the response PDF should contain {page_count:d} pages')
+@then(u'the response PDF should contain {page_count:d} pages')
 def step_check_response_pdf_page_count(context, page_count):
     response_file = io.BytesIO(context.response.content)
     reader = PdfReader(io.BytesIO(response_file.getvalue()))
     actual_page_count = len(reader.pages)
     assert actual_page_count == page_count, f"Expected {page_count} pages but got {actual_page_count} pages"
 
-@then('the response ZIP should contain {file_count:d} files')
+@then(u'the response ZIP should contain {file_count:d} files')
 def step_check_response_zip_file_count(context, file_count):
     response_file = io.BytesIO(context.response.content)
     with zipfile.ZipFile(io.BytesIO(response_file.getvalue())) as zip_file:
       actual_file_count = len(zip_file.namelist())
     assert actual_file_count == file_count, f"Expected {file_count} files but got {actual_file_count} files"
 
-@then('the response ZIP file should contain {doc_count:d} documents each having {pages_per_doc:d} pages')
+@then(u'the response ZIP file should contain {doc_count:d} documents each having {pages_per_doc:d} pages')
 def step_check_response_zip_doc_page_count(context, doc_count, pages_per_doc):
     response_file = io.BytesIO(context.response.content)
     with zipfile.ZipFile(io.BytesIO(response_file.getvalue())) as zip_file:
@@ -357,13 +357,13 @@ def step_check_response_zip_doc_page_count(context, doc_count, pages_per_doc):
                 actual_pages_per_doc = len(reader.pages)
                 assert actual_pages_per_doc == pages_per_doc, f"Expected {pages_per_doc} pages per document but got {actual_pages_per_doc} pages in document {file_name}"
 
-@then('the JSON value of "{key}" should be "{expected_value}"')
+@then(u'the JSON value of "{key}" should be "{expected_value}"')
 def step_check_json_value(context, key, expected_value):
     actual_value = context.response.json().get(key)
     assert actual_value == expected_value, \
         f"Expected JSON value for '{key}' to be '{expected_value}' but got '{actual_value}'"
 
-@then('JSON list entry containing "{identifier_key}" as "{identifier_value}" should have "{target_key}" as "{target_value}"')
+@then(u'JSON list entry containing "{identifier_key}" as "{identifier_value}" should have "{target_key}" as "{target_value}"')
 def step_check_json_list_entry(context, identifier_key, identifier_self, target_key, target_value):
     json_response = context.response.json()
     for entry in json_response:
@@ -374,7 +374,7 @@ def step_check_json_list_entry(context, identifier_key, identifier_self, target_
     else:
         raise AssertionError(f"No entry with {identifier_key} as {identifier_value} found")
 
-@then('the response should match the regex "{pattern}"')
+@then(u'the response should match the regex "{pattern}"')
 def step_response_matches_regex(context, pattern):
     response_text = context.response.text
     assert re.match(pattern, response_text), \
