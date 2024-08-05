@@ -9,7 +9,7 @@ COPY . .
 
 # Build the application with DOCKER_ENABLE_SECURITY=false
 RUN DOCKER_ENABLE_SECURITY=true \
-./gradlew clean build 
+./gradlew clean build
 
 # Main stage
 FROM alpine:3.20.0
@@ -18,7 +18,7 @@ FROM alpine:3.20.0
 COPY scripts /scripts
 COPY pipeline /pipeline
 COPY src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
-COPY --from=build /app/build/libs/*.jar /app.jar
+COPY --from=build /app/build/libs/*.jar app.jar
 
 ARG VERSION_TAG
 
@@ -31,8 +31,8 @@ ENV DOCKER_ENABLE_SECURITY=false \
     PGID=1000 \
     UMASK=022 \
     FAT_DOCKER=true \
-    INSTALL_BOOK_AND_ADVANCED_HTML_OPS=true
-    
+    INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
+
 
 # JDK for app
 RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
@@ -45,7 +45,6 @@ RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /et
         tini \
         bash \
         curl \
-        calibre@testing \
         shadow \
         su-exec \
         openssl \

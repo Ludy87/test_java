@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -34,10 +35,6 @@ public class DatabaseBackupHelper implements DatabaseBackupInterface {
     private String url;
 
     private Path backupPath = Paths.get("configs/db/backup/");
-
-    public Path getBackupPath() {
-        return backupPath;
-    }
 
     @Override
     public boolean hasBackup() {
@@ -135,11 +132,12 @@ public class DatabaseBackupHelper implements DatabaseBackupInterface {
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         Path insertOutputFilePath =
                 this.getBackupFilePath("backup_" + dateNow.format(myFormatObj) + ".sql");
-        String query = "SCRIPT SIMPLE COLUMNS DROP to '" + insertOutputFilePath.toString() + "';";
+        String query = "SCRIPT SIMPLE COLUMNS DROP to ?;";
 
         try (Connection conn = DriverManager.getConnection(url, "sa", "");
-                Statement stmt = conn.createStatement()) {
-            stmt.execute(query);
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, insertOutputFilePath.toString());
+            stmt.execute();
             log.info("Database export completed: {}", insertOutputFilePath);
         } catch (SQLException e) {
             log.error("Error during database export: {}", e.getMessage(), e);
@@ -181,11 +179,12 @@ public class DatabaseBackupHelper implements DatabaseBackupInterface {
     }
 
     private boolean executeDatabaseScript(Path scriptPath) {
-        try (Connection conn = DriverManager.getConnection(url, "sa", "");
-                Statement stmt = conn.createStatement()) {
+        String query = "RUNSCRIPT from ?;";
 
-            String query = "RUNSCRIPT from '" + scriptPath.toString() + "';";
-            stmt.execute(query);
+        try (Connection conn = DriverManager.getConnection(url, "sa", "");
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, scriptPath.toString());
+            stmt.execute();
             log.info("Database import completed: {}", scriptPath);
             return true;
         } catch (SQLException e) {
