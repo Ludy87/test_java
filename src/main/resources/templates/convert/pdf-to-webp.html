@@ -18,7 +18,7 @@
                 <span class="tool-header-text" th:text="#{pdfToWebp.header}"></span>
               </div>
               <p th:text="#{processTimeWarning}"></p>
-              <form method="post" enctype="multipart/form-data" th:action="@{api/v1/convert/pdf/webp}">
+              <form method="post" enctype="multipart/form-data" th:action="@{'/api/v1/convert/pdf/webp'}">
                 <div th:replace="~{fragments/common :: fileSelector(name='fileInput', multiple=false, accept='application/pdf')}"></div>
                 <div class="mb-3">
                   <label th:text="#{pdfToWebp.selectText}"></label>

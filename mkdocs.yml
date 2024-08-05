@@ -1,0 +1,29 @@
+site_name: Documentations
+site_description: 'Just another boring documentation site'
+
+site_dir: docs-build
+
+theme:
+  name: 'material'
+  palette:
+    primary: 'blue'
+    accent: 'lightblue'
+
+extra_css:
+  - 'css/extra.css'
+extra_javascript:
+  - js/extra.js
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/giansalex
+
+markdown_extensions:
+  - admonition
+  - codehilite:
+      css_class: code
+      use_pygments: false
+      guess_lang: false
+  - toc:
+      permalink: true

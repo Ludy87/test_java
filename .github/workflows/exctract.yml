@@ -1,0 +1,28 @@
+name: Extract Version from Issue
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  extract-version:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install requests packaging
+
+    - name: Run script
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ISSUE_NUMBER: ${{ github.event.issue.number }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+      run: python .github/scripts/extract.py

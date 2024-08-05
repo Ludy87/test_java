@@ -36,6 +36,13 @@ public class ConverterWebController {
         return "convert/img-to-pdf";
     }
 
+    @GetMapping("/pdf-to-webp")
+    @Hidden
+    public String convertPdfToWebpForm(Model model) {
+        model.addAttribute("currentPage", "pdf-to-webp");
+        return "convert/pdf-to-webp";
+    }
+
     @GetMapping("/html-to-pdf")
     @Hidden
     public String convertHTMLToPdfForm(Model model) {
