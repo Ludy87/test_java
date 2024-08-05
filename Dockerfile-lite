@@ -1,5 +1,5 @@
 # use alpine
-FROM alpine:3.19.1
+FROM alpine:3.20.2
 
 # Copy necessary files
 COPY scripts/download-security-jar.sh /scripts/download-security-jar.sh
