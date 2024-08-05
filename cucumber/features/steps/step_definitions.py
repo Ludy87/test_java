@@ -238,7 +238,7 @@ def step_send_get_request_with_params(context, endpoint):
     response = requests.get(full_url, params=params)
     context.response = response
 
-@when(u' "{endpoint}"')
+@when(u'I send the API request to the endpoint "{endpoint}"')
 def step_send_api_request(context, endpoint):
     url = f"http://localhost:8080{endpoint}"
     files = context.files if hasattr(context, 'files') else {}
