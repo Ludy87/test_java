@@ -19,11 +19,16 @@ public class PluginLoader {
         if (jarFiles != null) {
             for (File jarFile : jarFiles) {
                 URL jarURL = jarFile.toURI().toURL();
-                URLClassLoader classLoader = new URLClassLoader(new URL[]{jarURL}, this.getClass().getClassLoader());
+                URLClassLoader classLoader =
+                        new URLClassLoader(new URL[] {jarURL}, this.getClass().getClassLoader());
 
                 // Hier musst du den Plugin-Klassennamen wissen
                 Class<?> pluginClass = classLoader.loadClass("com.yourapp.plugins.MyPlugin");
-                PluginInterface plugin = (PluginInterface) pluginClass.getDeclaredConstructor(String.class).newInstance(PLUGIN_DIR);
+                PluginInterface plugin =
+                        (PluginInterface)
+                                pluginClass
+                                        .getDeclaredConstructor(String.class)
+                                        .newInstance(PLUGIN_DIR);
 
                 plugin.initialize();
                 plugins.add(plugin);
