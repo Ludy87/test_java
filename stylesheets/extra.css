@@ -127,3 +127,27 @@ input, form, div, code, a, .md-button {
 .md-source__repository {
     width: calc(100% - 1.2rem);
 }
+
+body {
+    margin: 0;
+}
+
+.watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 222222;
+    pointer-events: none;
+}
+
+.content {
+    position: relative;
+    z-index: 1; /* Stellt sicher, dass der Inhalt über dem Wasserzeichen liegt */
+}
+
+aside.md-banner {
+    text-align: center;
+}
