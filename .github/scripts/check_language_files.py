@@ -29,7 +29,9 @@ def check_defference(reference_file, directory):
                 f"Es fehlen Zeilen! Entweder fehlen Kommentare, leere Zeilen oder Übersetzungstrings! {reference_list_len}:{current_list_len}"
             )
         elif reference_list_len < current_list_len:
-            print("Es gibt zuviele Zeilen! Überprüfen sie deine Übersetzungs Dateien!")
+            print(
+                f"Es gibt zuviele Zeilen! Überprüfen sie deine Übersetzungs Dateien! {reference_list_len}:{current_list_len}"
+            )
     if isDiff:
         print("Check fail")
         exit(1)
