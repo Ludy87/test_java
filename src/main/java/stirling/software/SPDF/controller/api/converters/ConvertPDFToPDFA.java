@@ -93,7 +93,7 @@ public class ConvertPDFToPDFA {
         command.add("--skip-text");
         command.add("--tesseract-timeout=0");
         command.add("--output-type");
-        command.add(outputFormat.toString());
+        command.add(outputFormat);
         command.add(tempInputFile.toString());
         command.add(tempOutputFile.toString());
 
