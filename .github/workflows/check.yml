@@ -12,25 +12,49 @@ jobs:
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # Um die Historie für PR-Branch zu erhalten
+          fetch-depth: 0
 
       - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           ref: main
-          path: main-branch  # Pfad zum Checkout des main-Branches
+          path: main-branch
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'  # Die Python-Version, die du benötigst
+          python-version: "3.x"
 
-      - name: Install dependencies
+      - name: Fetch and show changes
         run: |
-          pip install -r requirements.txt  # Installiere Abhängigkeiten, falls vorhanden
+          echo "Fetching changes..."
+          git fetch origin
+          echo "Current branch:"
+          git branch --show-current
+          echo "Remote branches:"
+          git branch -r
+          echo "Changed files:"
+          CHANGED_FILES=$(git diff --name-only main...HEAD)
+          echo "$CHANGED_FILES"
+
+      - name: Determine if reference file is from PR branch
+        id: determine-file
+        run: |
+          echo "Checking for file changes..."
+          CHANGED_FILES=$(git diff --name-only main...HEAD)
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          if echo "$CHANGED_FILES" | awk '/^src\/main\/resources\/messages_en_GB.properties$/ {found=1} END {exit !found}'; then
+              echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          else
+              echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          fi
+
+      - name: Show REFERENCE_FILE
+        run: echo "Reference file is set to ${{ env.REFERENCE_FILE }}"
 
       - name: Run Python script to check file
         run: |
-          python .github/scripts/check_language_files.py  # Führe dein Python-Skript aus
-        env:
-          REFERENCE_FILE: main-branch/src/main/resources/messages_en_GB.properties
+          python .github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }}
