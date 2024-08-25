@@ -25,7 +25,7 @@ def check_difference(reference_file, file_list, branch):
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
-            # report.append(f"File '{basename_current_file}' is ignored.")
+            report.append(f"File '{basename_current_file}' is ignored.")
             continue
         report.append(f"Checking the language file `{basename_current_file}`...")
         current_list = read_properties(branch + "/" + file_path)
