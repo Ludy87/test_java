@@ -86,12 +86,12 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const [repoOwner, repoName] = process.env.GITHUB_REPOSITORY.split('/');
-            const prNumber = process.env.GITHUB_REF.split('/').pop();
-            const errorOutput = process.env.ERROR_OUTPUT || 'No error output captured';
+            const { GITHUB_REPOSITORY, GITHUB_REF, ERROR_OUTPUT } = process.env;
+            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
+            const prNumber = GITHUB_REF.split('/').pop();
             await github.rest.issues.createComment({
               owner: repoOwner,
               repo: repoName,
               issue_number: prNumber,
-              body: `### Test Report\n\n\`\`\`\n${errorOutput}\n\`\`\``
+              body: `### Test Report\n\n\`\`\`\n${ERROR_OUTPUT}\n\`\`\``
             });
