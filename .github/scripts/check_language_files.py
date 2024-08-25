@@ -13,7 +13,7 @@ def check_difference(reference_file, file_list, branch):
 
     report = []
     report.append(
-        f"#### Checking with the file `{basename_reference_file}` from the `{reference_branch}` branch - Checking the `{branch}` branch"
+        f"#### Checking with the file `{basename_reference_file}` from the `{reference_branch}` - Checking the `{branch}`"
     )
     reference_list = read_properties(reference_file)
     is_diff = False
