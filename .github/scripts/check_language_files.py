@@ -82,13 +82,12 @@ def check_difference(reference_file, file_list, branch):
                 report.append("- ✅ Test 2 passed")
         report.append("")
 
+    report.append("")
     if is_diff:
-        report.append("")
-        report.append("#### ❌ Check fail")
-        print("\n".join(report))
-        # exit(1)
+        report.append("## ❌ Check fail")
     else:
-        print("Check success")
+        print("## ✅ Check success")
+    print("\n".join(report))
 
 
 if __name__ == "__main__":
