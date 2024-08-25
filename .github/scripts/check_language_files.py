@@ -53,13 +53,15 @@ def check_difference(reference_file, file_list, branch):
                 if not item.startswith("#") and item != "" and "=" in item:
                     key, _ = item.split("=", 1)
                     reference_keys.append(key)
-            s1 = set(current_keys)
-            s2 = set(reference_keys)
-            s3 = s1.difference(s2)
-            l3 = list(s3)
-            if len(l3) > 0:
+            current_set = set(current_keys)
+            reference_set = set(reference_keys)
+            set_test1 = current_set.difference(reference_set)
+            set_test2 = reference_set.difference(current_set)
+            set_test1_list = list(set_test1)
+            set_test2_list = list(set_test2)
+            if len(set_test1_list) > 0:
                 is_diff = True
-                print(f"Es gibt keys in {basename_current_file} {l3} die in {reference_file} nicht vorhanden sind!")
+                print(f"Es gibt keys in {basename_current_file} {set_test1_list} {set_test2_list} die in {reference_file} nicht vorhanden sind!")
             else:
                 print("Test 3 bestanden")
 
