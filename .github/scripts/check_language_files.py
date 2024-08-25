@@ -57,7 +57,11 @@ def check_difference(reference_file, file_list, branch):
             s2 = set(reference_keys)
             s3 = s1.difference(s2)
             l3 = list(s3)
-            print(l3)
+            if len(l3) > 0:
+                is_diff = True
+                print(f"Es gibt keys in {basename_current_file} {l3} die in {reference_file} nicht vorhanden sind!")
+            else:
+                print("Test 3 bestanden")
 
     if is_diff:
         print("Check fail")
