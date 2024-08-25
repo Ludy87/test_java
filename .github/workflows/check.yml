@@ -53,7 +53,7 @@ jobs:
         id: determine-file
         run: |
           echo "Determining reference file..."
-          if echo "${{ env.CHANGED_FILES }}" | tr '\x1e' '\n' | grep -q 'src/main/resources/messages_en_GB.properties'; then
+          if echo "${{ env.CHANGED_FILES }}"| grep -q 'src/main/resources/messages_en_GB.properties'; then
               echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
               echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
