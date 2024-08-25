@@ -27,7 +27,7 @@ def check_difference(reference_file, file_list, branch):
         ):
             # report.append(f"Datei '{basename_current_file}' wird ignoriert.")
             continue
-        report.append(f"Überprüfung der Sprachdatei '{basename_current_file}'...")
+        report.append(f"Überprüfung der Sprachdatei `{basename_current_file}`...")
         current_list = read_properties(branch + "/" + file_path)
         reference_list_len = len(reference_list)
         current_list_len = len(current_list)
@@ -47,7 +47,6 @@ def check_difference(reference_file, file_list, branch):
         else:
             report.append("- ✅ Test 1 bestanden")
 
-        if 1 == 1:
             current_keys = []
             reference_keys = []
             for item in current_list:
@@ -79,6 +78,7 @@ def check_difference(reference_file, file_list, branch):
                 )
             else:
                 report.append("- ✅ Test 2 bestanden")
+        report.append("")
 
     if is_diff:
         report.append("")
