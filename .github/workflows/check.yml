@@ -88,7 +88,7 @@ jobs:
           script: |
             const { GITHUB_REPOSITORY, GITHUB_REF, ERROR_OUTPUT } = process.env;
             const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
-            const prNumber = GITHUB_REF.split('/').pop();
+            const prNumber = context.issue.number; // Pull request number from context
             await github.rest.issues.createComment({
               owner: repoOwner,
               repo: repoName,
