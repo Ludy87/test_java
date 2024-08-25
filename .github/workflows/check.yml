@@ -92,5 +92,5 @@ jobs:
               owner: repoOwner,
               repo: repoName,
               issue_number: prNumber,
-              body: `## Test Report\n\n\n${ERROR_OUTPUT}\n`
+              body: `## Translation Verification Summary\n\n\n${ERROR_OUTPUT}\n`
             });
