@@ -34,9 +34,7 @@ def check_difference(reference_file, file_list, branch):
 
         if reference_list_len != current_list_len:
             report.append("")
-            report.append(
-                "- ❌ Test 1 nicht bestanden! Differenz in der Datei!"
-            )
+            report.append("- ❌ Test 1 nicht bestanden! Differenz in der Datei!")
             is_diff = True
             if reference_list_len > current_list_len:
                 report.append(
@@ -48,6 +46,8 @@ def check_difference(reference_file, file_list, branch):
                 )
         else:
             report.append("- ✅ Test 1 bestanden")
+
+        if 1 == 1:
             current_keys = []
             reference_keys = []
             for item in current_list:
@@ -70,7 +70,7 @@ def check_difference(reference_file, file_list, branch):
                 set_test1_list = "`, `".join(set_test1_list)
                 set_test2_list = "`, `".join(set_test2_list)
                 is_diff = True
-                report.append(f"- ❌ Test 2 nicht bestanden")
+                report.append("- ❌ Test 2 nicht bestanden")
                 report.append(
                     f"  - Es gibt keys in {basename_current_file} `{set_test1_list}` die in {reference_file} nicht vorhanden sind!"
                 )
