@@ -69,7 +69,7 @@ jobs:
           python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.BRANCH_PATH }} --files ${{ env.CHANGED_FILES }}
         continue-on-error: true
 
-        - name: Capture output
+      - name: Capture output
         id: capture-output
         run: |
           if [ -f main-branch/.github/scripts/check_language_files.py ]; then
