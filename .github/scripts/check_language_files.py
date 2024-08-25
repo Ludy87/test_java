@@ -26,13 +26,14 @@ def check_difference(reference_file, file_list, branch):
             continue
 
         report.append(f"Überprüfung der Sprachdatei '{basename_current_file}'...")
-
         current_list = read_properties(branch + "/" + file_path)
         reference_list_len = len(reference_list)
         current_list_len = len(current_list)
 
         if reference_list_len != current_list_len:
-            report.append(f"{basename_current_file} - Test 1 nicht bestanden! Differenz in der Datei!")
+            report.append(
+                f"{basename_current_file} - Test 1 nicht bestanden! Differenz in der Datei!"
+            )
             is_diff = True
             if reference_list_len > current_list_len:
                 report.append(
@@ -63,8 +64,12 @@ def check_difference(reference_file, file_list, branch):
             if len(set_test1_list) > 0:
                 is_diff = True
                 report.append(f"{basename_current_file} - Test 2 nicht bestanden")
-                report.append(f"Es gibt keys in {basename_current_file} {set_test1_list} die in {reference_file} nicht vorhanden sind!")
-                report.append(f"Es gibt keys in {reference_file} {set_test2_list} die in {basename_current_file} nicht vorhanden sind!")
+                report.append(
+                    f"Es gibt keys in {basename_current_file} {set_test1_list} die in {reference_file} nicht vorhanden sind!"
+                )
+                report.append(
+                    f"Es gibt keys in {reference_file} {set_test2_list} die in {basename_current_file} nicht vorhanden sind!"
+                )
             else:
                 report.append("Test 2 bestanden")
 
@@ -86,7 +91,7 @@ if __name__ == "__main__":
         "--branch",
         type=str,
         required=True,
-        help="",
+        help="Branch Name.",
     )
     parser.add_argument(
         "--files",
@@ -96,5 +101,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    file_list = args.files  # .split()
+    file_list = args.files
     check_difference(args.reference_file, file_list, args.branch)
