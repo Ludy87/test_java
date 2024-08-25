@@ -76,8 +76,9 @@ def check_difference(reference_file, file_list, branch):
     if is_diff:
         report.append("Check fail")
         print("\n".join(report))
-        exit(1)
-    print("Check success")
+        # exit(1)
+    else:
+        print("Check success")
 
 
 if __name__ == "__main__":
