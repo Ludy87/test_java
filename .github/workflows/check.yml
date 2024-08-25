@@ -73,7 +73,7 @@ jobs:
         id: capture-output
         run: |
           if [ -f main-branch/.github/scripts/check_language_files.py ]; then
-            python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.BRANCH_PATH }} --files ${{ env.CHANGED_FILES }} || echo "Test failed" > failure.txt
+            python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.BRANCH_PATH }} --files ${{ env.CHANGED_FILES }} > failure.txt
           fi
           if [ -f failure.txt ]; then
             echo "Test failed, capturing output..."
