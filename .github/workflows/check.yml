@@ -30,7 +30,8 @@ jobs:
           python-version: "3.x"
 
       - name: Install GitHub CLI
-        run: sudo apt-get update && sudo apt-get install -y gh
+        run: |
+          pip install gh
 
       - name: Fetch PR changed files
         id: fetch-pr-changes
@@ -64,6 +65,7 @@ jobs:
         run: echo "Reference file is set to ${{ env.REFERENCE_FILE }}"
 
       - name: Run Python script to check files
+        id: run-check
         run: |
           python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.BRANCH_PATH }} --files ${{ env.CHANGED_FILES }}
         continue-on-error: true
