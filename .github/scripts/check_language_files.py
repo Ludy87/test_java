@@ -66,16 +66,18 @@ def check_difference(reference_file, file_list, branch):
             set_test2_list = list(set_test2)
 
             if len(set_test1_list) > 0 or len(set_test2_list) > 0:
+                is_diff = True
                 set_test1_list = "`, `".join(set_test1_list)
                 set_test2_list = "`, `".join(set_test2_list)
-                is_diff = True
                 report.append("- ❌ Test 2 nicht bestanden")
-                report.append(
-                    f"  - Es gibt keys in ***{basename_current_file}*** `{set_test1_list}` die in ***{basename_reference_file}*** nicht vorhanden sind!"
-                )
-                report.append(
-                    f"  - Es gibt keys in ***{basename_reference_file}*** `{set_test2_list}` die in ***{basename_current_file}*** nicht vorhanden sind!"
-                )
+                if len(set_test1_list) > 0:
+                    report.append(
+                        f"  - Es gibt keys in ***{basename_current_file}*** `{set_test1_list}` die in ***{basename_reference_file}*** nicht vorhanden sind!"
+                    )
+                if len(set_test2_list) > 0:
+                    report.append(
+                        f"  - Es gibt keys in ***{basename_reference_file}*** `{set_test2_list}` die in ***{basename_current_file}*** nicht vorhanden sind!"
+                    )
             else:
                 report.append("- ✅ Test 2 bestanden")
         report.append("")
