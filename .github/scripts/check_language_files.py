@@ -8,7 +8,7 @@ def read_properties(file_path):
 
 
 def check_difference(reference_file, file_list, branch):
-    reference_branch = reference_file.split("-")[0]
+    reference_branch = reference_file.split("/")[0]
     basename_reference_file = os.path.basename(reference_file)
 
     report = []
@@ -71,10 +71,10 @@ def check_difference(reference_file, file_list, branch):
                 is_diff = True
                 report.append("- ❌ Test 2 nicht bestanden")
                 report.append(
-                    f"  - Es gibt keys in {basename_current_file} `{set_test1_list}` die in {reference_file} nicht vorhanden sind!"
+                    f"  - Es gibt keys in {basename_current_file} `{set_test1_list}` die in `{basename_reference_file}` nicht vorhanden sind!"
                 )
                 report.append(
-                    f"  - Es gibt keys in {reference_file} `{set_test2_list}` die in {basename_current_file} nicht vorhanden sind!"
+                    f"  - Es gibt keys in {reference_file} `{set_test2_list}` die in `{basename_current_file}` nicht vorhanden sind!"
                 )
             else:
                 report.append("- ✅ Test 2 bestanden")
