@@ -78,6 +78,7 @@ jobs:
             echo "ERROR_OUTPUT<<EOF" >> $GITHUB_ENV
             echo "$ERROR_OUTPUT" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
+            echo $ERROR_OUTPUT
           fi
 
       - name: Post comment on PR
@@ -91,5 +92,5 @@ jobs:
               owner: repoOwner,
               repo: repoName,
               issue_number: prNumber,
-              body: `## Test Report\n\n\${ERROR_OUTPUT}`
+              body: `## Test Report\n\n\n${ERROR_OUTPUT}\n`
             });
