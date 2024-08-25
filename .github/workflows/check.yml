@@ -66,3 +66,27 @@ jobs:
       - name: Run Python script to check files
         run: |
           python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.BRANCH_PATH }} --files ${{ env.CHANGED_FILES }}
+        continue-on-error: true
+
+      - name: Post comment on PR
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { exec } = require('@actions/exec');
+            let output = '';
+            await exec('python', ['.github/scripts/check_language_files.py', '--reference-file', 'pr-branch/src/main/resources/messages_en_GB.properties', '--branch', 'pr-branch', '--files', ...process.env.CHANGED_FILES.split(' ')], {
+              listeners: {
+                stdout: (data) => {
+                  output += data.toString();
+                }
+              }
+            });
+            const [repoOwner, repoName] = process.env.GITHUB_REPOSITORY.split('/');
+            const prNumber = process.env.GITHUB_REF.split('/').pop();
+            await github.rest.issues.createComment({
+              owner: repoOwner,
+              repo: repoName,
+              issue_number: prNumber,
+              body: `### Test Report\n\n\`\`\`\n${output}\n\`\`\``
+            });

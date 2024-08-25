@@ -8,7 +8,8 @@ def read_properties(file_path):
 
 
 def check_difference(reference_file, file_list, branch):
-    print(
+    report = []
+    report.append(
         f"Prüfung mit der Datei: {reference_file} - Überprüft wird der Branch: {branch}"
     )
     reference_list = read_properties(reference_file)
@@ -21,28 +22,28 @@ def check_difference(reference_file, file_list, branch):
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
-            print(f"Datei '{basename_current_file}' wird ignoriert.")
+            report.append(f"Datei '{basename_current_file}' wird ignoriert.")
             continue
 
-        print(f"Überprüfung der Sprachdatei '{basename_current_file}'...")
+        report.append(f"Überprüfung der Sprachdatei '{basename_current_file}'...")
 
         current_list = read_properties(branch + "/" + file_path)
         reference_list_len = len(reference_list)
         current_list_len = len(current_list)
 
         if reference_list_len != current_list_len:
-            print(f"{basename_current_file} - Test 1 nicht bestanden! Differenz in der Datei!")
+            report.append(f"{basename_current_file} - Test 1 nicht bestanden! Differenz in der Datei!")
             is_diff = True
             if reference_list_len > current_list_len:
-                print(
+                report.append(
                     f"Es fehlen Zeilen! Entweder fehlen Kommentare, leere Zeilen oder Übersetzungstrings! {reference_list_len}:{current_list_len}"
                 )
             elif reference_list_len < current_list_len:
-                print(
+                report.append(
                     f"Es gibt zuviele Zeilen! Überprüfen sie deine Übersetzungs Dateien! {reference_list_len}:{current_list_len}"
                 )
         else:
-            print("Test 1 bestanden")
+            report.append("Test 1 bestanden")
             current_keys = []
             reference_keys = []
             for item in current_list:
@@ -61,12 +62,15 @@ def check_difference(reference_file, file_list, branch):
             set_test2_list = list(set_test2)
             if len(set_test1_list) > 0:
                 is_diff = True
-                print(f"Es gibt keys in {basename_current_file} {set_test1_list} {set_test2_list} die in {reference_file} nicht vorhanden sind!")
+                report.append(f"{basename_current_file} - Test 2 nicht bestanden")
+                report.append(f"Es gibt keys in {basename_current_file} {set_test1_list} die in {reference_file} nicht vorhanden sind!")
+                report.append(f"Es gibt keys in {reference_file} {set_test2_list} die in {basename_current_file} nicht vorhanden sind!")
             else:
-                print("Test 3 bestanden")
+                report.append("Test 2 bestanden")
 
     if is_diff:
-        print("Check fail")
+        report.append("Check fail")
+        print("\n".join(report))
         exit(1)
     print("Check success")
 
