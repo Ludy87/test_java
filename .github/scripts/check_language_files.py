@@ -43,10 +43,21 @@ def check_difference(reference_file, file_list, branch):
                 )
         else:
             print("Test 1 bestanden")
+            current_keys = []
+            reference_keys = []
             for item in current_list:
                 if not item.startswith("#") and item != "" and "=" in item:
-                    key, value = item.split("=", 1)
-                    print(key)
+                    key, _ = item.split("=", 1)
+                    current_keys.append(key)
+            for item in reference_list:
+                if not item.startswith("#") and item != "" and "=" in item:
+                    key, _ = item.split("=", 1)
+                    reference_keys.append(key)
+            s1 = set(current_keys)
+            s2 = set(reference_keys)
+            s3 = s1.difference(s2)
+            l3 = list(s3)
+            print(l3)
 
     if is_diff:
         print("Check fail")
