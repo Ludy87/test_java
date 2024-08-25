@@ -91,5 +91,5 @@ jobs:
               owner: repoOwner,
               repo: repoName,
               issue_number: prNumber,
-              body: `### Test Report\n\n\`\`\`\n${ERROR_OUTPUT}\n\`\`\``
+              body: `## Test Report\n\n\${ERROR_OUTPUT}`
             });

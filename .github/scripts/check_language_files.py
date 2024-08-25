@@ -8,9 +8,12 @@ def read_properties(file_path):
 
 
 def check_difference(reference_file, file_list, branch):
+    reference_branch = reference_file.split("-")[0]
+    basename_reference_file = os.path.basename(reference_file)
+
     report = []
     report.append(
-        f"Prüfung mit der Datei: {reference_file} - Überprüft wird der Branch: {branch}"
+        f"### Prüfung mit der Datei `{basename_reference_file}` aus dem `{reference_branch}` Branch - Überprüft wird der `{branch}` Branch"
     )
     reference_list = read_properties(reference_file)
     is_diff = False
@@ -22,26 +25,26 @@ def check_difference(reference_file, file_list, branch):
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
-            report.append(f"Datei '{basename_current_file}' wird ignoriert.")
+            # report.append(f"Datei '{basename_current_file}' wird ignoriert.")
             continue
-
         report.append(f"Überprüfung der Sprachdatei '{basename_current_file}'...")
         current_list = read_properties(branch + "/" + file_path)
         reference_list_len = len(reference_list)
         current_list_len = len(current_list)
 
         if reference_list_len != current_list_len:
+            report.append("")
             report.append(
-                f"{basename_current_file} - Test 1 nicht bestanden! Differenz in der Datei!"
+                "- ❌ Test 1 nicht bestanden! Differenz in der Datei!"
             )
             is_diff = True
             if reference_list_len > current_list_len:
                 report.append(
-                    f"Es fehlen Zeilen! Entweder fehlen Kommentare, leere Zeilen oder Übersetzungstrings! {reference_list_len}:{current_list_len}"
+                    f"  - Es fehlen Zeilen! Entweder fehlen Kommentare, leere Zeilen oder Übersetzungstrings! {reference_list_len}:{current_list_len}"
                 )
             elif reference_list_len < current_list_len:
                 report.append(
-                    f"Es gibt zuviele Zeilen! Überprüfen sie deine Übersetzungs Dateien! {reference_list_len}:{current_list_len}"
+                    f"  - Es gibt zuviele Zeilen! Überprüfen sie deine Übersetzungs Dateien! {reference_list_len}:{current_list_len}"
                 )
         else:
             report.append("Test 1 bestanden")
@@ -63,18 +66,19 @@ def check_difference(reference_file, file_list, branch):
             set_test2_list = list(set_test2)
             if len(set_test1_list) > 0:
                 is_diff = True
-                report.append(f"{basename_current_file} - Test 2 nicht bestanden")
+                report.append(f"- ❌ Test 2 nicht bestanden")
                 report.append(
-                    f"Es gibt keys in {basename_current_file} {set_test1_list} die in {reference_file} nicht vorhanden sind!"
+                    f"  - Es gibt keys in {basename_current_file} {set_test1_list} die in {reference_file} nicht vorhanden sind!"
                 )
                 report.append(
-                    f"Es gibt keys in {reference_file} {set_test2_list} die in {basename_current_file} nicht vorhanden sind!"
+                    f"  - Es gibt keys in {reference_file} {set_test2_list} die in {basename_current_file} nicht vorhanden sind!"
                 )
             else:
-                report.append("Test 2 bestanden")
+                report.append("- ✅ Test 2 bestanden")
 
     if is_diff:
-        report.append("Check fail")
+        report.append("")
+        report.append("#### ❌ Check fail")
         print("\n".join(report))
         # exit(1)
     else:
