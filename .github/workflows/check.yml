@@ -66,27 +66,26 @@ jobs:
       - name: Run Python script to check files
         id: run-check
         run: |
-          python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.BRANCH_PATH }} --files ${{ env.CHANGED_FILES }}
-        continue-on-error: true
+          python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.BRANCH_PATH }} --files ${{ env.CHANGED_FILES }} > failure.txt || true
 
       - name: Capture output
         id: capture-output
         run: |
-          if [ -f main-branch/.github/scripts/check_language_files.py ]; then
-            python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.BRANCH_PATH }} --files ${{ env.CHANGED_FILES }} > failure.txt
-          fi
           if [ -f failure.txt ]; then
             echo "Test failed, capturing output..."
-            # Extract error output and store it in an environment variable
-            ERROR_OUTPUT=$(tail -n 50 failure.txt)
-            echo "ERROR_OUTPUT=${ERROR_OUTPUT}" >> $GITHUB_ENV
+            # Use the cat command to avoid issues with special characters in environment variables
+            ERROR_OUTPUT=$(cat failure.txt)
+            echo "ERROR_OUTPUT<<EOF" >> $GITHUB_ENV
+            echo "$ERROR_OUTPUT" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
           fi
 
       - name: Post comment on PR
+        if: ${{ failure() }}
         uses: actions/github-script@v7
         with:
           script: |
-            const { GITHUB_REPOSITORY, GITHUB_REF, ERROR_OUTPUT } = process.env;
+            const { GITHUB_REPOSITORY, ERROR_OUTPUT } = process.env;
             const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
             const prNumber = context.issue.number; // Pull request number from context
             await github.rest.issues.createComment({
