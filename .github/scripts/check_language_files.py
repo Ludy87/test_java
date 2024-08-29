@@ -97,8 +97,6 @@ def check_difference_keys(reference_file, file_list, branch):
                         reference["value"] = current["value"]
             ref_json.append(reference)
         print(file_path)
-        print()
-        print(ref_json)
         write_json_file(branch + "/" + file_path, ref_json)
 
 
