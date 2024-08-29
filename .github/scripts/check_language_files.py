@@ -1,5 +1,104 @@
 import os
 import argparse
+import re
+
+
+def parse_properties_file(file_path):
+    """Parst eine .properties-Datei und gibt eine Liste von Objekten (mit Kommentaren, leeren Zeilen und Zeilennummern) zurück."""
+    properties_list = []
+    with open(file_path, "r", encoding="utf-8") as file:
+        for line_number, line in enumerate(file, start=1):
+            stripped_line = line.strip()
+
+            # Leere Zeilen
+            if not stripped_line:
+                properties_list.append(
+                    {"line": line_number, "type": "empty", "content": ""}
+                )
+                continue
+
+            # Kommentare
+            if stripped_line.startswith("#"):
+                properties_list.append(
+                    {"line": line_number, "type": "comment", "content": stripped_line}
+                )
+                continue
+
+            # Schlüssel-Wert-Paare
+            match = re.match(r"^([^=]+)=(.*)$", line)
+            if match:
+                key, value = match.groups()
+                properties_list.append(
+                    {
+                        "line": line_number,
+                        "type": "entry",
+                        "key": key.strip(),
+                        "value": value.strip(),
+                    }
+                )
+
+    return properties_list
+
+
+def write_json_file(file_path, updated_current_json):
+    updated_lines = {entry["line"]: entry for entry in updated_current_json}
+
+    # Sortiere nach Zeilennummern und behalte Kommentare und leere Zeilen bei
+    all_lines = sorted(set(updated_lines.keys()))
+
+    original_format = []
+    for line in all_lines:
+        if line in updated_lines:
+            entry = updated_lines[line]
+        else:
+            entry = None
+        ref_entry = updated_lines[line]
+        if ref_entry["type"] in ["comment", "empty"]:
+            original_format.append(ref_entry)
+        elif entry is None:
+            # Füge fehlende Einträge aus der Referenzdatei hinzu
+            original_format.append(ref_entry)
+        elif entry["type"] == "entry":
+            # Ersetze Einträge mit denen aus der aktuellen JSON
+            original_format.append(entry)
+
+    # Schreibe ins ursprüngliche Format zurück
+    with open(file_path, "w", encoding="utf-8") as f:
+        for entry in original_format:
+            if entry["type"] == "comment":
+                f.write(f"{entry['content']}\n")
+            elif entry["type"] == "empty":
+                f.write(f"{entry['content']}\n")
+            elif entry["type"] == "entry":
+                f.write(f"{entry['key']}={entry['value']}\n")
+
+
+def check_difference_keys(reference_file, file_list):
+
+    reference_json = parse_properties_file(reference_file)
+
+    for file_path in file_list:
+        basename_current_file = os.path.basename(file_path)
+        if (
+            file_path == reference_file
+            or not file_path.endswith(".properties")
+            or not basename_current_file.startswith("messages_")
+        ):
+            continue
+        print(file_path)
+
+        current_json = parse_properties_file(file_path)
+        ref_json = []
+        for reference in reference_json:
+            for current in current_json:
+                if current["type"] == "entry":
+                    if reference["type"] != "entry":
+                        continue
+                    if reference["key"] == current["key"]:
+                        reference["value"] = current["value"]
+            ref_json.append(reference)
+
+        write_json_file(file_path, ref_json)
 
 
 def read_properties(file_path):
@@ -113,3 +212,4 @@ if __name__ == "__main__":
 
     file_list = args.files
     check_difference(args.reference_file, file_list, args.branch)
+    check_difference_keys(args.reference_file, file_list)

@@ -96,3 +96,18 @@ jobs:
               issue_number: prNumber,
               body: `## Translation Verification Summary\n\n\n${ERROR_OUTPUT}\n`
             });
+
+      - name: Set up git config
+        run: |
+          git config --global user.email "GitHub Action <action@github.com>"
+          git config --global user.name "GitHub Action <action@github.com>"
+
+      - name: add translation keys
+        run: |
+          cd $GITHUB_WORKSPACE
+          git add src/main/resources/*
+          git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
+
+      - name: Push
+        if: env.CHANGES_DETECTED == 'true'
+        run: git push origin ${{ env.BRANCH_PATH }}
