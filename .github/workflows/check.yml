@@ -112,6 +112,8 @@ jobs:
           ls
           git add .
           git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
+          git commit -m "Update translation files" || echo "No changes to commit"
+          git push origin ${{ github.head_ref }}
 
       - name: Create Pull Request
         id: cpr
