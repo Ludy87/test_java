@@ -73,21 +73,21 @@ def write_json_file(file_path, updated_current_json):
                 f.write(f"{entry['key']}={entry['value']}\n")
 
 
-def check_difference_keys(reference_file, file_list):
+def check_difference_keys(reference_file, file_list, branch):
 
     reference_json = parse_properties_file(reference_file)
 
     for file_path in file_list:
-        basename_current_file = os.path.basename(file_path)
+        basename_current_file = os.path.basename(branch + "/" + file_path)
         if (
-            file_path == reference_file
+            branch + "/" + file_path == reference_file
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
             continue
         print(file_path)
 
-        current_json = parse_properties_file(file_path)
+        current_json = parse_properties_file(branch + "/" + file_path)
         ref_json = []
         for reference in reference_json:
             for current in current_json:
@@ -212,4 +212,4 @@ if __name__ == "__main__":
 
     file_list = args.files
     check_difference(args.reference_file, file_list, args.branch)
-    check_difference_keys(args.reference_file, file_list)
+    check_difference_keys(args.reference_file, file_list, args.branch)
