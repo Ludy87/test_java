@@ -105,7 +105,7 @@ jobs:
       - name: Add translation keys
         run: |
           cd pr-branch
-          git add src/main/resources/*
+          git add .
           git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
 
       - name: Push changes
