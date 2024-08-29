@@ -102,12 +102,15 @@ jobs:
           git config --global user.email "GitHub Action <action@github.com>"
           git config --global user.name "GitHub Action <action@github.com>"
 
-      - name: add translation keys
+      - name: Add translation keys
         run: |
-          cd $GITHUB_WORKSPACE
+          cd pr-branch
           git add src/main/resources/*
           git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
 
-      - name: Push
+      - name: Push changes
         if: env.CHANGES_DETECTED == 'true'
-        run: git push origin ${{ env.BRANCH_PATH }}
+        run: |
+          cd pr-branch
+          git commit -m "Update translation files" || echo "No changes to commit"
+          git push origin ${{ github.head_ref }}
