@@ -85,7 +85,6 @@ def check_difference_keys(reference_file, file_list, branch):
             or not basename_current_file.startswith("messages_")
         ):
             continue
-        print(file_path)
 
         current_json = parse_properties_file(branch + "/" + file_path)
         ref_json = []
@@ -100,7 +99,7 @@ def check_difference_keys(reference_file, file_list, branch):
         print(file_path)
         print()
         print(ref_json)
-        write_json_file(file_path, ref_json)
+        write_json_file(branch + "/" + file_path, ref_json)
 
 
 def read_properties(file_path):
