@@ -143,7 +143,9 @@ def check_difference(reference_file, file_list, branch):
                 report.append(
                     f"  - Too many lines! Check your translation files! {reference_list_len}:{current_list_len}"
                 )
+            report.append("")
             report.append(f"***{basename_current_file}*** wird korrigiert")
+            report.append("")
             check_difference_keys(reference_file, [file_path], branch)
         else:
             report.append("- ✅ Test 1 passed")
@@ -179,7 +181,9 @@ def check_difference(reference_file, file_list, branch):
                     report.append(
                         f"  - There are keys in ***{basename_reference_file}*** `{set_test2_list}` that are not present in ***{basename_current_file}***!"
                     )
+                report.append("")
                 report.append(f"***{basename_current_file}*** wird korrigiert")
+                report.append("")
                 check_difference_keys(reference_file, [file_path], branch)
             else:
                 report.append("- ✅ Test 2 passed")
