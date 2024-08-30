@@ -115,5 +115,5 @@ jobs:
       - name: Push
         if: env.CHANGES_DETECTED == 'true'
         run: |
-          # cd ${{ env.BRANCH_PATH }}
-          git push origin ${{ env.BRANCH_PATH }} || echo "Push failed: possibly no changes to push"
+          cd pr-branch
+          git push origin ${{ github.head_ref }} || echo "Push failed: possibly no changes to push"
