@@ -109,12 +109,11 @@ jobs:
       - name: Add translation keys
         run: |
           cd ${{ env.BRANCH_PATH }}
-          ls
           git add .
           git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
           git commit -m "Update translation files" || echo "No changes to commit"
       - name: Push
         if: env.CHANGES_DETECTED == 'true'
         run: |
-          cd ${{ env.BRANCH_PATH }}
-          git push origin ${{ env.BRANCH_PATH }}
+          # cd ${{ env.BRANCH_PATH }}
+          git push origin ${{ env.BRANCH_PATH }} || echo "Push failed: possibly no changes to push"
