@@ -143,6 +143,8 @@ def check_difference(reference_file, file_list, branch):
                 report.append(
                     f"  - Too many lines! Check your translation files! {reference_list_len}:{current_list_len}"
                 )
+            report.append(f"***{basename_current_file}*** wird korrigiert")
+            check_difference_keys(reference_file, [file_path], branch)
         else:
             report.append("- ✅ Test 1 passed")
         if 1 == 1:
