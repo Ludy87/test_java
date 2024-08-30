@@ -74,7 +74,6 @@ def write_json_file(file_path, updated_current_json):
 
 
 def check_difference_keys(reference_file, file_list, branch):
-
     reference_json = parse_properties_file(reference_file)
 
     for file_path in file_list:
@@ -178,6 +177,8 @@ def check_difference(reference_file, file_list, branch):
                     report.append(
                         f"  - There are keys in ***{basename_reference_file}*** `{set_test2_list}` that are not present in ***{basename_current_file}***!"
                     )
+                report.append(f"***{basename_current_file}*** wird korrigiert")
+                check_difference_keys(reference_file, [file_path], branch)
             else:
                 report.append("- ✅ Test 2 passed")
         report.append("")
@@ -215,4 +216,3 @@ if __name__ == "__main__":
 
     file_list = args.files
     check_difference(args.reference_file, file_list, args.branch)
-    check_difference_keys(args.reference_file, file_list, args.branch)
