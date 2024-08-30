@@ -1,11 +1,13 @@
 name: Check Properties Files in PR
 
 on:
-  workflow_dispatch:
   pull_request_target:
     types: [opened, synchronize, reopened]
     paths:
       - "src/main/resources/messages_*.properties"
+  push:
+    paths:
+      - "src/main/resources/messages_en_GB.properties"
 
 permissions:
   contents: write
@@ -13,10 +15,11 @@ permissions:
 
 jobs:
   check-files:
+    if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout PR branch
+        if: github.event_name == 'pull_request_target'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
@@ -24,6 +27,7 @@ jobs:
           fetch-depth: 0
 
       - name: Checkout main branch
+        if: github.event_name == 'pull_request_target'
         uses: actions/checkout@v4
         with:
           ref: main
@@ -31,14 +35,17 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Python
+        if: github.event_name == 'pull_request_target'
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
       - name: Install GitHub CLI
+        if: github.event_name == 'pull_request_target'
         run: sudo apt-get update && sudo apt-get install -y gh
 
       - name: Fetch PR changed files
+        if: github.event_name == 'pull_request_target'
         id: fetch-pr-changes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -56,10 +63,11 @@ jobs:
           echo "Branch: ${BRANCH_PATH}"
 
       - name: Determine reference file
+        if: github.event_name == 'pull_request_target'
         id: determine-file
         run: |
           echo "Determining reference file..."
-          if echo "${{ env.CHANGED_FILES }}"| grep -q 'src/main/resources/messages_en_GB.properties'; then
+          if echo "${{ env.CHANGED_FILES }}" | grep -q 'src/main/resources/messages_en_GB.properties'; then
               echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
               echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
@@ -67,19 +75,21 @@ jobs:
           echo "REFERENCE_FILE=${{ env.REFERENCE_FILE }}"
 
       - name: Show REFERENCE_FILE
+        if: github.event_name == 'pull_request_target'
         run: echo "Reference file is set to ${{ env.REFERENCE_FILE }}"
 
       - name: Run Python script to check files
+        if: github.event_name == 'pull_request_target'
         id: run-check
         run: |
           python main-branch/.github/scripts/check_language_files.py --reference-file ${{ env.REFERENCE_FILE }} --branch ${{ env.BRANCH_PATH }} --files ${{ env.CHANGED_FILES }} > failure.txt || true
 
       - name: Capture output
+        if: github.event_name == 'pull_request_target'
         id: capture-output
         run: |
           if [ -f failure.txt ] && [ -s failure.txt ]; then
             echo "Test failed, capturing output..."
-            # Use the cat command to avoid issues with special characters in environment variables
             ERROR_OUTPUT=$(cat failure.txt)
             echo "ERROR_OUTPUT<<EOF" >> $GITHUB_ENV
             echo "$ERROR_OUTPUT" >> $GITHUB_ENV
@@ -91,13 +101,13 @@ jobs:
           fi
 
       - name: Post comment on PR
-        if: env.ERROR_OUTPUT != ''
+        if: github.event_name == 'pull_request_target' && env.ERROR_OUTPUT != ''
         uses: actions/github-script@v7
         with:
           script: |
             const { GITHUB_REPOSITORY, ERROR_OUTPUT } = process.env;
             const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
-            const prNumber = context.issue.number; // Pull request number from context
+            const prNumber = context.issue.number;
             await github.rest.issues.createComment({
               owner: repoOwner,
               repo: repoName,
@@ -105,19 +115,54 @@ jobs:
               body: `## Translation Verification Summary\n\n\n${ERROR_OUTPUT}\n`
             });
 
+  update-translations-main:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        if: github.event_name == 'push'
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        if: github.event_name == 'push'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run Python script to check files
+        if: github.event_name == 'push'
+        id: run-check
+        run: |
+          python .github/scripts/check_language_files.py --reference-file src/main/resources/messages_en_GB.properties --branch main
+
       - name: Set up git config
+        if: github.event_name == 'push'
         run: |
           git config --global user.email "GitHub Action <action@github.com>"
           git config --global user.name "GitHub Action <action@github.com>"
 
       - name: Add translation keys
+        if: github.event_name == 'push'
         run: |
-          cd ${{ env.BRANCH_PATH }}
-          git add .
+          git add src/main/resources/messages_*.properties
           git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
-          git commit -m "Update translation files" || echo "No changes to commit"
-      - name: Push
-        if: env.CHANGES_DETECTED == 'true'
-        run: |
-          cd pr-branch
-          git push origin ${{ github.head_ref }} || echo "Push failed: possibly no changes to push"
+
+      - name: Create Pull Request
+        id: cpr
+        if: env.CHANGES_DETECTED == 'true' && github.event_name == 'push'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update translation files"
+          committer: GitHub Action <action@github.com>
+          author: GitHub Action <action@github.com>
+          signoff: true
+          branch: update-translation-files
+          title: "Update translation files"
+          body: |
+            Auto-generated by [create-pull-request][1]
+
+            [1]: https://github.com/peter-evans/create-pull-request
+          labels: Translation
+          draft: false
+          delete-branch: true
