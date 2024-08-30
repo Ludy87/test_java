@@ -96,7 +96,6 @@ def check_difference_keys(reference_file, file_list, branch):
                     if reference["key"] == current["key"]:
                         reference["value"] = current["value"]
             ref_json.append(reference)
-        print(file_path)
         write_json_file(branch + "/" + file_path, ref_json)
 
 
@@ -116,6 +115,8 @@ def check_difference(reference_file, file_list, branch):
     reference_list = read_properties(reference_file)
     is_diff = False
 
+    only_ref_file = True
+
     for file_path in file_list:
         basename_current_file = os.path.basename(branch + "/" + file_path)
         if (
@@ -125,6 +126,7 @@ def check_difference(reference_file, file_list, branch):
         ):
             # report.append(f"File '{basename_current_file}' is ignored.")
             continue
+        only_ref_file = False
         report.append(f"Checking the language file `{basename_current_file}`...")
         current_list = read_properties(branch + "/" + file_path)
         reference_list_len = len(reference_list)
@@ -185,7 +187,9 @@ def check_difference(reference_file, file_list, branch):
         report.append("## ❌ Check fail")
     else:
         report.append("## ✅ Check success")
-    print("\n".join(report))
+
+    if not only_ref_file:
+        print("\n".join(report))
 
 
 if __name__ == "__main__":
