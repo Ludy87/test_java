@@ -1,5 +1,103 @@
 import os
 import argparse
+import re
+
+
+def parse_properties_file(file_path):
+    """Parst eine .properties-Datei und gibt eine Liste von Objekten (mit Kommentaren, leeren Zeilen und Zeilennummern) zurück."""
+    properties_list = []
+    with open(file_path, "r", encoding="utf-8") as file:
+        for line_number, line in enumerate(file, start=1):
+            stripped_line = line.strip()
+
+            # Leere Zeilen
+            if not stripped_line:
+                properties_list.append(
+                    {"line": line_number, "type": "empty", "content": ""}
+                )
+                continue
+
+            # Kommentare
+            if stripped_line.startswith("#"):
+                properties_list.append(
+                    {"line": line_number, "type": "comment", "content": stripped_line}
+                )
+                continue
+
+            # Schlüssel-Wert-Paare
+            match = re.match(r"^([^=]+)=(.*)$", line)
+            if match:
+                key, value = match.groups()
+                properties_list.append(
+                    {
+                        "line": line_number,
+                        "type": "entry",
+                        "key": key.strip(),
+                        "value": value.strip(),
+                    }
+                )
+
+    return properties_list
+
+
+def write_json_file(file_path, updated_current_json):
+    updated_lines = {entry["line"]: entry for entry in updated_current_json}
+
+    # Sortiere nach Zeilennummern und behalte Kommentare und leere Zeilen bei
+    all_lines = sorted(set(updated_lines.keys()))
+
+    original_format = []
+    for line in all_lines:
+        if line in updated_lines:
+            entry = updated_lines[line]
+        else:
+            entry = None
+        ref_entry = updated_lines[line]
+        if ref_entry["type"] in ["comment", "empty"]:
+            original_format.append(ref_entry)
+        elif entry is None:
+            # Füge fehlende Einträge aus der Referenzdatei hinzu
+            original_format.append(ref_entry)
+        elif entry["type"] == "entry":
+            # Ersetze Einträge mit denen aus der aktuellen JSON
+            original_format.append(entry)
+
+    # Schreibe ins ursprüngliche Format zurück
+    with open(file_path, "w", encoding="utf-8") as f:
+        for entry in original_format:
+            if entry["type"] == "comment":
+                f.write(f"{entry['content']}\n")
+            elif entry["type"] == "empty":
+                f.write(f"{entry['content']}\n")
+            elif entry["type"] == "entry":
+                f.write(f"{entry['key']}={entry['value']}\n")
+
+
+def check_difference_keys(reference_file, file_list, branch):
+
+    reference_json = parse_properties_file(reference_file)
+
+    for file_path in file_list:
+        basename_current_file = os.path.basename(branch + "/" + file_path)
+        if (
+            branch + "/" + file_path == reference_file
+            or not file_path.endswith(".properties")
+            or not basename_current_file.startswith("messages_")
+        ):
+            continue
+
+        current_json = parse_properties_file(branch + "/" + file_path)
+        ref_json = []
+        for reference in reference_json:
+            for current in current_json:
+                if current["type"] == "entry":
+                    if reference["type"] != "entry":
+                        continue
+                    if reference["key"] == current["key"]:
+                        reference["value"] = current["value"]
+            ref_json.append(reference)
+        print(file_path)
+        write_json_file(branch + "/" + file_path, ref_json)
 
 
 def read_properties(file_path):
@@ -13,7 +111,7 @@ def check_difference(reference_file, file_list, branch):
 
     report = []
     report.append(
-        f"### Prüfung mit der Datei `{basename_reference_file}` aus dem `{reference_branch}` Branch - Überprüft wird der `{branch}` Branch"
+        f"#### Checking with the file `{basename_reference_file}` from the `{reference_branch}` - Checking the `{branch}`"
     )
     reference_list = read_properties(reference_file)
     is_diff = False
@@ -25,28 +123,28 @@ def check_difference(reference_file, file_list, branch):
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
-            # report.append(f"Datei '{basename_current_file}' wird ignoriert.")
+            # report.append(f"File '{basename_current_file}' is ignored.")
             continue
-        report.append(f"Überprüfung der Sprachdatei `{basename_current_file}`...")
+        report.append(f"Checking the language file `{basename_current_file}`...")
         current_list = read_properties(branch + "/" + file_path)
         reference_list_len = len(reference_list)
         current_list_len = len(current_list)
 
         if reference_list_len != current_list_len:
             report.append("")
-            report.append("- ❌ Test 1 nicht bestanden! Differenz in der Datei!")
+            report.append("- ❌ Test 1 failed! Difference in the file!")
             is_diff = True
             if reference_list_len > current_list_len:
                 report.append(
-                    f"  - Es fehlen Zeilen! Entweder fehlen Kommentare, leere Zeilen oder Übersetzungstrings! {reference_list_len}:{current_list_len}"
+                    f"  - Missing lines! Either comments, empty lines, or translation strings are missing! {reference_list_len}:{current_list_len}"
                 )
             elif reference_list_len < current_list_len:
                 report.append(
-                    f"  - Es gibt zuviele Zeilen! Überprüfen sie deine Übersetzungs Dateien! {reference_list_len}:{current_list_len}"
+                    f"  - Too many lines! Check your translation files! {reference_list_len}:{current_list_len}"
                 )
         else:
-            report.append("- ✅ Test 1 bestanden")
-
+            report.append("- ✅ Test 1 passed")
+        if 1 == 1:
             current_keys = []
             reference_keys = []
             for item in current_list:
@@ -69,48 +167,48 @@ def check_difference(reference_file, file_list, branch):
                 is_diff = True
                 set_test1_list = "`, `".join(set_test1_list)
                 set_test2_list = "`, `".join(set_test2_list)
-                report.append("- ❌ Test 2 nicht bestanden")
+                report.append("- ❌ Test 2 failed")
                 if len(set_test1_list) > 0:
                     report.append(
-                        f"  - Es gibt keys in ***{basename_current_file}*** `{set_test1_list}` die in ***{basename_reference_file}*** nicht vorhanden sind!"
+                        f"  - There are keys in ***{basename_current_file}*** `{set_test1_list}` that are not present in ***{basename_reference_file}***!"
                     )
                 if len(set_test2_list) > 0:
                     report.append(
-                        f"  - Es gibt keys in ***{basename_reference_file}*** `{set_test2_list}` die in ***{basename_current_file}*** nicht vorhanden sind!"
+                        f"  - There are keys in ***{basename_reference_file}*** `{set_test2_list}` that are not present in ***{basename_current_file}***!"
                     )
             else:
-                report.append("- ✅ Test 2 bestanden")
+                report.append("- ✅ Test 2 passed")
         report.append("")
 
+    report.append("")
     if is_diff:
-        report.append("")
-        report.append("#### ❌ Check fail")
-        print("\n".join(report))
-        # exit(1)
+        report.append("## ❌ Check fail")
     else:
-        print("Check success")
+        report.append("## ✅ Check success")
+    print("\n".join(report))
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Find missing Keys")
+    parser = argparse.ArgumentParser(description="Find missing keys")
     parser.add_argument(
         "--reference-file",
         required=True,
-        help="Pfad zur Referenzdatei.",
+        help="Path to the reference file.",
     )
     parser.add_argument(
         "--branch",
         type=str,
         required=True,
-        help="Branch Name.",
+        help="Branch name.",
     )
     parser.add_argument(
         "--files",
         nargs="+",
         required=True,
-        help="Liste der geänderten Dateien, durch Leerzeichen getrennt.",
+        help="List of changed files, separated by spaces.",
     )
     args = parser.parse_args()
 
     file_list = args.files
     check_difference(args.reference_file, file_list, args.branch)
+    check_difference_keys(args.reference_file, file_list, args.branch)
