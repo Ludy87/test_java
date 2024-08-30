@@ -65,6 +65,7 @@ def write_json_file(file_path, updated_current_json):
 
     # Schreibe ins ursprüngliche Format zurück
     with open(file_path, "w", encoding="utf-8") as f:
+        print("schreibe")
         for entry in original_format:
             if entry["type"] == "comment":
                 f.write(f"{entry['content']}\n")
@@ -74,19 +75,18 @@ def write_json_file(file_path, updated_current_json):
                 f.write(f"{entry['key']}={entry['value']}\n")
 
 
-def push_difference_keys(reference_file, file_list, branch=""):
+def push_difference_keys(reference_file, file_list):
     reference_json = parse_properties_file(reference_file)
-
     for file_path in file_list:
-        basename_current_file = os.path.basename(branch + file_path)
+        basename_current_file = os.path.basename(file_path)
         if (
-            branch + file_path == reference_file
+            file_path == reference_file
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
             continue
 
-        current_json = parse_properties_file(branch + file_path)
+        current_json = parse_properties_file(file_path)
         ref_json = []
         for reference in reference_json:
             for current in current_json:
@@ -96,33 +96,33 @@ def push_difference_keys(reference_file, file_list, branch=""):
                     if reference["key"] == current["key"]:
                         reference["value"] = current["value"]
             ref_json.append(reference)
-        write_json_file(branch + file_path, ref_json)
+        write_json_file(file_path, ref_json)
 
 
 def check_difference_keys(reference_file, file_list, branch):
-    push_difference_keys(reference_file, file_list, branch + "/")
-    # reference_json = parse_properties_file(reference_file)
+    # push_difference_keys(reference_file, file_list, branch + "/")
+    reference_json = parse_properties_file(reference_file)
 
-    # for file_path in file_list:
-    #     basename_current_file = os.path.basename(branch + "/" + file_path)
-    #     if (
-    #         branch + "/" + file_path == reference_file
-    #         or not file_path.endswith(".properties")
-    #         or not basename_current_file.startswith("messages_")
-    #     ):
-    #         continue
+    for file_path in file_list:
+        basename_current_file = os.path.basename(branch + "/" + file_path)
+        if (
+            branch + "/" + file_path == reference_file
+            or not file_path.endswith(".properties")
+            or not basename_current_file.startswith("messages_")
+        ):
+            continue
 
-    #     current_json = parse_properties_file(branch + "/" + file_path)
-    #     ref_json = []
-    #     for reference in reference_json:
-    #         for current in current_json:
-    #             if current["type"] == "entry":
-    #                 if reference["type"] != "entry":
-    #                     continue
-    #                 if reference["key"] == current["key"]:
-    #                     reference["value"] = current["value"]
-    #         ref_json.append(reference)
-    #     write_json_file(branch + "/" + file_path, ref_json)
+        current_json = parse_properties_file(branch + "/" + file_path)
+        ref_json = []
+        for reference in reference_json:
+            for current in current_json:
+                if current["type"] == "entry":
+                    if reference["type"] != "entry":
+                        continue
+                    if reference["key"] == current["key"]:
+                        reference["value"] = current["value"]
+            ref_json.append(reference)
+        write_json_file(branch + "/" + file_path, ref_json)
 
 
 def read_properties(file_path):
@@ -248,7 +248,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     file_list = args.files
-    print(file_list)
     if file_list is None:
         file_list = glob.glob(
             os.getcwd() + "/src/**/messages_*.properties", recursive=True

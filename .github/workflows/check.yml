@@ -1,4 +1,4 @@
-name: Check Properties Files in PR
+name: Check Properties Files
 
 on:
   pull_request_target:
