@@ -65,6 +65,7 @@ def write_json_file(file_path, updated_current_json):
 
     # Schreibe ins ursprüngliche Format zurück
     with open(file_path, "w", encoding="utf-8") as f:
+        print("schreibe")
         for entry in original_format:
             if entry["type"] == "comment":
                 f.write(f"{entry['content']}\n")
@@ -76,7 +77,6 @@ def write_json_file(file_path, updated_current_json):
 
 def push_difference_keys(reference_file, file_list, branch=""):
     reference_json = parse_properties_file(reference_file)
-
     for file_path in file_list:
         basename_current_file = os.path.basename(branch + file_path)
         if (
@@ -96,6 +96,11 @@ def push_difference_keys(reference_file, file_list, branch=""):
                     if reference["key"] == current["key"]:
                         reference["value"] = current["value"]
             ref_json.append(reference)
+        print(f"BRANCH {branch}")
+        print(f"reference_file {reference_file}")
+        print(f"basename_current_file {basename_current_file}")
+        print(f"file_path {file_path}")
+        print(f"branch + file_path {branch + file_path}")
         write_json_file(branch + file_path, ref_json)
 
 
@@ -248,7 +253,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     file_list = args.files
-    print(file_list)
     if file_list is None:
         file_list = glob.glob(
             os.getcwd() + "/src/**/messages_*.properties", recursive=True
