@@ -136,23 +136,23 @@ jobs:
               console.log("Comment update attempt denied. Actor does not match.");
             }
 
-      - name: Set up git config
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      # - name: Set up git config
+      #   run: |
+      #     git config --global user.name "github-actions[bot]"
+      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Add translation keys
-        run: |
-          cd ${{ env.BRANCH_PATH }}
-          git add src/main/resources/messages_*.properties
-          git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
-          git commit -m "Update translation files" || echo "No changes to commit"
-      - name: Push
-        if: env.CHANGES_DETECTED == 'true'
-        run: |
-          cd pr-branch
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}.git
-          git push origin ${{ github.head_ref }} || echo "Push failed: possibly no changes to push"
+      # - name: Add translation keys
+      #   run: |
+      #     cd ${{ env.BRANCH_PATH }}
+      #     git add src/main/resources/messages_*.properties
+      #     git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
+      #     git commit -m "Update translation files" || echo "No changes to commit"
+      # - name: Push
+      #   if: env.CHANGES_DETECTED == 'true'
+      #   run: |
+      #     cd pr-branch
+      #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}.git
+      #     git push origin ${{ github.head_ref }} || echo "Push failed: possibly no changes to push"
 
   update-translations-main:
     if: github.event_name == 'push'
