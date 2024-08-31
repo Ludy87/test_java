@@ -151,7 +151,7 @@ jobs:
         if: env.CHANGES_DETECTED == 'true'
         run: |
           cd pr-branch
-          git push origin ${{ github.head_ref }} || echo "Push failed: possibly no changes to push"
+          git push origin ${{ github.event.pull_request.head.repo.full_name }} || echo "Push failed: possibly no changes to push"
 
   update-translations-main:
     if: github.event_name == 'push'
