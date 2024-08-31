@@ -21,7 +21,6 @@ jobs:
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
           path: pr-branch
@@ -49,6 +48,7 @@ jobs:
         run: |
           echo "Fetching PR changed files..."
           cd pr-branch
+          gh repo set-default ${{ github.repository }}
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > ../changed_files.txt
           cd ..
           echo $(cat changed_files.txt)
