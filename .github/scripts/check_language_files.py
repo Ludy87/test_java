@@ -204,14 +204,14 @@ def check_for_differences(reference_file, file_list, branch):
             # update_missing_keys(reference_file, [file_path], branch + "/")
         else:
             report.append("- **Test 2 Status:** ✅ Passed")
-        if has_differences:
-            report.append("")
-            report.append(f"#### 🚧 ***{basename_current_file}*** will be corrected...")
-            report.append("")
+        # if has_differences:
+        #     report.append("")
+        #     report.append(f"#### 🚧 ***{basename_current_file}*** will be corrected...")
+        report.append("")
         report.append("---")
         report.append("")
-    update_file_list = glob.glob(branch + "/src/**/messages_*.properties", recursive=True)
-    update_missing_keys(reference_file, update_file_list)
+    # update_file_list = glob.glob(branch + "/src/**/messages_*.properties", recursive=True)
+    # update_missing_keys(reference_file, update_file_list)
     # report.append("---")
     # report.append("")
     if has_differences:
