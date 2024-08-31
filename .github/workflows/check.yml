@@ -47,8 +47,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetching PR changed files..."
-          gh repo set-default ${{ github.repository }}
           cd pr-branch
+          gh repo set-default ${{ github.repository }}
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > ../changed_files.txt
           cd ..
           echo $(cat changed_files.txt)
