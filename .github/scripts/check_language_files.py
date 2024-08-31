@@ -130,7 +130,7 @@ def check_for_differences(reference_file, file_list, branch):
 
     report = []
     report.append(
-        f"#### Checking with the file `{basename_reference_file}` from the `{reference_branch}` - Checking the `{branch}`"
+        f"#### 📋 Checking with the file `{basename_reference_file}` from the `{reference_branch}` - Checking the `{branch}`"
     )
     reference_lines = read_properties(reference_file)
     has_differences = False
@@ -146,29 +146,29 @@ def check_for_differences(reference_file, file_list, branch):
         ):
             continue
         only_reference_file = False
-        report.append(f"Checking the language file `{basename_current_file}`...")
+        report.append(f"🗂️ Checking File: `{basename_current_file}`...")
         current_lines = read_properties(branch + "/" + file_path)
         reference_line_count = len(reference_lines)
         current_line_count = len(current_lines)
 
         if reference_line_count != current_line_count:
             report.append("")
-            report.append("- ❌ Test 1 failed! Difference in the file!")
+            report.append("- Test 1 Status: ❌ Failed")
             has_differences = True
             if reference_line_count > current_line_count:
                 report.append(
-                    f"  - Missing lines! Either comments, empty lines, or translation strings are missing! {reference_line_count}:{current_line_count}"
+                    f"  - **Issue:** Missing lines! Comments, empty lines, or translation strings are missing. Details: {reference_line_count} (reference) vs {current_line_count} (current)."
                 )
             elif reference_line_count < current_line_count:
                 report.append(
-                    f"  - Too many lines! Check your translation files! {reference_line_count}:{current_line_count}"
+                    f"  - **Issue:** Too many lines! Check your translation files! Details: {reference_line_count} (reference) vs {current_line_count} (current)."
                 )
             report.append("")
-            report.append(f"#### ***{basename_current_file}*** will be corrected...")
+            report.append(f"#### 🚧 ***{basename_current_file}*** will be corrected...")
             report.append("")
             update_missing_keys(reference_file, [file_path], branch + "/")
         else:
-            report.append("- ✅ Test 1 passed")
+            report.append("- Test 1 Status: ✅ Passed")
 
         # Check for missing or extra keys
         current_keys = []
@@ -193,28 +193,28 @@ def check_for_differences(reference_file, file_list, branch):
             has_differences = True
             missing_keys_str = "`, `".join(missing_keys_list)
             extra_keys_str = "`, `".join(extra_keys_list)
-            report.append("- ❌ Test 2 failed")
+            report.append("- Test 2 Status: ❌ Failed")
             if missing_keys_list:
                 report.append(
-                    f"  - There are keys in ***{basename_current_file}*** `{missing_keys_str}` that are not present in ***{basename_reference_file}***!"
+                    f"  - **Issue:** There are keys in ***{basename_current_file}*** `{missing_keys_str}` that are not present in ***{basename_reference_file}***!"
                 )
             if extra_keys_list:
                 report.append(
-                    f"  - There are keys in ***{basename_reference_file}*** `{extra_keys_str}` that are not present in ***{basename_current_file}***!"
+                    f"  - **Issue:** There are keys in ***{basename_reference_file}*** `{extra_keys_str}` that are not present in ***{basename_current_file}***!"
                 )
             report.append("")
-            report.append(f"#### ***{basename_current_file}*** will be corrected...")
+            report.append(f"#### 🚧 ***{basename_current_file}*** will be corrected...")
             report.append("")
             update_missing_keys(reference_file, [file_path], branch + "/")
         else:
-            report.append("- ✅ Test 2 passed")
+            report.append("- Test 2 Status: ✅ Passed")
         report.append("")
 
     report.append("")
     if has_differences:
-        report.append("## ❌ Check fail")
+        report.append("## ❌ Overall Check Status: Failed")
     else:
-        report.append("## ✅ Check success")
+        report.append("## ✅ Overall Check Status: Success")
 
     if not only_reference_file:
         print("\n".join(report))
