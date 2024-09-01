@@ -2,12 +2,7 @@ package stirling.software.SPDF.controller.web;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +22,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import stirling.software.SPDF.config.security.session.SessionPersistentRegistry;
-import stirling.software.SPDF.model.ApplicationProperties;
+import stirling.software.SPDF.model.*;
 import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2;
 import stirling.software.SPDF.model.ApplicationProperties.Security.OAUTH2.Client;
-import stirling.software.SPDF.model.Authority;
-import stirling.software.SPDF.model.Role;
-import stirling.software.SPDF.model.SessionEntity;
-import stirling.software.SPDF.model.User;
 import stirling.software.SPDF.model.provider.GithubProvider;
 import stirling.software.SPDF.model.provider.GoogleProvider;
 import stirling.software.SPDF.model.provider.KeycloakProvider;
@@ -361,7 +352,7 @@ public class AccountWebController {
             if (username != null) {
                 // Fetch user details from the database
                 Optional<User> user =
-                        userRepository.findByUsernameIgnoreCase(
+                        userRepository.findByUsernameIgnoreCaseWithSettings(
                                 username); // Assuming findByUsername method exists
                 if (!user.isPresent()) {
                     return "redirect:/error";

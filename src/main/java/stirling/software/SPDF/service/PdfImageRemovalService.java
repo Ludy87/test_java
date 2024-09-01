@@ -1,6 +1,8 @@
 package stirling.software.SPDF.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -27,13 +29,21 @@ public class PdfImageRemovalService {
         // Iterate over each page in the PDF document
         for (PDPage page : document.getPages()) {
             PDResources resources = page.getResources();
+            // Collect the XObject names to remove
+            List<COSName> namesToRemove = new ArrayList<>();
+
             // Iterate over all XObject names in the page's resources
             for (COSName name : resources.getXObjectNames()) {
                 // Check if the XObject is an image
                 if (resources.isImageXObject(name)) {
-                    // Remove the image XObject by setting it to null
-                    resources.put(name, (PDXObject) null);
+                    // Collect the name for removal
+                    namesToRemove.add(name);
                 }
+            }
+
+            // Now, modify the resources by removing the collected names
+            for (COSName name : namesToRemove) {
+                resources.put(name, (PDXObject) null);
             }
         }
         return document;

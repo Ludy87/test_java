@@ -1,11 +1,7 @@
 package stirling.software.SPDF.config.security;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +61,8 @@ public class UserService implements UserServiceInterface {
     }
 
     public Authentication getAuthentication(String apiKey) {
-        User user = getUserByApiKey(apiKey);
-        if (user == null) {
+        Optional<User> user = getUserByApiKey(apiKey);
+        if (!user.isPresent()) {
             throw new UsernameNotFoundException("API key is not valid");
         }
 
@@ -74,7 +70,7 @@ public class UserService implements UserServiceInterface {
         return new UsernamePasswordAuthenticationToken(
                 user, // principal (typically the user)
                 null, // credentials (we don't expose the password or API key here)
-                getAuthorities(user) // user's authorities (roles/permissions)
+                getAuthorities(user.get()) // user's authorities (roles/permissions)
                 );
     }
 
@@ -89,17 +85,17 @@ public class UserService implements UserServiceInterface {
         String apiKey;
         do {
             apiKey = UUID.randomUUID().toString();
-        } while (userRepository.findByApiKey(apiKey) != null); // Ensure uniqueness
+        } while (userRepository.findByApiKey(apiKey).isPresent()); // Ensure uniqueness
         return apiKey;
     }
 
     public User addApiKeyToUser(String username) {
-        User user =
-                findByUsernameIgnoreCase(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        user.setApiKey(generateApiKey());
-        return userRepository.save(user);
+        Optional<User> user = findByUsernameIgnoreCase(username);
+        if (user.isPresent()) {
+            user.get().setApiKey(generateApiKey());
+            return userRepository.save(user.get());
+        }
+        throw new UsernameNotFoundException("User not found");
     }
 
     public User refreshApiKeyForUser(String username) {
@@ -114,21 +110,18 @@ public class UserService implements UserServiceInterface {
     }
 
     public boolean isValidApiKey(String apiKey) {
-        return userRepository.findByApiKey(apiKey) != null;
+        return userRepository.findByApiKey(apiKey).isPresent();
     }
 
-    public User getUserByApiKey(String apiKey) {
+    public Optional<User> getUserByApiKey(String apiKey) {
         return userRepository.findByApiKey(apiKey);
     }
 
-    public UserDetails loadUserByApiKey(String apiKey) {
-        User user = userRepository.findByApiKey(apiKey);
-        if (user != null) {
-            // Convert your User entity to a UserDetails object with authorities
-            return new org.springframework.security.core.userdetails.User(
-                    user.getUsername(),
-                    user.getPassword(), // you might not need this for API key auth
-                    getAuthorities(user));
+    public Optional<User> loadUserByApiKey(String apiKey) {
+        Optional<User> user = userRepository.findByApiKey(apiKey);
+
+        if (user.isPresent()) {
+            return user;
         }
         return null; // or throw an exception
     }
@@ -224,7 +217,7 @@ public class UserService implements UserServiceInterface {
 
     public void updateUserSettings(String username, Map<String, String> updates)
             throws IOException {
-        Optional<User> userOpt = findByUsernameIgnoreCase(username);
+        Optional<User> userOpt = findByUsernameIgnoreCaseWithSettings(username);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             Map<String, String> settingsMap = user.getSettings();
@@ -247,6 +240,10 @@ public class UserService implements UserServiceInterface {
 
     public Optional<User> findByUsernameIgnoreCase(String username) {
         return userRepository.findByUsernameIgnoreCase(username);
+    }
+
+    public Optional<User> findByUsernameIgnoreCaseWithSettings(String username) {
+        return userRepository.findByUsernameIgnoreCaseWithSettings(username);
     }
 
     public Authority findRole(User user) {

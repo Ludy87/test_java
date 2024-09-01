@@ -6,15 +6,43 @@
 
   <body>
     <div id="page-container">
-      <div id="content-wrap">
-        <th:block th:insert="~{fragments/navbar.html :: navbar}"></th:block>
-        <br><br>
+      <header>
+      <th:block th:insert="~{fragments/navbar :: navbar}"></th:block>
+      </header>
+      <main id="content-wrap">
         <div class="container">
           <div class="row justify-content-center">
-            <div class="col-md-6 bg-card"></div>
+            <div class="col-md-6 bg-card">
+              <!-- About Section -->
+              <section id="about">
+                <h2>About Stirling-PDF</h2>
+                <p>
+                  <strong>Stirling-PDF</strong> is a powerful, locally hosted web application designed to provide comprehensive PDF manipulation capabilities. This open-source tool, built on Java and Docker, allows users to perform a wide range of operations on PDF files, including merging, splitting, converting, compressing, reorganizing, and more—all within the privacy and security of their own server environment.
+                </p>
+                <p>
+                  <strong>Key Features:</strong><br>
+                  - Complete PDF Management: Stirling-PDF supports various PDF operations such as page reordering, rotation, removal, and merging. It also offers advanced features like OCR (Optical Character Recognition) for text extraction and PDF/A conversion for long-term archiving.<br>
+                  - Conversion Capabilities: Convert PDFs to and from various formats, including images, Word, PowerPoint, and HTML. The tool also supports conversion from URLs and Markdown files to PDFs.<br>
+                  - Security and Permissions: Add or remove passwords, set permissions, and apply digital signatures. Stirling-PDF also includes features like watermarking, redaction, and sanitization to ensure your documents meet security and privacy standards.<br>
+                  - Customization: The application is highly customizable, allowing users to modify the app’s appearance, functionality, and settings through a simple configuration file or environment variables.<br>
+                  - API Integration: Stirling-PDF offers an API for integration with external scripts, making it ideal for automated workflows and large-scale PDF processing tasks.
+                </p>
+                <p>
+                  <strong>Why Stirling-PDF?</strong><br>
+                  Stirling-PDF stands out because it operates entirely on your local environment, ensuring that your data never leaves your control. Unlike many cloud-based PDF tools, Stirling-PDF processes files locally, providing enhanced privacy and security for sensitive documents.
+                </p>
+                <p>
+                  With support for over 38 languages, a rich set of features, and an active development community, Stirling-PDF is the go-to solution for all your PDF needs, whether for personal use or in a professional environment.
+                </p>
+                <p>
+                  Explore more about Stirling-PDF on <a href="https://github.com/Stirling-Tools/Stirling-PDF" target="_blank">GitHub</a>, where you can find installation instructions, detailed documentation, and contribute to its ongoing development.
+                </p>
+              </section>
+              <!-- End About Section -->
+            </div>
           </div>
         </div>
-      </div>
+      </main>
       <th:block th:insert="~{fragments/footer.html :: footer}"></th:block>
     </div>
   </body>
