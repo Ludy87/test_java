@@ -59,4 +59,7 @@ ignore = [
 - New translation tags **must be added** to the `messages_en_GB.properties` file to maintain a reference for other languages.
 - After adding the new tags to `messages_en_GB.properties`, add and translate them in the respective language file (e.g., `messages_pl_PL.properties`).
 
+> [!CAUTION]
+> Ensure strict adherence to the formatting of all translation tags and entries. Incorrect formatting will cause the translation tool to fail the test and mark it as erroneous. Consistent formatting is essential to prevent errors during compilation or runtime.
+
 Make sure to place the entry under the correct language section. This helps maintain the accuracy of translation progress statistics and ensures that the translation tool or scripts do not misinterpret the completion rate.
