@@ -166,9 +166,6 @@ def check_for_differences(reference_file, file_list, branch, actor):
                 report.append(
                     f"  - **Issue:** Too many lines! Check your translation files! Details: {reference_line_count} (reference) vs {current_line_count} (current)."
                 )
-                report.append(
-                    f"@{actor} please check your translation if it conforms to the standard. Follow the format of [messages_en_GB.properties](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/src/main/resources/messages_en_GB.properties)"
-                )
             # update_missing_keys(reference_file, [file_path], branch + "/")
         else:
             report.append("- **Test 1 Status:** ✅ Passed")
@@ -220,6 +217,9 @@ def check_for_differences(reference_file, file_list, branch, actor):
     # report.append("")
     if has_differences:
         report.append("## ❌ Overall Check Status: **_Failed_**")
+        report.append(
+            f"@{actor} please check your translation if it conforms to the standard. Follow the format of [messages_en_GB.properties](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/src/main/resources/messages_en_GB.properties)"
+        )
     else:
         report.append("## ✅ Overall Check Status: **_Success_**")
 
