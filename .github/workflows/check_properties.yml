@@ -202,7 +202,7 @@ jobs:
       - name: Create Pull Request
         id: cpr
         if: env.CHANGES_DETECTED == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Update translation files"
@@ -218,3 +218,4 @@ jobs:
           labels: Translation
           draft: false
           delete-branch: true
+          sign-commits: true
