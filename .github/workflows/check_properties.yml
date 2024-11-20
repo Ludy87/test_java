@@ -87,7 +87,7 @@ jobs:
         run: |
           echo "Running Python script to check files..."
           python main-branch/.github/scripts/check_language_properties.py \
-            --actor ${{ github.event.pull_request.user.login }}
+            --actor ${{ github.event.pull_request.user.login }} \
             --reference-file "${REFERENCE_FILE}" \
             --branch "${BRANCH_PATH}" \
             --files ${CHANGED_FILES} > failure.txt || true
@@ -185,6 +185,7 @@ jobs:
         run: |
           echo "Running Python script to check files..."
           python .github/scripts/check_language_properties.py \
+            --actor ${{ github.event.pull_request.user.login }} \
             --reference-file src/main/resources/messages_en_GB.properties \
             --branch main
 
