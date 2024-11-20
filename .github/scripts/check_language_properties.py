@@ -127,7 +127,7 @@ def read_properties(file_path):
         return file.read().splitlines()
 
 
-def check_for_differences(reference_file, file_list, branch):
+def check_for_differences(reference_file, file_list, branch, actor):
     reference_branch = reference_file.split("/")[0]
     basename_reference_file = os.path.basename(reference_file)
 
@@ -165,6 +165,9 @@ def check_for_differences(reference_file, file_list, branch):
             elif reference_line_count < current_line_count:
                 report.append(
                     f"  - **Issue:** Too many lines! Check your translation files! Details: {reference_line_count} (reference) vs {current_line_count} (current)."
+                )
+                report.append(
+                    f"@{actor} please check your translation if it conforms to the standard. Follow the format of [messages_en_GB.properties](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/src/main/resources/messages_en_GB.properties)"
                 )
             # update_missing_keys(reference_file, [file_path], branch + "/")
         else:
@@ -227,6 +230,11 @@ def check_for_differences(reference_file, file_list, branch):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Find missing keys")
     parser.add_argument(
+        "--actor",
+        required=False,
+        help="Actor from PR.",
+    )
+    parser.add_argument(
         "--reference-file",
         required=True,
         help="Path to the reference file.",
@@ -252,4 +260,4 @@ if __name__ == "__main__":
         )
         update_missing_keys(args.reference_file, file_list)
     else:
-        check_for_differences(args.reference_file, file_list, args.branch)
+        check_for_differences(args.reference_file, file_list, args.branch, args.actor)
