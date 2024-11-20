@@ -218,7 +218,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
     if has_differences:
         report.append("## ❌ Overall Check Status: **_Failed_**")
         report.append(
-            f"@{actor} please check your translation if it conforms to the standard. Follow the format of [messages_en_GB.properties](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/src/main/resources/messages_en_GB.properties)"
+            f"@{actor} please check your translation if it conforms to [the standard](HowToAddNewLanguage.md). Follow the format of [messages_en_GB.properties](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/src/main/resources/messages_en_GB.properties)"
         )
     else:
         report.append("## ✅ Overall Check Status: **_Success_**")
