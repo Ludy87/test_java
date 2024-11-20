@@ -9,7 +9,6 @@ on:
     paths:
       - "src/main/resources/messages_en_GB.properties"
 
-# Permissions required for the workflow
 permissions:
   contents: write
   pull-requests: write
@@ -19,19 +18,18 @@ jobs:
     if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main branch first
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          path: pr-branch
+          fetch-depth: 0
+
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           ref: main
           path: main-branch
-          fetch-depth: 0
-
-      - name: Checkout PR branch
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
-          path: pr-branch
           fetch-depth: 0
 
       - name: Set up Python
@@ -49,52 +47,38 @@ jobs:
         run: |
           echo "Fetching PR changed files..."
           cd pr-branch
-          gh repo set-default ${{ github.repository }}
-          # Store files in a safe way, only allowing valid properties files
-          echo "Getting list of changed files from PR..."
-          gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > ../changed_files.txt
+          gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > ../changed_files.txt
           cd ..
-          echo "Setting branch path..."
+          echo $(cat changed_files.txt)
           BRANCH_PATH="pr-branch"
-
           echo "BRANCH_PATH=${BRANCH_PATH}" >> $GITHUB_ENV
-          echo "Processing changed files..."
-          mapfile -t CHANGED_FILES < changed_files.txt
-
-          CHANGED_FILES_STR="${CHANGED_FILES[*]}"
-          echo "CHANGED_FILES=${CHANGED_FILES_STR}" >> $GITHUB_ENV
-
-          echo "Changed files: ${CHANGED_FILES_STR}"
+          CHANGED_FILES=$(cat changed_files.txt | tr '\n' ' ')
+          echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
+          echo "Changed files: ${CHANGED_FILES}"
           echo "Branch: ${BRANCH_PATH}"
 
       - name: Determine reference file
         id: determine-file
         run: |
           echo "Determining reference file..."
-          if grep -Fxq "src/main/resources/messages_en_GB.properties" changed_files.txt; then
-              echo "Using PR branch reference file"
+          if echo "${{ env.CHANGED_FILES }}" | grep -q 'src/main/resources/messages_en_GB.properties'; then
               echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
-              echo "Using main branch reference file"
               echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           fi
+          echo "REFERENCE_FILE=${{ env.REFERENCE_FILE }}"
 
       - name: Show REFERENCE_FILE
-        run: echo "Reference file is set to ${REFERENCE_FILE}"
+        run: echo "Reference file is set to ${{ env.REFERENCE_FILE }}"
 
       - name: Run Python script to check files
         id: run-check
         run: |
-          echo "Running Python script to check files..."
           python main-branch/.github/scripts/check_language_properties.py \
             --actor ${{ github.event.pull_request.user.login }} \
-            --reference-file "${REFERENCE_FILE}" \
-            --branch "${BRANCH_PATH}" \
-            --files ${CHANGED_FILES} > failure.txt || true
-
-      - name: cat
-        shell: bash
-        run: cat failure.txt
+            --reference-file ${{ env.REFERENCE_FILE }} \
+            --branch ${{ env.BRANCH_PATH }} \
+            --files ${{ env.CHANGED_FILES }} > failure.txt || true
 
       - name: Capture output
         id: capture-output
@@ -105,7 +89,7 @@ jobs:
             echo "ERROR_OUTPUT<<EOF" >> $GITHUB_ENV
             echo "$ERROR_OUTPUT" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
-            echo "${ERROR_OUTPUT}"
+            echo $ERROR_OUTPUT
           else
             echo "No errors found."
             echo "ERROR_OUTPUT=" >> $GITHUB_ENV
@@ -154,23 +138,22 @@ jobs:
               console.log("Comment update attempt denied. Actor does not match.");
             }
 
-      # - name: Set up git config
-      #   run: |
-      #     git config --global user.name "github-actions[bot]"
-      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Set up git config
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # - name: Add translation keys
-      #   run: |
-      #     cd ${{ env.BRANCH_PATH }}
-      #     git add src/main/resources/messages_*.properties
-      #     git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
-      #     git commit -m "Update translation files" || echo "No changes to commit"
-      # - name: Push
-      #   if: env.CHANGES_DETECTED == 'true'
-      #   run: |
-      #     cd pr-branch
-      #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}.git
-      #     git push origin ${{ github.head_ref }} || echo "Push failed: possibly no changes to push"
+      - name: Add translation keys
+        run: |
+          cd ${{ env.BRANCH_PATH }}
+          git add src/main/resources/messages_*.properties
+          git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
+          git commit -m "Update translation files" || echo "No changes to commit"
+      - name: Push
+        if: env.CHANGES_DETECTED == 'true'
+        run: |
+          cd pr-branch
+          git push origin ${{ github.head_ref }} || echo "Push failed: possibly no changes to push"
 
   update-translations-main:
     if: github.event_name == 'push'
@@ -187,7 +170,6 @@ jobs:
       - name: Run Python script to check files
         id: run-check
         run: |
-          echo "Running Python script to check files..."
           python .github/scripts/check_language_properties.py \
             --actor ${{ github.event.pull_request.user.login }} \
             --reference-file src/main/resources/messages_en_GB.properties \
