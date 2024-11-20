@@ -92,6 +92,8 @@ jobs:
             --branch "${BRANCH_PATH}" \
             --files ${CHANGED_FILES} > failure.txt || true
 
+      - run: cat failure.txt
+
       - name: Capture output
         id: capture-output
         run: |
