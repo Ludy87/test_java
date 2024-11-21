@@ -1,22 +1,22 @@
 name: Check Properties Files Str
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened]
     paths:
       - "src/main/resources/messages_*.properties"
   push:
+    branches: ["main"]
     paths:
       - "src/main/resources/messages_en_GB.properties"
 
-# Permissions required for the workflow
-permissions:
-  contents: read
-  pull-requests: write
-
 jobs:
   check-files:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request_target'
+    # Permissions required for the workflow
+    permissions:
+      contents: read
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main branch first
@@ -152,6 +152,8 @@ jobs:
 
   update-translations-main:
     if: github.event_name == 'push'
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
