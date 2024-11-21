@@ -131,7 +131,6 @@ def read_properties(file_path):
 
 def check_for_differences(reference_file, file_list, branch, actor):
     reference_branch = reference_file.split("/")[0]
-    print(reference_branch)
     basename_reference_file = os.path.basename(reference_file)
 
     report = []
@@ -145,6 +144,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
 
     for file_path in file_list:
         basename_current_file = os.path.basename(branch + "/" + file_path)
+        print(basename_current_file)
         if (
             basename_current_file == basename_reference_file
             or not file_path.endswith(".properties")
