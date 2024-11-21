@@ -141,9 +141,9 @@ def check_for_differences(reference_file, file_list, branch, actor):
     has_differences = False
 
     only_reference_file = True
-    print(file_list)
+    print(file_list[0].split())
 
-    for file_path in file_list:
+    for file_path in file_list[0].split():
         basename_current_file = os.path.basename(branch + "/" + file_path)
         if (
             basename_current_file == basename_reference_file
