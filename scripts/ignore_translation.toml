@@ -106,7 +106,6 @@ ignore = [
 ignore = [
     'PDFToBook.selectText.1',
     'font',
-    'home.pipeline.title',
     'info',
     'language.direction',
     'pdfOrganiser.tags',
