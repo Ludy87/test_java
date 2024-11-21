@@ -261,6 +261,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     file_list = args.files
+    print(file_list)
     if file_list is None:
         file_list = glob.glob(
             os.getcwd() + "/src/**/messages_*.properties", recursive=True
