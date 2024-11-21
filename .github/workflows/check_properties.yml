@@ -14,9 +14,9 @@ jobs:
   check-files:
     if: github.event_name == 'pull_request_target'
     # Permissions required for the workflow
-    permissions:
-      contents: read
-      pull-requests: write
+    # permissions:
+    #   contents: read
+    #   pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main branch first
@@ -153,6 +153,7 @@ jobs:
   update-translations-main:
     if: github.event_name == 'push'
     permissions:
+      contents: write
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
