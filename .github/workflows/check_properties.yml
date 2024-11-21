@@ -1,4 +1,4 @@
-name: Check Properties Files
+name: Check Properties Files Str
 
 on:
   pull_request:
