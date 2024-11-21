@@ -123,8 +123,10 @@ def check_for_missing_keys(reference_file, file_list, branch):
 
 
 def read_properties(file_path):
-    with open(file_path, "r", encoding="utf-8") as file:
-        return file.read().splitlines()
+    if (os.path.isfile(file_path) and os.path.exists(file_path)):
+        with open(file_path, "r", encoding="utf-8") as file:
+            return file.read().splitlines()
+    return [""]
 
 
 def check_for_differences(reference_file, file_list, branch, actor):
