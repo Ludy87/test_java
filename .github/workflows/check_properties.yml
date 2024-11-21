@@ -1,7 +1,7 @@
 name: Check Properties Files
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
     paths:
       - "src/main/resources/messages_*.properties"
@@ -11,12 +11,12 @@ on:
 
 # Permissions required for the workflow
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
 
 jobs:
   check-files:
-    if: github.event_name == 'pull_request_target'
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main branch first
@@ -90,7 +90,7 @@ jobs:
             --actor ${{ github.event.pull_request.user.login }} \
             --reference-file "${REFERENCE_FILE}" \
             --branch "${BRANCH_PATH}" \
-            --files ${CHANGED_FILES} > failure.txt || true
+            --files "${CHANGED_FILES[@]}" > failure.txt || true
 
       - name: Capture output
         id: capture-output
@@ -149,24 +149,6 @@ jobs:
             } else {
               console.log("Comment update attempt denied. Actor does not match.");
             }
-
-      # - name: Set up git config
-      #   run: |
-      #     git config --global user.name "github-actions[bot]"
-      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      # - name: Add translation keys
-      #   run: |
-      #     cd ${{ env.BRANCH_PATH }}
-      #     git add src/main/resources/messages_*.properties
-      #     git diff --staged --quiet || echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
-      #     git commit -m "Update translation files" || echo "No changes to commit"
-      # - name: Push
-      #   if: env.CHANGES_DETECTED == 'true'
-      #   run: |
-      #     cd pr-branch
-      #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}.git
-      #     git push origin ${{ github.head_ref }} || echo "Push failed: possibly no changes to push"
 
   update-translations-main:
     if: github.event_name == 'push'
