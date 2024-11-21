@@ -146,13 +146,16 @@ def check_for_differences(reference_file, file_list, branch, actor):
     for file_path in file_list:
         basename_current_file = os.path.basename(branch + "/" + file_path)
         print(basename_current_file)
+        print(basename_reference_file)
         if (
             basename_current_file == basename_reference_file
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
         ):
             continue
+        print(only_reference_file)
         only_reference_file = False
+        print(only_reference_file)
         report.append(f"#### 🗂️ **Checking File:** `{basename_current_file}`...")
         current_lines = read_properties(branch + "/" + file_path)
         reference_line_count = len(reference_lines)
