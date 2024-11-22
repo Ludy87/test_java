@@ -157,9 +157,6 @@ def check_for_differences(reference_file, file_list, branch, actor):
         # Verify that file is within the expected directory
         if not absolute_path.startswith(base_dir):
             raise ValueError(f"Unsafe file found: {file_path}")
-        # # Verify that file size is within allowed limits
-        # if os.path.getsize(absolute_path) > MAX_FILE_SIZE:
-        #     raise ValueError(f"The file {file_path} is too large and could pose a security risk.")
         # Verify file size before processing
         if os.path.getsize(os.path.join(branch, file_path)) > MAX_FILE_SIZE:
             raise ValueError(f"The file {file_path} is too large and could pose a security risk.")
