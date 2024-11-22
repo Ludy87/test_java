@@ -50,10 +50,7 @@ jobs:
           echo "Getting list of changed files from PR..."
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > ../changed_files.txt
           cd ..
-          echo "Setting branch path..."
-          BRANCH_PATH="pr-branch"
 
-          echo "BRANCH_PATH=${BRANCH_PATH}" >> $GITHUB_ENV
           echo "Processing changed files..."
           mapfile -t CHANGED_FILES < changed_files.txt
 
@@ -61,7 +58,6 @@ jobs:
           echo "CHANGED_FILES=${CHANGED_FILES_STR}" >> $GITHUB_ENV
 
           echo "Changed files: ${CHANGED_FILES_STR}"
-          echo "Branch: ${BRANCH_PATH}"
 
       - name: Determine reference file
         id: determine-file
@@ -85,7 +81,7 @@ jobs:
           python main-branch/.github/scripts/check_language_properties.py \
             --actor ${{ github.event.pull_request.user.login }} \
             --reference-file "${REFERENCE_FILE}" \
-            --branch "${BRANCH_PATH}" \
+            --branch pr-branch \
             --files "${CHANGED_FILES[@]}" > failure.txt || true
 
       - name: Capture output
