@@ -94,9 +94,17 @@ jobs:
             echo "$SCRIPT_OUTPUT" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
             echo "${SCRIPT_OUTPUT}"
+
+            # Set FAIL_JOB to true if SCRIPT_OUTPUT contains ❌
+            if [[ "$SCRIPT_OUTPUT" == *"❌"* ]]; then
+              echo "FAIL_JOB=true" >> $GITHUB_ENV
+            else
+              echo "FAIL_JOB=false" >> $GITHUB_ENV
+            fi
           else
             echo "No update found."
             echo "SCRIPT_OUTPUT=" >> $GITHUB_ENV
+            echo "FAIL_JOB=false" >> $GITHUB_ENV
           fi
 
       - name: Post comment on PR
@@ -141,6 +149,12 @@ jobs:
             } else {
               console.log("Comment update attempt denied. Actor does not match.");
             }
+
+      - name: Fail job if errors found
+        if: env.FAIL_JOB == 'true'
+        run: |
+          echo "Failing the job because errors were detected."
+          exit 1
 
   update-translations-main:
     if: github.event_name == 'push'
