@@ -138,9 +138,8 @@ def check_for_differences(reference_file, file_list, branch, actor):
     basename_reference_file = os.path.basename(reference_file)
 
     report = []
-    report.append(f"#### 📋 Reference File: `{basename_reference_file}`")
     report.append(f"#### 🔄 Reference Branch: `{reference_branch}`")
-    report.append(f"`{reference_file}`")
+    # report.append(f"#### 📋 Reference File: `{basename_reference_file}`")
     reference_lines = read_properties(reference_file)
     has_differences = False
 
@@ -181,7 +180,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
 
         if reference_line_count != current_line_count:
             report.append("")
-            report.append("- **Test 1 Status:** ❌ **_Failed_**")
+            report.append("- **1. Test Status:** ❌ **_Failed_**")
             report.append("  - **Issue:**")
             has_differences = True
             if reference_line_count > current_line_count:
@@ -193,7 +192,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
                     f"    - **_Too many lines_**: {reference_line_count} (reference) vs {current_line_count} (current). Please verify if there is an additional line that needs to be removed."
                 )
         else:
-            report.append("- **Test 1 Status:** ✅ **_Passed_**")
+            report.append("- **1. Test Status:** ✅ **_Passed_**")
 
         # Check for missing or extra keys
         current_keys = []
@@ -218,7 +217,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
             has_differences = True
             missing_keys_str = "`, `".join(missing_keys_list)
             extra_keys_str = "`, `".join(extra_keys_list)
-            report.append("- **Test 2 Status:** ❌ **_Failed_**")
+            report.append("- **2. Test Status:** ❌ **_Failed_**")
             report.append("  - **Issue:**")
             if missing_keys_list:
                 spaces_keys_list = []
@@ -238,7 +237,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
                     f"    - **_Missing keys in `{basename_reference_file}`_**: `{extra_keys_str}` that are not present in **_`{basename_current_file}`_**."
                 )
         else:
-            report.append("- **Test 2 Status:** ✅ **_Passed_**")
+            report.append("- **2. Test Status:** ✅ **_Passed_**")
         report.append("")
         report.append("---")
         report.append("")
