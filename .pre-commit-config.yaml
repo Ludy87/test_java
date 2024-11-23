@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.2.1
+    rev: v0.8.0
     hooks:
       - id: ruff
         args:
@@ -28,8 +28,6 @@ repos:
         entry: python .github/scripts/check_duplicates.py
         language: python
         files: ^(src)/.+\.properties$
-  - repo: local
-    hooks:
       - id: check-html-tabs
         name: Check HTML for tabs
         # args: ["--replace_with=  "]
@@ -37,18 +35,3 @@ repos:
         language: python
         exclude: ^(src/main/resources/static/pdfjs|src/main/resources/static/pdfjs-legacy)
         files: ^.*(\.html|\.css|\.js)$
-  - repo: local
-    hooks:
-      - id: update-languages-table
-        name: Updated Tabel Language
-        entry: python scripts/counter_translation.py
-        language: python
-        files: ^README.md$
-  - repo: local
-    hooks:
-      - id: update-chart-version
-        name: Updated Chart Version
-        entry: python .github/scripts/gradle_to_chart.py
-        language: python
-        files: ^chart/stirling-pdf/Chart.yaml$
-        additional_dependencies: [pyyaml]
