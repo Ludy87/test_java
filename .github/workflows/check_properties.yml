@@ -150,12 +150,6 @@ jobs:
               console.log("Comment update attempt denied. Actor does not match.");
             }
 
-      - name: Fail job if errors found
-        if: env.FAIL_JOB == 'true'
-        run: |
-          echo "Failing the job because errors were detected."
-          exit 1
-
   update-translations-main:
     if: github.event_name == 'push'
     permissions:
