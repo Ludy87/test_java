@@ -180,7 +180,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
 
         if reference_line_count != current_line_count:
             report.append("")
-            report.append("- **1. Test Status:** ❌ **_Failed_**")
+            report.append("1. **Test Status:** ❌ **_Failed_**")
             report.append("  - **Issue:**")
             has_differences = True
             if reference_line_count > current_line_count:
@@ -192,7 +192,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
                     f"    - **_Too many lines_**: {reference_line_count} (reference) vs {current_line_count} (current). Please verify if there is an additional line that needs to be removed."
                 )
         else:
-            report.append("- **1. Test Status:** ✅ **_Passed_**")
+            report.append("1. **Test Status:** ✅ **_Passed_**")
 
         # Check for missing or extra keys
         current_keys = []
@@ -217,7 +217,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
             has_differences = True
             missing_keys_str = "`, `".join(missing_keys_list)
             extra_keys_str = "`, `".join(extra_keys_list)
-            report.append("- **2. Test Status:** ❌ **_Failed_**")
+            report.append("2. **Test Status:** ❌ **_Failed_**")
             report.append("  - **Issue:**")
             if missing_keys_list:
                 spaces_keys_list = []
@@ -237,7 +237,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
                     f"    - **_Missing keys in `{basename_reference_file}`_**: `{extra_keys_str}` that are not present in **_`{basename_current_file}`_**."
                 )
         else:
-            report.append("- **2. Test Status:** ✅ **_Passed_**")
+            report.append("2. **Test Status:** ✅ **_Passed_**")
         report.append("")
         report.append("---")
         report.append("")
