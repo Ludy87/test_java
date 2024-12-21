@@ -74,6 +74,7 @@ jobs:
               inputs: {
                 files: files,
                 actor: actor,
-                ref_file: refFile
+                ref_file: refFile,
+                pr_number: prNumber
               }
             });
