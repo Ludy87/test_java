@@ -38,76 +38,77 @@ jobs:
             --actor ${{ github.event.inputs.actor }} \
             --reference-file "${{ github.event.inputs.ref_file }}" \
             --branch "" \
-            --files "${{ github.event.inputs.files }}" > result.txt || true
+            --files "${{ github.event.inputs.files }}"
+            #  > result.txt || true
 
-      - name: Capture output
-        id: capture-output
-        run: |
-          if [ -f result.txt ] && [ -s result.txt ]; then
-            echo "Test, capturing output..."
-            SCRIPT_OUTPUT=$(cat result.txt)
-            echo "SCRIPT_OUTPUT<<EOF" >> $GITHUB_ENV
-            echo "$SCRIPT_OUTPUT" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-            echo "${SCRIPT_OUTPUT}"
+      # - name: Capture output
+      #   id: capture-output
+      #   run: |
+      #     if [ -f result.txt ] && [ -s result.txt ]; then
+      #       echo "Test, capturing output..."
+      #       SCRIPT_OUTPUT=$(cat result.txt)
+      #       echo "SCRIPT_OUTPUT<<EOF" >> $GITHUB_ENV
+      #       echo "$SCRIPT_OUTPUT" >> $GITHUB_ENV
+      #       echo "EOF" >> $GITHUB_ENV
+      #       echo "${SCRIPT_OUTPUT}"
 
-            # Set FAIL_JOB to true if SCRIPT_OUTPUT contains ❌
-            if [[ "$SCRIPT_OUTPUT" == *"❌"* ]]; then
-              echo "FAIL_JOB=true" >> $GITHUB_ENV
-            else
-              echo "FAIL_JOB=false" >> $GITHUB_ENV
-            fi
-          else
-            echo "No update found."
-            echo "SCRIPT_OUTPUT=" >> $GITHUB_ENV
-            echo "FAIL_JOB=false" >> $GITHUB_ENV
-          fi
+      #       # Set FAIL_JOB to true if SCRIPT_OUTPUT contains ❌
+      #       if [[ "$SCRIPT_OUTPUT" == *"❌"* ]]; then
+      #         echo "FAIL_JOB=true" >> $GITHUB_ENV
+      #       else
+      #         echo "FAIL_JOB=false" >> $GITHUB_ENV
+      #       fi
+      #     else
+      #       echo "No update found."
+      #       echo "SCRIPT_OUTPUT=" >> $GITHUB_ENV
+      #       echo "FAIL_JOB=false" >> $GITHUB_ENV
+      #     fi
 
-      - name: Post comment on PR
-        if: env.SCRIPT_OUTPUT != ''
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        with:
-          script: |
-            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
-            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
-            const prNumber = context.issue.number;
+      # - name: Post comment on PR
+      #   if: env.SCRIPT_OUTPUT != ''
+      #   uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+      #   with:
+      #     script: |
+      #       const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
+      #       const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
+      #       const prNumber = context.issue.number;
 
-            // Find existing comment
-            const comments = await github.rest.issues.listComments({
-              owner: repoOwner,
-              repo: repoName,
-              issue_number: prNumber
-            });
+      #       // Find existing comment
+      #       const comments = await github.rest.issues.listComments({
+      #         owner: repoOwner,
+      #         repo: repoName,
+      #         issue_number: prNumber
+      #       });
 
-            const comment = comments.data.find(c => c.body.includes("## 🚀 Translation Verification Summary"));
+      #       const comment = comments.data.find(c => c.body.includes("## 🚀 Translation Verification Summary"));
 
-            // Only allow the action user to update comments
-            const expectedActor = "github-actions[bot]";
+      #       // Only allow the action user to update comments
+      #       const expectedActor = "github-actions[bot]";
 
-            if (comment && comment.user.login === expectedActor) {
-              // Update existing comment
-              await github.rest.issues.updateComment({
-                owner: repoOwner,
-                repo: repoName,
-                comment_id: comment.id,
-                body: `## 🚀 Translation Verification Summary\n\n\n${SCRIPT_OUTPUT}\n`
-              });
-              console.log("Updated existing comment.");
-            } else if (!comment) {
-              // Create new comment if no existing comment is found
-              await github.rest.issues.createComment({
-                owner: repoOwner,
-                repo: repoName,
-                issue_number: prNumber,
-                body: `## 🚀 Translation Verification Summary\n\n\n${SCRIPT_OUTPUT}\n`
-              });
-              console.log("Created new comment.");
-            } else {
-              console.log("Comment update attempt denied. Actor does not match.");
-            }
+      #       if (comment && comment.user.login === expectedActor) {
+      #         // Update existing comment
+      #         await github.rest.issues.updateComment({
+      #           owner: repoOwner,
+      #           repo: repoName,
+      #           comment_id: comment.id,
+      #           body: `## 🚀 Translation Verification Summary\n\n\n${SCRIPT_OUTPUT}\n`
+      #         });
+      #         console.log("Updated existing comment.");
+      #       } else if (!comment) {
+      #         // Create new comment if no existing comment is found
+      #         await github.rest.issues.createComment({
+      #           owner: repoOwner,
+      #           repo: repoName,
+      #           issue_number: prNumber,
+      #           body: `## 🚀 Translation Verification Summary\n\n\n${SCRIPT_OUTPUT}\n`
+      #         });
+      #         console.log("Created new comment.");
+      #       } else {
+      #         console.log("Comment update attempt denied. Actor does not match.");
+      #       }
 
-      - name: Fail job if errors found
-        if: env.FAIL_JOB == 'true'
-        run: |
-          echo "Failing the job because errors were detected."
-          exit 1
+      # - name: Fail job if errors found
+      #   if: env.FAIL_JOB == 'true'
+      #   run: |
+      #     echo "Failing the job because errors were detected."
+      #     exit 1
