@@ -43,7 +43,7 @@ jobs:
           python .github/scripts/check_language_properties.py \
             --actor ${{ github.event.inputs.actor }} \
             --reference-file "${{ github.event.inputs.ref_file }}" \
-            --branch "" \
+            --branch "test_DE_11" \
             --files "${{ github.event.inputs.files }}" > result.txt || true
 
       - name: Capture output
