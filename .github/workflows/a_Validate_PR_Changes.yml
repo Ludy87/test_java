@@ -34,6 +34,18 @@ jobs:
 
           echo "Changed files: ${CHANGED_FILES_STR}"
 
+      - name: Determine reference file
+        id: determine-file
+        run: |
+          echo "Determining reference file..."
+          if grep -Fxq "src/main/resources/messages_en_GB.properties" changed_files.txt; then
+              echo "Using PR branch reference file"
+              echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          else
+              echo "Using main branch reference file"
+              echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          fi
+
       - name: Trigger secure workflow
         uses: actions/github-script@v7
         env:
