@@ -22,7 +22,10 @@ jobs:
         run: |
           echo "Fetching PR changed files..."
           gh repo set-default ${{ github.repository }}
+
           echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          echo "BRANCH_NAME=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
+
           # Store files in a safe way, only allowing valid properties files
           echo "Getting list of changed files from PR..."
           # gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > changed_files.txt
@@ -65,6 +68,9 @@ jobs:
             const refFile = process.env.REFERENCE_FILE;
             const prNumber = process.env.PR_NUMBER;
 
+            // Lade den Branch-Namen aus den Umgebungsvariablen
+            const branchName = process.env.BRANCH_NAME;
+
             // Trigger den Workflow
             github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
@@ -75,6 +81,7 @@ jobs:
                 files: files,
                 actor: actor,
                 ref_file: refFile,
-                pr_number: prNumber
+                pr_number: prNumber,
+                branch_name: branchName
               }
             });
