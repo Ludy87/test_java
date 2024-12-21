@@ -46,21 +46,18 @@ jobs:
           if [ -f result.txt ] && [ -s result.txt ]; then
             echo "Test, capturing output..."
             SCRIPT_OUTPUT=$(cat result.txt)
-            echo "SCRIPT_OUTPUT<<EOF" >> $GITHUB_ENV
-            echo "$SCRIPT_OUTPUT" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+            echo "script_output=$SCRIPT_OUTPUT" >> $GITHUB_OUTPUT
             echo "${SCRIPT_OUTPUT}"
 
             # Set FAIL_JOB to true if SCRIPT_OUTPUT contains ❌
             if [[ "$SCRIPT_OUTPUT" == *"❌"* ]]; then
-              echo "FAIL_JOB=true" >> $GITHUB_ENV
+              echo "FAIL_JOB=true" >> $GITHUB_STATE
             else
-              echo "FAIL_JOB=false" >> $GITHUB_ENV
+              echo "FAIL_JOB=false" >> $GITHUB_STATE
             fi
           else
             echo "No update found."
-            echo "SCRIPT_OUTPUT=" >> $GITHUB_ENV
-            echo "FAIL_JOB=false" >> $GITHUB_ENV
+            echo "FAIL_JOB=false" >> $GITHUB_STATE
           fi
 
       - name: Post comment on PR
@@ -68,7 +65,15 @@ jobs:
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
+            const { GITHUB_REPOSITORY, GITHUB_EVENT_NAME } = process.env;
+
+            // Ensure the event is a pull request
+            if (GITHUB_EVENT_NAME !== 'pull_request') {
+              console.log("Not a pull request event, skipping comment.");
+              return;
+            }
+
+            const SCRIPT_OUTPUT = process.env.SCRIPT_OUTPUT || "No output provided.";
             const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
             const prNumber = context.issue.number;
 
@@ -107,7 +112,9 @@ jobs:
             }
 
       - name: Fail job if errors found
-        if: env.FAIL_JOB == 'true'
         run: |
-          echo "Failing the job because errors were detected."
-          exit 1
+          FAIL_JOB=$(cat $GITHUB_STATE | grep FAIL_JOB | cut -d '=' -f2)
+          if [[ "$FAIL_JOB" == "true" ]]; then
+            echo "Failing the job because errors were detected."
+            exit 1
+          fi
