@@ -20,12 +20,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetching PR changed files..."
-          cd pr-branch
           gh repo set-default ${{ github.repository }}
           # Store files in a safe way, only allowing valid properties files
           echo "Getting list of changed files from PR..."
           # gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > changed_files.txt
-          gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > ../changed_files.txt
+          gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > changed_files.txt
           cat changed_files.txt
 
       - name: Trigger secure workflow
