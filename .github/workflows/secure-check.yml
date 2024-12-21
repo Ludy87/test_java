@@ -70,12 +70,6 @@ jobs:
           script: |
             const SCRIPT_OUTPUT = process.env.SCRIPT_OUTPUT || "No output provided.";
 
-            // Ensure the event is a pull request
-            if (context.eventName !== 'pull_request') {
-              console.log("Not a pull request event, skipping comment.");
-              return;
-            }
-
             const [repoOwner, repoName] = context.repo.owner.split('/');
             const prNumber = context.payload.pull_request.number;
 
