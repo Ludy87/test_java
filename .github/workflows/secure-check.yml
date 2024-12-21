@@ -9,6 +9,9 @@ on:
       actor:
         description: "User who opened the PR"
         required: true
+      ref_file:
+        description: "Reference file to use"
+        required: true
 
 jobs:
   check-files:
@@ -21,11 +24,18 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - run: |
-          echo ${{ github.event.inputs.files }}
-          echo ${{ github.event.inputs.actor }}
 
-      # - name: Run Python script
-      #   run: |
-      #     python .github/scripts/check_language_properties.py \
-      #       --files "${{ github.event.inputs.files }}"
+      - name: Log inputs
+        run: |
+          echo "Changed files: ${{ github.event.inputs.files }}"
+          echo "Actor: ${{ github.event.inputs.actor }}"
+          echo "Reference file: ${{ github.event.inputs.ref_file }}"
+
+      - name: Run Python script
+        run: |
+          echo "Running Python script to check files..."
+          python main/.github/scripts/check_language_properties.py \
+            --actor ${{ github.event.inputs.actor }} \
+            --reference-file "${{ github.event.inputs.ref_file }}" \
+            --branch "" \
+            --files "${{ github.event.inputs.files }}" > result.txt || true
