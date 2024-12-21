@@ -27,13 +27,22 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            const fs = require('fs');
+
+            // Lade die Liste der Dateien aus der Textdatei
+            const files = fs.readFileSync('changed_files.txt', 'utf8');
+
+            // Hole den Benutzer, der die PR geöffnet hat, aus dem Event-Kontext
+            const actor = context.payload.pull_request.user.login;
+
+            // Trigger den Workflow
             github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: "secure-check.yml",
               ref: context.ref,
               inputs: {
-                files: require('fs').readFileSync('changed_files.txt', 'utf8'),
-                actor: ${{ github.event.pull_request.user.login }},
+                files: files,
+                actor: actor
               }
-            })
+            });
