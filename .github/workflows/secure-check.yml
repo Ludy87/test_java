@@ -15,6 +15,9 @@ on:
       pr_number:
         description: "Pull Request number"
         required: true
+      branch_name:
+        description: "Branch to check"
+        required: true
 
 jobs:
   check-files:
@@ -36,6 +39,7 @@ jobs:
           echo "Actor: ${{ github.event.inputs.actor }}"
           echo "Reference file: ${{ github.event.inputs.ref_file }}"
           echo "Pull Request number: ${{ github.event.inputs.pr_number }}"
+          echo "Branch: ${{ github.event.inputs.branch_name }}"
 
       - name: Run Python script
         run: |
