@@ -74,8 +74,11 @@ jobs:
           script: |
             const SCRIPT_OUTPUT = process.env.SCRIPT_OUTPUT || "No output provided.";
 
-            const [repoOwner, repoName] = context.repo.owner.split('/');
             const prNumber = parseInt("${{ github.event.inputs.pr_number }}", 10);
+
+            // Überprüfen, ob der Kontext korrekt ist
+            const repoOwner = context.repo.owner;
+            const repoName = context.repo.repo;
 
             // Find existing comment
             const comments = await github.rest.issues.listComments({
