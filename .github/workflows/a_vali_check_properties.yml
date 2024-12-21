@@ -12,6 +12,8 @@ jobs:
       contents: read
     steps:
       - name: Fetch PR changed files
+        env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetching changed files using GitHub CLI..."
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > changed_files.txt
