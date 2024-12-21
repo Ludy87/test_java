@@ -46,18 +46,21 @@ jobs:
           if [ -f result.txt ] && [ -s result.txt ]; then
             echo "Test, capturing output..."
             SCRIPT_OUTPUT=$(cat result.txt)
-            echo "script_output=$SCRIPT_OUTPUT" >> $GITHUB_OUTPUT
+            echo "SCRIPT_OUTPUT<<EOF" >> $GITHUB_ENV
+            echo "$SCRIPT_OUTPUT" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
             echo "${SCRIPT_OUTPUT}"
 
             # Set FAIL_JOB to true if SCRIPT_OUTPUT contains ❌
             if [[ "$SCRIPT_OUTPUT" == *"❌"* ]]; then
-              echo "FAIL_JOB=true" >> $GITHUB_STATE
+              echo "FAIL_JOB=true" >> $GITHUB_ENV
             else
-              echo "FAIL_JOB=false" >> $GITHUB_STATE
+              echo "FAIL_JOB=false" >> $GITHUB_ENV
             fi
           else
             echo "No update found."
-            echo "FAIL_JOB=false" >> $GITHUB_STATE
+            echo "SCRIPT_OUTPUT=" >> $GITHUB_ENV
+            echo "FAIL_JOB=false" >> $GITHUB_ENV
           fi
 
       - name: Post comment on PR
@@ -65,15 +68,13 @@ jobs:
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const { GITHUB_REPOSITORY, GITHUB_EVENT_NAME } = process.env;
+            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
 
             // Ensure the event is a pull request
             if (GITHUB_EVENT_NAME !== 'pull_request') {
               console.log("Not a pull request event, skipping comment.");
               return;
             }
-
-            const SCRIPT_OUTPUT = process.env.SCRIPT_OUTPUT || "No output provided.";
             const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
             const prNumber = context.issue.number;
 
