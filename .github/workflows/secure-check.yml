@@ -68,10 +68,11 @@ jobs:
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
+            const SCRIPT_OUTPUT = process.env.SCRIPT_OUTPUT || "No output provided.";
+            const context = require('@actions/github').context;
 
             // Ensure the event is a pull request
-            if (GITHUB_EVENT_NAME !== 'pull_request') {
+            if (context.eventName !== 'pull_request') {
               console.log("Not a pull request event, skipping comment.");
               return;
             }
