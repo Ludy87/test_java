@@ -5,12 +5,13 @@ on:
     paths:
       - "src/main/resources/messages_*.properties"
 
-permissions:
-  contents: read
-  actions: write
+permissions: read-all
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
