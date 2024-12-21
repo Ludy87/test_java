@@ -22,6 +22,7 @@ jobs:
         run: |
           echo "Fetching PR changed files..."
           gh repo set-default ${{ github.repository }}
+          echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
           # Store files in a safe way, only allowing valid properties files
           echo "Getting list of changed files from PR..."
           # gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > changed_files.txt
@@ -60,8 +61,9 @@ jobs:
             // Hole den Benutzer, der die PR geöffnet hat, aus dem Event-Kontext
             const actor = context.payload.pull_request.user.login;
 
-            // Hole die Referenzdatei aus der Umgebungsvariable
+            // Hole die Referenzdatei und PR-Nummer aus der Umgebungsvariablen
             const refFile = process.env.REFERENCE_FILE;
+            const prNumber = process.env.PR_NUMBER;
 
             // Trigger den Workflow
             github.rest.actions.createWorkflowDispatch({

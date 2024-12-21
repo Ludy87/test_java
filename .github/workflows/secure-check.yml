@@ -12,6 +12,9 @@ on:
       ref_file:
         description: "Reference file to use"
         required: true
+      pr_number:
+        description: "Pull Request number"
+        required: true
 
 jobs:
   check-files:
@@ -30,6 +33,7 @@ jobs:
           echo "Changed files: ${{ github.event.inputs.files }}"
           echo "Actor: ${{ github.event.inputs.actor }}"
           echo "Reference file: ${{ github.event.inputs.ref_file }}"
+          echo "Pull Request number: ${{ github.event.inputs.pr_number }}"
 
       - name: Run Python script
         run: |
@@ -71,7 +75,7 @@ jobs:
             const SCRIPT_OUTPUT = process.env.SCRIPT_OUTPUT || "No output provided.";
 
             const [repoOwner, repoName] = context.repo.owner.split('/');
-            const prNumber = context.payload.pull_request.number;
+            const prNumber = parseInt("${{ github.event.inputs.pr_number }}", 10);
 
             // Find existing comment
             const comments = await github.rest.issues.listComments({
