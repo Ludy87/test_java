@@ -24,7 +24,12 @@ jobs:
           gh repo set-default ${{ github.repository }}
 
           echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
-          echo "BRANCH_NAME=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
+          BRANCH_NAME=$(echo '${{ github.event.pull_request.head.ref }}' | grep -E '^[a-zA-Z0-9._/-]+$' | grep -v -e '^\.\/' -e '\.\.')
+          if [ -z "$BRANCH_NAME" ]; then
+              echo "Ungültiger Branch-Name erkannt!"
+              exit 1
+          fi
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
           # Store files in a safe way, only allowing valid properties files
           echo "Getting list of changed files from PR..."
