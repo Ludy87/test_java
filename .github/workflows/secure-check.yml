@@ -6,6 +6,9 @@ on:
       files:
         description: "List of changed files"
         required: true
+      actor:
+        description: "User who opened the PR"
+        required: true
 
 jobs:
   check-files:
