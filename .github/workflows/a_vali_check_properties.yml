@@ -1,0 +1,32 @@
+name: Validate PR Changes
+
+on:
+  pull_request_target:
+    paths:
+      - "src/main/resources/messages_*.properties"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Fetch PR changed files
+        run: |
+          echo "Fetching changed files using GitHub CLI..."
+          gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > changed_files.txt
+          cat changed_files.txt
+
+      - name: Trigger secure workflow
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: "secure-check.yml",
+              ref: context.ref,
+              inputs: {
+                files: require('fs').readFileSync('changed_files.txt', 'utf8')
+              }
+            })
