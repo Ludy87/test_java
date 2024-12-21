@@ -1,0 +1,20 @@
+name: a_Validate_PR_Changes
+
+on:
+  pull_request_target:
+    paths:
+      - "src/main/resources/messages_*.properties"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Install GitHub CLI
+        run: sudo apt-get update && sudo apt-get install -y gh
+      - name: Fetch PR changed files
+        run: |
+          echo "Fetching changed files using GitHub CLI..."
+          gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > changed_files.txt
+          cat changed_files.txt
