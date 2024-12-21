@@ -27,10 +27,31 @@ jobs:
       issues: write
       pull-requests: write
     steps:
+      - name: Determine reference file
+        id: determine-ref-file
+        run: |
+          echo "Determining reference file..."
+          if echo "${{ github.event.inputs.files }}" | grep -q "messages_en_GB.properties"; then
+            echo "Reference file found in PR branch."
+            echo "REFERENCE_FILE=${{ github.event.inputs.branch_name }}/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          else
+            echo "Reference file will use main branch."
+            echo "REFERENCE_FILE=main/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          fi
+          echo "REFERENCE_FILE=$REFERENCE_FILE"
+
       - name: Checkout main branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.inputs.branch_name }}
+          fetch-depth: 0
+
+      - name: Checkout main branch (if needed)
+        if: env.REFERENCE_FILE == 'main/src/main/resources/messages_en_GB.properties'
+        uses: actions/checkout@v4
+        with:
           ref: main
+          path: main-branch
           fetch-depth: 0
 
       - name: Log inputs
@@ -38,6 +59,7 @@ jobs:
           echo "Changed files: ${{ github.event.inputs.files }}"
           echo "Actor: ${{ github.event.inputs.actor }}"
           echo "Reference file: ${{ github.event.inputs.ref_file }}"
+          echo "Reference file from Branch: ${{ env.REFERENCE_FILE }}"
           echo "Pull Request number: ${{ github.event.inputs.pr_number }}"
           echo "Branch: ${{ github.event.inputs.branch_name }}"
 
@@ -46,7 +68,7 @@ jobs:
           echo "Running Python script to check files..."
           python .github/scripts/check_language_properties.py \
             --actor ${{ github.event.inputs.actor }} \
-            --reference-file "${{ github.event.inputs.ref_file }}" \
+            --reference-file "${{ env.REFERENCE_FILE }}"" \
             --branch "${{ github.event.inputs.branch_name }}" \
             --files "${{ github.event.inputs.files }}" > result.txt || true
 
