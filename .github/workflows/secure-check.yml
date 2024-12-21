@@ -68,7 +68,7 @@ jobs:
           echo "Running Python script to check files..."
           python .github/scripts/check_language_properties.py \
             --actor ${{ github.event.inputs.actor }} \
-            --reference-file "${{ env.REFERENCE_FILE }}"" \
+            --reference-file "${{ env.REFERENCE_FILE }}" \
             --branch "${{ github.event.inputs.branch_name }}" \
             --files "${{ github.event.inputs.files }}" > result.txt || true
 
