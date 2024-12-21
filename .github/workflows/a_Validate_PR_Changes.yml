@@ -25,7 +25,7 @@ jobs:
           gh repo set-default ${{ github.repository }}
 
           echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
-          BRANCH_NAME=$(echo '$BRANCH_NAME' | grep -E '^[a-zA-Z0-9._/-]+$' | grep -v -e '^\.\/' -e '\.\.')
+          BRANCH_NAME=$(echo "$BRANCH_NAME" | grep -E '^[a-zA-Z0-9._/-]+$' | grep -v -e '^\.\/' -e '\.\.' -e '^/$' -e '^-$')
           if [ -z "$BRANCH_NAME" ]; then
               echo "Ungültiger Branch-Name erkannt!"
               exit 1
