@@ -27,6 +27,12 @@ jobs:
           # gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" > changed_files.txt
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > changed_files.txt
           cat changed_files.txt
+          echo "Processing changed files..."
+          mapfile -t CHANGED_FILES < changed_files.txt
+          CHANGED_FILES_STR="${CHANGED_FILES[*]}"
+          echo "CHANGED_FILES=${CHANGED_FILES_STR}" >> $GITHUB_ENV
+
+          echo "Changed files: ${CHANGED_FILES_STR}"
 
       - name: Trigger secure workflow
         uses: actions/github-script@v7
