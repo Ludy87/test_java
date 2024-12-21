@@ -33,6 +33,7 @@ jobs:
               workflow_id: "secure-check.yml",
               ref: context.ref,
               inputs: {
-                files: require('fs').readFileSync('changed_files.txt', 'utf8')
+                files: require('fs').readFileSync('changed_files.txt', 'utf8'),
+                actor: ${{ github.event.pull_request.user.login }},
               }
             })
