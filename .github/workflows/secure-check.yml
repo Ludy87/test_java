@@ -31,7 +31,7 @@ jobs:
         id: determine-ref-file
         run: |
           echo "Determining reference file..."
-          if echo "${{ github.event.inputs.files }}" | grep -q "messages_en_GB.properties"; then
+          if echo "${{ github.event.inputs.files }}" | grep -q "src/main/resources/messages_en_GB.properties"; then
             echo "Reference file found in PR branch."
             echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
@@ -47,8 +47,7 @@ jobs:
           path: pr-branch
           fetch-depth: 0
 
-      - name: Checkout main branch (if needed)
-        # if: env.REFERENCE_FILE == 'main/src/main/resources/messages_en_GB.properties'
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           ref: main
