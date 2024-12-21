@@ -33,10 +33,10 @@ jobs:
           echo "Determining reference file..."
           if echo "${{ github.event.inputs.files }}" | grep -q "messages_en_GB.properties"; then
             echo "Reference file found in PR branch."
-            echo "REFERENCE_FILE=${{ github.event.inputs.branch_name }}/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+            echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
             echo "Reference file will use main branch."
-            echo "REFERENCE_FILE=main/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+            echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           fi
           echo "REFERENCE_FILE=$REFERENCE_FILE"
 
