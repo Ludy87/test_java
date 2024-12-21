@@ -69,15 +69,15 @@ jobs:
         with:
           script: |
             const SCRIPT_OUTPUT = process.env.SCRIPT_OUTPUT || "No output provided.";
-            const context = require('@actions/github').context;
 
             // Ensure the event is a pull request
             if (context.eventName !== 'pull_request') {
               console.log("Not a pull request event, skipping comment.");
               return;
             }
-            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
-            const prNumber = context.issue.number;
+
+            const [repoOwner, repoName] = context.repo.owner.split('/');
+            const prNumber = context.payload.pull_request.number;
 
             // Find existing comment
             const comments = await github.rest.issues.listComments({
@@ -87,8 +87,6 @@ jobs:
             });
 
             const comment = comments.data.find(c => c.body.includes("## 🚀 Translation Verification Summary"));
-
-            // Only allow the action user to update comments
             const expectedActor = "github-actions[bot]";
 
             if (comment && comment.user.login === expectedActor) {
