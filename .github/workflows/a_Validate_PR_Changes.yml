@@ -43,7 +43,7 @@ jobs:
               echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
               echo "Using main branch reference file"
-              echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+              echo "REFERENCE_FILE=main/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           fi
 
       - name: Trigger secure workflow
@@ -60,6 +60,9 @@ jobs:
             // Hole den Benutzer, der die PR geöffnet hat, aus dem Event-Kontext
             const actor = context.payload.pull_request.user.login;
 
+            // Hole die Referenzdatei aus der Umgebungsvariable
+            const refFile = process.env.REFERENCE_FILE;
+
             // Trigger den Workflow
             github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
@@ -68,6 +71,7 @@ jobs:
               ref: context.ref,
               inputs: {
                 files: files,
-                actor: actor
+                actor: actor,
+                ref_file: refFile
               }
             });
