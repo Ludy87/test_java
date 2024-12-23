@@ -11,7 +11,7 @@ COPY . .
 RUN gradle clean build
 
 # Main stage
-FROM alpine:3.20.0
+FROM alpine:3.21.0
 
 # Copy necessary files from the build stage
 COPY --from=build /app/build/libs/*.jar /app.jar
