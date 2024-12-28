@@ -47,7 +47,8 @@ jobs:
             exit 0
           fi
 
-          echo "$CHANGED_FILES" > changed_files.txt
+          # Remove newlines and store as a single line
+          CHANGED_FILES=$(echo "$CHANGED_FILES" | tr '\n' ' ')
           echo "CHANGED_FILES=${CHANGED_FILES}" | tee -a $GITHUB_ENV
 
           echo "Determining reference file..."
@@ -60,7 +61,7 @@ jobs:
             echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" | tee -a $GITHUB_ENV
           fi
 
-          # Debugging: Show the GITHUB_ENV content
+          # Debugging: Show the environment variables
           cat $GITHUB_ENV
 
       - name: Run Python script to check files
