@@ -7,7 +7,10 @@ on:
       - "src/main/resources/messages_*.properties"
       - ".github/workflows/check_prop.yml"
 
-permissions: read-all
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   check-files:
