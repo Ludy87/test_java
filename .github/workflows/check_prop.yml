@@ -30,6 +30,8 @@ jobs:
         id: determine-file
         run: |
           echo "Fetching PR changed files..."
+          # Fetch upstream main branch
+          git fetch upstream main
           CHANGED_FILES=$(git diff --name-only FETCH_HEAD...HEAD | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$')
 
           echo "Processing changed files..."
