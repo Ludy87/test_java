@@ -52,7 +52,10 @@ jobs:
         run: |
           echo "Fetching PR changed files..."
           # cd pr-branch
-          gh repo set-default ${{ github.repository }}
+
+          # gh repo set-default ${{ github.repository }}
+          gh repo set-default ${{ github.event.pull_request.head.repo.full_name }}
+
           # Store files in a safe way, only allowing valid properties files
           echo "Getting list of changed files from PR..."
           GHOUTPUT=$(gh pr view ${{ github.event.pull_request.number }} --json headRefName,headRefOid)
