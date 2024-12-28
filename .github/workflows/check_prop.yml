@@ -69,6 +69,7 @@ jobs:
           echo "CHANGED_FILES=${CHANGED_FILES_STR}" >> $GITHUB_ENV
 
           echo "Changed files: ${CHANGED_FILES_STR}"
+          cat ${CHANGED_FILES_STR}
 
       - name: Determine reference file
         id: determine-file
