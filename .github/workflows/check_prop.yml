@@ -56,7 +56,9 @@ jobs:
           # Store files in a safe way, only allowing valid properties files
           echo "Getting list of changed files from PR..."
           GHOUTPUT=$(gh pr view ${{ github.event.pull_request.number }} --json headRefName,headRefOid)
+          pp=$(gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path")
           echo "$GHOUTPUT"
+          echo "$pp"
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > ../changed_files.txt
           # cd ..
 
