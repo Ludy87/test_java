@@ -81,12 +81,12 @@ jobs:
 
           if grep -Fxq "src/main/resources/messages_en_GB.properties" changed_files.txt; then
               echo "Using PR branch reference file"
-              REFERENCE_FILE="pr-branch_reference_file_decoded.txt"
+              REFERENCE_FILE="pr-branch-messages_en_GB.properties"
               gh api repos/$REPO_OWNER/$REPO_NAME/contents/src/main/resources/messages_en_GB.properties?ref=${{ github.event.pull_request.head.ref }} \
                 --jq '.content' | base64 -d > $REFERENCE_FILE
           else
               echo "Using main branch reference file"
-              REFERENCE_FILE="main-branch_reference_file_decoded.txt"
+              REFERENCE_FILE="main-branch-messages_en_GB.properties"
               gh api repos/Ludy87/test_java/contents/src/main/resources/messages_en_GB.properties?ref=main \
                 --jq '.content' | base64 -d > $REFERENCE_FILE
           fi
