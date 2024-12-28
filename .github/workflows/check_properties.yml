@@ -9,6 +9,7 @@ on:
     branches: ["main"]
     paths:
       - "src/main/resources/messages_en_GB.properties"
+      - ".github/workflows/check_properties.yml"
 
 permissions:
   contents: read
