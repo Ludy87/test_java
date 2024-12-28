@@ -80,12 +80,12 @@ jobs:
           REPO_NAME=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.name')
           if grep -Fxq "src/main/resources/messages_en_GB.properties" changed_files.txt; then
               echo "Using PR branch reference file"
-              REFERENCE_FILE_CONTENT=$(gh api repos/$REPO_OWNER/$REPO_NAME/contents/src/main/resources/messages_en_GB.properties?ref=main --jq '.content' | base64 -d | tr -d '\n' | tr -d '\r')
-              printf "REFERENCE_FILE=\"$REFERENCE_FILE_CONTENT\"\n" >> $GITHUB_ENV
+              REFERENCE_FILE_CONTENT=$(gh api repos/$REPO_OWNER/$REPO_NAME/contents/src/main/resources/messages_en_GB.properties?ref=main --jq '.content')
+              echo "REFERENCE_FILE_CONTENT=$REFERENCE_FILE_CONTENT" >> $GITHUB_ENV
           else
               echo "Using main branch reference file"
-              REFERENCE_FILE_CONTENT=$(gh api repos/Ludy87/test_java/contents/src/main/resources/messages_en_GB.properties?ref=main --jq '.content' | base64 -d | tr -d '\n' | tr -d '\r')
-              printf "REFERENCE_FILE=\"$REFERENCE_FILE_CONTENT\"\n" >> $GITHUB_ENV
+              REFERENCE_FILE_CONTENT=$(gh api repos/Ludy87/test_java/contents/src/main/resources/messages_en_GB.properties?ref=main --jq '.content')
+              echo "REFERENCE_FILE_CONTENT=$REFERENCE_FILE_CONTENT" >> $GITHUB_ENV
           fi
 
       - name: Show REFERENCE_FILE
