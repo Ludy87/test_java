@@ -15,147 +15,119 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        uses: step-security/harden-runner@v2.10.2
         with:
           egress-policy: audit
 
-      - name: Checkout main branch first
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          ref: main
-          path: main-branch
-          fetch-depth: 0
+      - name: Checkout main branch
+        run: |
+          git clone --no-checkout https://github.com/${{ github.repository }} main-branch
+          cd main-branch
+          git fetch origin main
+          git checkout main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout PR branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
-          path: pr-branch
-          fetch-depth: 0
+        run: |
+          git clone --no-checkout https://github.com/${{ github.event.pull_request.head.repo.full_name }} pr-branch
+          cd pr-branch
+          git fetch origin ${{ github.event.pull_request.head.ref }}
+          git checkout ${{ github.event.pull_request.head.ref }}
 
       - name: Set up Python
-        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: "3.x"
 
-      - name: Install GitHub CLI
-        run: sudo apt-get update && sudo apt-get install -y gh
-
       - name: Fetch PR changed files
         id: fetch-pr-changes
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetching PR changed files..."
-          cd pr-branch
-          gh repo set-default ${{ github.repository }}
-          # Store files in a safe way, only allowing valid properties files
-          echo "Getting list of changed files from PR..."
-          gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > ../changed_files.txt
-          cd ..
+          CHANGED_FILES=$(git diff --name-only main-branch...pr-branch | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$')
 
           echo "Processing changed files..."
-          mapfile -t CHANGED_FILES < changed_files.txt
-
-          CHANGED_FILES_STR="${CHANGED_FILES[*]}"
-          echo "CHANGED_FILES=${CHANGED_FILES_STR}" >> $GITHUB_ENV
-
-          echo "Changed files: ${CHANGED_FILES_STR}"
-
-      - name: Determine reference file
-        id: determine-file
-        run: |
-          echo "Determining reference file..."
-          if grep -Fxq "src/main/resources/messages_en_GB.properties" changed_files.txt; then
-              echo "Using PR branch reference file"
-              echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
-          else
-              echo "Using main branch reference file"
-              echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No changed files found in PR. Exiting."
+            echo "FAIL_JOB=false" >> $GITHUB_ENV
+            exit 0
           fi
 
-      - name: Show REFERENCE_FILE
-        run: echo "Reference file is set to ${REFERENCE_FILE}"
+          echo "$CHANGED_FILES" | tr '\n' ' ' > changed_files.txt
+          echo "CHANGED_FILES=$(cat changed_files.txt)" >> $GITHUB_ENV
+
+      - name: Determine reference file
+        run: |
+          echo "Determining reference file..."
+          if grep -q "src/main/resources/messages_en_GB.properties" changed_files.txt; then
+            echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          else
+            echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          fi
 
       - name: Run Python script to check files
-        id: run-check
         run: |
           echo "Running Python script to check files..."
           python main-branch/.github/scripts/check_language_properties.py \
-            --actor ${{ github.event.pull_request.user.login }} \
+            --actor ${{ github.actor }} \
             --reference-file "${REFERENCE_FILE}" \
             --branch pr-branch \
-            --files "${CHANGED_FILES[@]}" > result.txt || true
+            --files "${CHANGED_FILES}" > result.txt || true
 
       - name: Capture output
-        id: capture-output
         run: |
           if [ -f result.txt ] && [ -s result.txt ]; then
-            echo "Test, capturing output..."
             SCRIPT_OUTPUT=$(cat result.txt)
             echo "SCRIPT_OUTPUT<<EOF" >> $GITHUB_ENV
             echo "$SCRIPT_OUTPUT" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
-            echo "${SCRIPT_OUTPUT}"
 
-            # Set FAIL_JOB to true if SCRIPT_OUTPUT contains ❌
-            if [[ "$SCRIPT_OUTPUT" == *"❌"* ]]; then
+            if echo "$SCRIPT_OUTPUT" | grep -q "❌"; then
               echo "FAIL_JOB=true" >> $GITHUB_ENV
             else
               echo "FAIL_JOB=false" >> $GITHUB_ENV
             fi
           else
-            echo "No update found."
-            echo "SCRIPT_OUTPUT=" >> $GITHUB_ENV
+            echo "No output generated."
             echo "FAIL_JOB=false" >> $GITHUB_ENV
           fi
 
       - name: Post comment on PR
         if: env.SCRIPT_OUTPUT != ''
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@v7
         with:
           script: |
-            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
-            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
+            const { SCRIPT_OUTPUT } = process.env;
             const prNumber = context.issue.number;
 
-            // Find existing comment
             const comments = await github.rest.issues.listComments({
-              owner: repoOwner,
-              repo: repoName,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               issue_number: prNumber
             });
 
-            const comment = comments.data.find(c => c.body.includes("## 🚀 Translation Verification Summary"));
+            const existingComment = comments.data.find(comment =>
+              comment.body.includes("## 🚀 Translation Verification Summary")
+            );
 
-            // Only allow the action user to update comments
-            const expectedActor = "github-actions[bot]";
+            const newCommentBody = `## 🚀 Translation Verification Summary\n\n${SCRIPT_OUTPUT}`;
 
-            if (comment && comment.user.login === expectedActor) {
-              // Update existing comment
+            if (existingComment) {
               await github.rest.issues.updateComment({
-                owner: repoOwner,
-                repo: repoName,
-                comment_id: comment.id,
-                body: `## 🚀 Translation Verification Summary\n\n\n${SCRIPT_OUTPUT}\n`
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: newCommentBody
               });
-              console.log("Updated existing comment.");
-            } else if (!comment) {
-              // Create new comment if no existing comment is found
-              await github.rest.issues.createComment({
-                owner: repoOwner,
-                repo: repoName,
-                issue_number: prNumber,
-                body: `## 🚀 Translation Verification Summary\n\n\n${SCRIPT_OUTPUT}\n`
-              });
-              console.log("Created new comment.");
             } else {
-              console.log("Comment update attempt denied. Actor does not match.");
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: newCommentBody
+              });
             }
 
       - name: Fail job if errors found
         if: env.FAIL_JOB == 'true'
-        run: |
-          echo "Failing the job because errors were detected."
-          exit 1
+        run: exit 1
