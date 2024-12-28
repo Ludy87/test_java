@@ -43,12 +43,12 @@ jobs:
           echo "Processing changed files..."
           if [ -z "$CHANGED_FILES" ]; then
             echo "No changed files found in PR. Exiting."
-            echo "FAIL_JOB=false" >> $GITHUB_ENV
+            echo "FAIL_JOB=false" | tee -a $GITHUB_ENV
             exit 0
           fi
 
           echo "$CHANGED_FILES" > changed_files.txt
-          echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
+          echo "CHANGED_FILES=${CHANGED_FILES}" | tee -a $GITHUB_ENV
 
           echo "Determining reference file..."
           if echo "$CHANGED_FILES" | grep -q "src/main/resources/messages_en_GB.properties"; then
@@ -59,6 +59,9 @@ jobs:
             git checkout upstream/main -- src/main/resources/messages_en_GB.properties
             echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" | tee -a $GITHUB_ENV
           fi
+
+          # Debugging: Show the GITHUB_ENV content
+          cat $GITHUB_ENV
 
       - name: Run Python script to check files
         id: run-check
