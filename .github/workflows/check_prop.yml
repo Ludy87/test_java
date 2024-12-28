@@ -1,0 +1,121 @@
+name: Check Properties Files on PR
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "src/main/resources/messages_*.properties"
+      - ".github/workflows/check_prop.yml"
+
+permissions: read-all
+
+jobs:
+  check-files:
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Fetch Main Repository
+        run: |
+          git remote add upstream https://github.com/Ludy87/test_java.git
+          git fetch upstream
+
+      - name: Determine reference file
+        id: determine-file
+        run: |
+          echo "Fetching PR changed files..."
+          CHANGED_FILES=$(git diff --name-only FETCH_HEAD...HEAD | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$')
+
+          echo "Processing changed files..."
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No changed files found in PR. Exiting."
+            echo "FAIL_JOB=false" >> $GITHUB_ENV
+            exit 0
+          fi
+
+          echo "$CHANGED_FILES" > changed_files.txt
+          echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
+
+          echo "Determining reference file..."
+          if echo "$CHANGED_FILES" | grep -q "src/main/resources/messages_en_GB.properties"; then
+            echo "Using PR branch reference file"
+            echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          else
+            echo "Using main branch reference file"
+            git checkout upstream/main -- src/main/resources/messages_en_GB.properties
+            echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+          fi
+
+      - name: Run Python script to check files
+        id: run-check
+        run: |
+          echo "Running Python script to check files..."
+          python .github/scripts/check_language_properties.py \
+            --actor ${{ github.event.pull_request.user.login }} \
+            --reference-file "${REFERENCE_FILE}" \
+            --files $(cat changed_files.txt) > result.txt || true
+
+      - name: Capture output
+        id: capture-output
+        run: |
+          if [ -s result.txt ]; then
+            SCRIPT_OUTPUT=$(cat result.txt)
+            echo "SCRIPT_OUTPUT<<EOF" >> $GITHUB_ENV
+            echo "$SCRIPT_OUTPUT" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+
+            if echo "$SCRIPT_OUTPUT" | grep -q "❌"; then
+              echo "FAIL_JOB=true" >> $GITHUB_ENV
+            else
+              echo "FAIL_JOB=false" >> $GITHUB_ENV
+            fi
+          else
+            echo "No output generated."
+            echo "FAIL_JOB=false" >> $GITHUB_ENV
+          fi
+
+      - name: Post comment on PR
+        if: env.SCRIPT_OUTPUT != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { SCRIPT_OUTPUT } = process.env;
+            const { number } = context.issue;
+
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: number,
+            });
+
+            const existingComment = comments.data.find(comment =>
+              comment.body.includes("## 🚀 Translation Verification Summary")
+            );
+
+            const newCommentBody = `## 🚀 Translation Verification Summary\n\n${SCRIPT_OUTPUT}`;
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: newCommentBody,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: number,
+                body: newCommentBody,
+              });
+            }
+
+      - name: Fail job if errors found
+        if: env.FAIL_JOB == 'true'
+        run: exit 1
