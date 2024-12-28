@@ -53,11 +53,11 @@ jobs:
           echo "Determining reference file..."
           if echo "$CHANGED_FILES" | grep -q "src/main/resources/messages_en_GB.properties"; then
             echo "Using PR branch reference file"
-            echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+            echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" | tee -a $GITHUB_ENV
           else
             echo "Using main branch reference file"
             git checkout upstream/main -- src/main/resources/messages_en_GB.properties
-            echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+            echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" | tee -a $GITHUB_ENV
           fi
 
       - name: Run Python script to check files
