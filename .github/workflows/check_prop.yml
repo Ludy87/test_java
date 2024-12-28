@@ -103,7 +103,7 @@ jobs:
           python .github/scripts/check_language_properties.py \
             --actor ${{ github.event.pull_request.user.login }} \
             --reference-file "${REFERENCE_FILE}" \
-            --branch pr-branch \
+            --branch "" \
             --files "${CHANGED_FILES[@]}" > result.txt || true
 
       - name: Capture output
