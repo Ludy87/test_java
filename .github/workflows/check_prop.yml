@@ -30,10 +30,14 @@ jobs:
         id: determine-file
         run: |
           echo "Fetching PR changed files..."
-          # Fetch upstream main branch
+          # Fetch the upstream main branch
           git fetch upstream main
 
-          # Get changed files
+          # Ensure the HEAD is on the correct branch
+          git fetch origin
+          git checkout $GITHUB_HEAD_REF
+
+          # Compare changes with upstream/main
           CHANGED_FILES=$(git diff --name-only upstream/main...HEAD | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$')
 
           echo "Processing changed files..."
