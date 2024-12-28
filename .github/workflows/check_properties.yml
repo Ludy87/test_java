@@ -169,7 +169,7 @@ jobs:
   update-translations-main:
     if: github.event_name == 'push'
     permissions:
-      # contents: write
+      contents: write
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
