@@ -72,6 +72,8 @@ jobs:
 
       - name: Determine reference file
         id: determine-file
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Determining reference file..."
           REPO_OWNER=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.owner.login')
