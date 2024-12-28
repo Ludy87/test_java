@@ -1,0 +1,55 @@
+name: Compare Properties Files
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: audit
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas
+
+      - name: Get changed files
+        id: changed_files
+        run: |
+          git fetch origin main
+          git diff --name-only origin/main > changed_files.txt
+          echo "CHANGED_FILES=$(cat changed_files.txt)" >> $GITHUB_ENV
+
+      - name: Run comparison script
+        run: |
+          echo ${{ steps.changed_files.outputs.CHANGED_FILES }}
+          changed_files=$(echo $CHANGED_FILES | tr ' ' '\n' | grep '^src/main/resources/messages_.*\.properties$')
+          if [ -n "$changed_files" ]; then
+            python .github/scripts/translation_check.py $changed_files
+          else
+            echo "No relevant changes in properties files."
+          fi
+        env:
+          CHANGED_FILES: ${{ env.CHANGED_FILES }}
+
+      - name: Create PR comment
+        if: success() && steps.changed_files.outputs.CHANGED_FILES
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: comparison_result.txt
