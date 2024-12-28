@@ -10,6 +10,9 @@ on:
     paths:
       - "src/main/resources/messages_en_GB.properties"
 
+permissions:
+  contents: read
+
 jobs:
   check-files:
     if: github.event_name == 'pull_request_target'
