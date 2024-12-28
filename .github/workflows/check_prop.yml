@@ -22,20 +22,20 @@ jobs:
         with:
           egress-policy: audit
 
-      - name: Checkout main branch first
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          ref: main
-          path: main-branch
-          fetch-depth: 0
+      # - name: Checkout main branch first
+      #   uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      #   with:
+      #     ref: main
+      #     path: main-branch
+      #     fetch-depth: 0
 
-      - name: Checkout PR branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
-          path: pr-branch
-          fetch-depth: 0
+      # - name: Checkout PR branch
+      #   uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      #   with:
+      #     repository: ${{ github.event.pull_request.head.repo.full_name }}
+      #     ref: ${{ github.event.pull_request.head.ref }}
+      #     path: pr-branch
+      #     fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
@@ -51,14 +51,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetching PR changed files..."
-          cd pr-branch
+          # cd pr-branch
           gh repo set-default ${{ github.repository }}
           # Store files in a safe way, only allowing valid properties files
           echo "Getting list of changed files from PR..."
           GHOUTPUT=$(gh pr view ${{ github.event.pull_request.number }} --json headRefName,headRefOid)
           echo "$GHOUTPUT"
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > ../changed_files.txt
-          cd ..
+          # cd ..
 
           echo "Processing changed files..."
           mapfile -t CHANGED_FILES < changed_files.txt
@@ -72,12 +72,18 @@ jobs:
         id: determine-file
         run: |
           echo "Determining reference file..."
+          REPO_OWNER=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.owner.login')
+          REPO_NAME=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.name')
           if grep -Fxq "src/main/resources/messages_en_GB.properties" changed_files.txt; then
               echo "Using PR branch reference file"
+              REFERENCE_FILE_CONTENT=$(gh api repos/$REPO_OWNER/$REPO_NAME/contents/src/main/resources/messages_en_GB.properties?ref=main --jq '.content' | base64 -d)
+              echo "REFERENCE_FILE=$REFERENCE_FILE_CONTENT" >> $GITHUB_ENV
               echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
               echo "Using main branch reference file"
-              echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+              REFERENCE_FILE_CONTENT=$(gh api repos/Ludy87/test_java/contents/src/main/resources/messages_en_GB.properties?ref=main --jq '.content' | base64 -d)
+              echo "REFERENCE_FILE=$REFERENCE_FILE_CONTENT" >> $GITHUB_ENV
+              # echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           fi
 
       - name: Show REFERENCE_FILE
