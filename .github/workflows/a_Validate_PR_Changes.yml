@@ -5,7 +5,8 @@ on:
     paths:
       - "src/main/resources/messages_*.properties"
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   validate:
