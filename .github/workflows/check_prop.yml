@@ -13,71 +13,70 @@ jobs:
   check-files:
     if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2.10.2
+        with:
+          egress-policy: audit
 
-      - name: Fetch Main Repository
+      - name: Checkout main branch
         run: |
-          git remote add upstream https://github.com/Ludy87/test_java.git
-          git fetch upstream
+          git clone --no-checkout https://github.com/${{ github.repository }} main-branch
+          cd main-branch
+          git fetch origin main
+          git checkout main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Determine reference file
-        id: determine-file
+      - name: Checkout PR branch
+        run: |
+          git clone --no-checkout https://github.com/${{ github.event.pull_request.head.repo.full_name }} pr-branch
+          cd pr-branch
+          git fetch origin ${{ github.event.pull_request.head.ref }}
+          git checkout ${{ github.event.pull_request.head.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.3.0
+        with:
+          python-version: "3.x"
+
+      - name: Fetch PR changed files
+        id: fetch-pr-changes
         run: |
           echo "Fetching PR changed files..."
-          # Fetch the upstream main branch
-          git fetch upstream main
-
-          # Ensure the HEAD is on the correct branch
-          git fetch origin
-          git checkout --track origin/$GITHUB_HEAD_REF || git checkout $GITHUB_HEAD_REF
-
-          # Compare changes with upstream/main
-          CHANGED_FILES=$(git diff --name-only upstream/main...HEAD | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$')
+          CHANGED_FILES=$(git diff --name-only main-branch...pr-branch | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$')
 
           echo "Processing changed files..."
           if [ -z "$CHANGED_FILES" ]; then
             echo "No changed files found in PR. Exiting."
-            echo "FAIL_JOB=false" | tee -a $GITHUB_ENV
+            echo "FAIL_JOB=false" >> $GITHUB_ENV
             exit 0
           fi
 
-          # Remove newlines and store as a single line
-          CHANGED_FILES=$(echo "$CHANGED_FILES" | tr '\n' ' ')
-          echo "CHANGED_FILES=${CHANGED_FILES}" | tee -a $GITHUB_ENV
+          echo "$CHANGED_FILES" | tr '\n' ' ' > changed_files.txt
+          echo "CHANGED_FILES=$(cat changed_files.txt)" >> $GITHUB_ENV
 
+      - name: Determine reference file
+        run: |
           echo "Determining reference file..."
-          if echo "$CHANGED_FILES" | grep -q "src/main/resources/messages_en_GB.properties"; then
-            echo "Using PR branch reference file"
-            echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" | tee -a $GITHUB_ENV
+          if grep -q "src/main/resources/messages_en_GB.properties" changed_files.txt; then
+            echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
-            echo "Using main branch reference file"
-            git checkout upstream/main -- src/main/resources/messages_en_GB.properties
-            echo "REFERENCE_FILE=src/main/resources/messages_en_GB.properties" | tee -a $GITHUB_ENV
+            echo "REFERENCE_FILE=main-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           fi
 
-          # Debugging: Show the environment variables
-          cat $GITHUB_ENV
-
       - name: Run Python script to check files
-        id: run-check
         run: |
           echo "Running Python script to check files..."
-          python .github/scripts/check_language_properties.py \
-            --actor ${{ github.event.pull_request.user.login }} \
+          python main-branch/.github/scripts/check_language_properties.py \
+            --actor ${{ github.actor }} \
             --reference-file "${REFERENCE_FILE}" \
-            --branch "" \
-            --files $(cat changed_files.txt) > result.txt || true
+            --branch pr-branch \
+            --files "${CHANGED_FILES}" > result.txt || true
 
       - name: Capture output
-        id: capture-output
         run: |
-          if [ -s result.txt ]; then
+          if [ -f result.txt ] && [ -s result.txt ]; then
             SCRIPT_OUTPUT=$(cat result.txt)
             echo "SCRIPT_OUTPUT<<EOF" >> $GITHUB_ENV
             echo "$SCRIPT_OUTPUT" >> $GITHUB_ENV
@@ -99,12 +98,12 @@ jobs:
         with:
           script: |
             const { SCRIPT_OUTPUT } = process.env;
-            const { number } = context.issue;
+            const prNumber = context.issue.number;
 
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: number,
+              issue_number: prNumber
             });
 
             const existingComment = comments.data.find(comment =>
@@ -118,14 +117,14 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 comment_id: existingComment.id,
-                body: newCommentBody,
+                body: newCommentBody
               });
             } else {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: number,
-                body: newCommentBody,
+                issue_number: prNumber,
+                body: newCommentBody
               });
             }
 
