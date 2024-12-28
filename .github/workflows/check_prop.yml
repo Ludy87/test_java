@@ -100,7 +100,7 @@ jobs:
         id: run-check
         run: |
           echo "Running Python script to check files..."
-          python main-branch/.github/scripts/check_language_properties.py \
+          python .github/scripts/check_language_properties.py \
             --actor ${{ github.event.pull_request.user.login }} \
             --reference-file "${REFERENCE_FILE}" \
             --branch pr-branch \
