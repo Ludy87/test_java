@@ -35,7 +35,7 @@ jobs:
 
           # Ensure the HEAD is on the correct branch
           git fetch origin
-          git checkout $GITHUB_HEAD_REF
+          git checkout --track origin/$GITHUB_HEAD_REF || git checkout $GITHUB_HEAD_REF
 
           # Compare changes with upstream/main
           CHANGED_FILES=$(git diff --name-only upstream/main...HEAD | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$')
