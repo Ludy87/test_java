@@ -82,7 +82,7 @@ jobs:
               echo "Using PR branch reference file"
               REFERENCE_FILE_CONTENT=$(gh api repos/$REPO_OWNER/$REPO_NAME/contents/src/main/resources/messages_en_GB.properties?ref=main --jq '.content' | base64 -d)
               echo "REFERENCE_FILE=$REFERENCE_FILE_CONTENT" >> $GITHUB_ENV
-              echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
+              # echo "REFERENCE_FILE=pr-branch/src/main/resources/messages_en_GB.properties" >> $GITHUB_ENV
           else
               echo "Using main branch reference file"
               REFERENCE_FILE_CONTENT=$(gh api repos/Ludy87/test_java/contents/src/main/resources/messages_en_GB.properties?ref=main --jq '.content' | base64 -d)
