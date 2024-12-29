@@ -101,7 +101,7 @@ jobs:
 
           ls pr-branch/
 
-          find pr-branch/ -type f > file_list.txt
+          find pr-branch/ -type f | awk -F'pr-branch/' '{print $2}' > file_list.txt
 
           mapfile -t FILES_LIST < file_list.txt
           FILES_LIST_STR="${FILES_LIST[*]}"
