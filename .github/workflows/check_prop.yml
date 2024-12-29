@@ -84,11 +84,14 @@ jobs:
           REPO_NAME=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.name')
           BRANCH=$(gh pr view ${{ github.event.pull_request.number }} --json headRefName -q '.headRefName')
 
+          echo $REPO_OWNER
+          echo $REPO_NAME
           echo $BRANCH
 
           # Zeige den Inhalt der Dateien
           while IFS= read -r file; do
             echo "File: $file"
+            echo repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH
             gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content'
           done < changed_files.txt
 
