@@ -24,26 +24,11 @@ jobs:
 
       - name: Checkout main branch first
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      #   with:
-      #     ref: main
-      #     path: main-branch
-      #     fetch-depth: 0
-
-      # - name: Checkout PR branch
-      #   uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      #   with:
-      #     repository: ${{ github.event.pull_request.head.repo.full_name }}
-      #     ref: ${{ github.event.pull_request.head.ref }}
-      #     path: pr-branch
-      #     fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
         with:
           python-version: "3.x"
-
-      # - name: Install GitHub CLI
-      #   run: sudo apt-get update && sudo apt-get install -y gh
 
       - name: Fetch PR changed files
         id: fetch-pr-changes
@@ -51,28 +36,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetching PR changed files..."
-          # cd pr-branch
 
-          # gh repo set-default ${{ github.repository }}
           gh repo set-default ${{ github.event.pull_request.head.repo.full_name }}
 
           # Store files in a safe way, only allowing valid properties files
           echo "Getting list of changed files from PR..."
-          GHOUTPUT=$(gh pr view ${{ github.event.pull_request.number }} --json headRefName,headRefOid)
-          pp=$(gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path")
-          echo "$GHOUTPUT"
-          echo "$pp "
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > changed_files.txt
-          # cd ..
-
-          echo "Processing changed files..."
-          mapfile -t CHANGED_FILES < changed_files.txt
-
-          CHANGED_FILES_STR="${CHANGED_FILES[*]}"
-          echo "CHANGED_FILES=${CHANGED_FILES_STR}" >> $GITHUB_ENV
-
-          echo "Changed files: ${CHANGED_FILES_STR}"
-          # cat ${CHANGED_FILES_STR}
 
       - name: Determine reference file
         id: determine-file
