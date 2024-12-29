@@ -7,10 +7,9 @@ on:
       - "src/main/resources/messages_*.properties"
       - ".github/workflows/check_prop.yml"
 
-
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+  issues: write
 
 jobs:
   check-files:
@@ -53,22 +52,13 @@ jobs:
           REPO_NAME=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.name')
           BRANCH=$(gh pr view ${{ github.event.pull_request.number }} --json headRefName -q '.headRefName')
 
-          echo $REPO_OWNER
-          echo $REPO_NAME
-          echo $BRANCH
-
           mkdir -p pr-branch
 
           # Zeige den Inhalt der Dateien
           while IFS= read -r file; do
-            echo "File: $file"
-            echo repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH
             mkdir -p "pr-branch/$(dirname "$file")"
             gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content' | base64 -d > "pr-branch/src/main/resources/$(basename "$file")"
-            # cat "pr-branch/$(basename "$file")"
           done < changed_files.txt
-
-          ls pr-branch/
 
           find pr-branch/ -type f | awk -F'pr-branch/' '{print $2}' > file_list.txt
 
@@ -77,7 +67,6 @@ jobs:
           echo "FILES_LIST=${FILES_LIST_STR}" >> $GITHUB_ENV
           echo "Changed files: ${FILES_LIST_STR}"
 
-          echo file_list.txt
           cat file_list.txt
 
           if grep -Fxq "src/main/resources/messages_en_GB.properties" changed_files.txt; then
@@ -93,9 +82,6 @@ jobs:
           fi
 
           echo "REFERENCE_FILE=$REFERENCE_FILE" >> $GITHUB_ENV
-
-      - name: Show REFERENCE_FILE
-        run: echo "Reference file is set to ${REFERENCE_FILE}"
 
       - name: Run Python script to check files
         id: run-check
