@@ -82,7 +82,7 @@ jobs:
           echo "Determining reference file..."
           REPO_OWNER=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.owner.login')
           REPO_NAME=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.name')
-          BRANCH=$(gh pr view $PR_NUMBER --json headRefName -q '.headRefName')
+          BRANCH=$(gh pr view ${{ github.event.pull_request.number }} --json headRefName -q '.headRefName')
 
           echo $BRANCH
 
