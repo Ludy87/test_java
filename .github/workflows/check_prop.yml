@@ -94,7 +94,7 @@ jobs:
           while IFS= read -r file; do
             echo "File: $file"
             echo repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH
-            cd pr-branch
+            mkdir -p "pr-branch/$(dirname "$file")"
             gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content' | base64 -d > "pr-branch/$(basename "$file")"
             cat "pr-branch/$(basename "$file")"
           done < changed_files.txt
