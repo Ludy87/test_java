@@ -72,7 +72,7 @@ jobs:
           echo "CHANGED_FILES=${CHANGED_FILES_STR}" >> $GITHUB_ENV
 
           echo "Changed files: ${CHANGED_FILES_STR}"
-          cat ${CHANGED_FILES_STR}
+          # cat ${CHANGED_FILES_STR}
 
       - name: Determine reference file
         id: determine-file
@@ -103,7 +103,10 @@ jobs:
 
           find pr-branch/ -maxdepth 1 -type f > file_list.txt
 
-          cat ${CHANGED_FILES[@]}
+          mapfile -t FILES_LIST < file_list.txt
+          FILES_LIST_STR="${FILES_LIST[*]}"
+          echo "FILES_LIST=${FILES_LIST_STR}" >> $GITHUB_ENV
+          echo "Changed files: ${FILES_LIST_STR}"
 
           echo file_list.txt
           cat file_list.txt
@@ -133,7 +136,7 @@ jobs:
             --actor ${{ github.event.pull_request.user.login }} \
             --reference-file "${REFERENCE_FILE}" \
             --branch "" \
-            --files "${CHANGED_FILES[@]}" > result.txt || true
+            --files "${FILES_LIST[@]}" > result.txt || true
 
       - name: Capture output
         id: capture-output
