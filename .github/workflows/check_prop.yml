@@ -48,9 +48,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Determining reference file..."
-          REPO_OWNER=$(gh pr view ${{ github.event.pull_request.number }} --json author -q '.author.login') # Get PR author's username
-          REPO_NAME=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.name') # Get PR repository name
-          BRANCH=$(gh pr view ${{ github.event.pull_request.number }} --json headRefName -q '.headRefName') # Get PR branch name
+          REPO_OWNER=$(printf "%q" "$(gh pr view ${{ github.event.pull_request.number }} --json author -q '.author.login')")
+          REPO_NAME=$(printf "%q" "$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.name')")
+          BRANCH=$(printf "%q" "$(gh pr view ${{ github.event.pull_request.number }} --json headRefName -q '.headRefName')")
+
+          echo $REPO_OWNER
+          echo $REPO_NAME
+          echo $BRANCH
 
           mkdir -p pr-branch # Create a directory for PR files
 
