@@ -55,13 +55,32 @@ jobs:
           echo $REPO_OWNER
           echo $REPO_NAME
           echo $BRANCH
+          if [[ ! "$REPO_OWNER" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+            echo "Invalid repository owner: $REPO_OWNER"
+            exit 1
+          fi
+
+          if [[ ! "$REPO_NAME" =~ ^[a-zA-Z0-9._-]+$ ]]; then
+            echo "Invalid repository name: $REPO_NAME"
+            exit 1
+          fi
+
+          if [[ ! "$BRANCH" =~ ^[a-zA-Z0-9._/-]+$ ]]; then
+            echo "Invalid branch name: $BRANCH"
+            exit 1
+          fi
 
           mkdir -p pr-branch # Create a directory for PR files
 
           # Download the content of each changed file
           while IFS= read -r file; do
-            mkdir -p "pr-branch/$(dirname "$file")" # Create directories for files
-            gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content' | base64 -d > "pr-branch/src/main/resources/$(basename "$file")" # Save decoded file content
+            if [[ "$file" =~ ^src/main/resources/messages_[a-zA-Z_]+\.properties$ ]]; then
+              mkdir -p "pr-branch/$(dirname "$file")" # Create directories for files
+              gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content' | base64 -d > "pr-branch/src/main/resources/$(basename "$file")" # Save decoded file content
+            else
+              echo "Invalid file path detected: $file"
+              exit 1
+            fi
           done < changed_files.txt
 
           # Generate a list of files without the "pr-branch/" prefix
