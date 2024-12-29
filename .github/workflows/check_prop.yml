@@ -74,6 +74,9 @@ jobs:
           echo "Changed files: ${CHANGED_FILES_STR}"
           cat ${CHANGED_FILES_STR}
 
+          echo "Current branch:"
+          git branch --show-current
+
       - name: Determine reference file
         id: determine-file
         env:
