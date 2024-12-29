@@ -83,7 +83,7 @@ jobs:
           REPO_OWNER=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.owner.login')
           E=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.owner')
           F=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository')
-          DF=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository)
+          D=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository)
           echo $E
           echo $F
           echo $D
