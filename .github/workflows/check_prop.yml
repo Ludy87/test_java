@@ -99,10 +99,14 @@ jobs:
             # cat "pr-branch/$(basename "$file")"
           done < changed_files.txt
 
-          ls -la pr-branch/
-          ls -la pr-branch/src/
-          ls -la pr-branch/src/main/
-          ls -la pr-branch/src/main/resources/
+          ls pr-branch/
+
+          find pr-branch/ -maxdepth 1 -type f > file_list.txt
+
+          cat ${CHANGED_FILES[@]}
+
+          echo file_list.txt
+          cat file_list.txt
 
           if grep -Fxq "src/main/resources/messages_en_GB.properties" changed_files.txt; then
               echo "Using PR branch reference file"
