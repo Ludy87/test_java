@@ -74,9 +74,6 @@ jobs:
           echo "Changed files: ${CHANGED_FILES_STR}"
           cat ${CHANGED_FILES_STR}
 
-          echo "Current branch:"
-          git branch --show-current
-
       - name: Determine reference file
         id: determine-file
         env:
@@ -85,6 +82,13 @@ jobs:
           echo "Determining reference file..."
           REPO_OWNER=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.owner.login')
           REPO_NAME=$(gh pr view ${{ github.event.pull_request.number }} --json headRepository -q '.headRepository.name')
+          BRANCH=$(gh pr view $PR_NUMBER --json headRefName -q '.headRefName')
+
+          # Zeige den Inhalt der Dateien
+          while IFS= read -r file; do
+            echo "File: $file"
+            gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content' | base64 -d
+          done < changed_files.txt
 
           if grep -Fxq "src/main/resources/messages_en_GB.properties" changed_files.txt; then
               echo "Using PR branch reference file"
