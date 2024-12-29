@@ -95,13 +95,13 @@ jobs:
             echo "File: $file"
             echo repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH
             mkdir -p "pr-branch/$(dirname "$file")"
-            gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content' | base64 -d > "pr-branch/$(basename "$file")"
+            gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content' | base64 -d > "pr-branch/src/main/resources/$(basename "$file")"
             # cat "pr-branch/$(basename "$file")"
           done < changed_files.txt
 
           ls pr-branch/
 
-          find pr-branch/ -maxdepth 1 -type f > file_list.txt
+          find pr-branch/ -type f > file_list.txt
 
           mapfile -t FILES_LIST < file_list.txt
           FILES_LIST_STR="${FILES_LIST[*]}"
