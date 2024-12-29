@@ -89,7 +89,7 @@ jobs:
           # Zeige den Inhalt der Dateien
           while IFS= read -r file; do
             echo "File: $file"
-            gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content' | base64 -d
+            gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content'
           done < changed_files.txt
 
           if grep -Fxq "src/main/resources/messages_en_GB.properties" changed_files.txt; then
