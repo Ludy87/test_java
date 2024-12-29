@@ -88,14 +88,15 @@ jobs:
           echo $REPO_NAME
           echo $BRANCH
 
+          mkdir -p pr-branch
+
           # Zeige den Inhalt der Dateien
           while IFS= read -r file; do
             echo "File: $file"
             echo repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH
-            mkdir pr-branch
             cd pr-branch
-            gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content' | base64 -d > "$file.txt"
-            cat "$file.txt"
+            gh api repos/$REPO_OWNER/$REPO_NAME/contents/$file?ref=$BRANCH --jq '.content' | base64 -d > "pr-branch/$(basename "$file")"
+            cat "pr-branch/$(basename "$file")"
           done < changed_files.txt
 
           if grep -Fxq "src/main/resources/messages_en_GB.properties" changed_files.txt; then
