@@ -72,9 +72,9 @@ jobs:
         with:
           script: |
             const prNumber = ${{ steps.get-pr-data.outputs.pr_number }};
-            const repoOwner = ${{ steps.get-pr-data.outputs.repo_owner }};
-            const repoName = ${{ steps.get-pr-data.outputs.repo_name }};
-            const branch = ${{ steps.get-pr-data.outputs.branch }};
+            const repoOwner = "${{ steps.get-pr-data.outputs.repo_owner }}";
+            const repoName = "${{ steps.get-pr-data.outputs.repo_name }}";
+            const branch = "${{ steps.get-pr-data.outputs.branch }}";
 
             console.log(`Determining reference file for PR #${prNumber}`);
 
