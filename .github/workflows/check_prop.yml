@@ -15,7 +15,6 @@ jobs:
     if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
     permissions:
-      contents: read # Allow read access to repository content
       issues: write # Allow posting comments on issues/PRs
     steps:
       - name: Harden Runner
@@ -38,11 +37,11 @@ jobs:
         run: |
           echo "Fetching PR changed files..."
 
-          gh repo set-default ${{ github.event.pull_request.head.repo.full_name }} # Set the fork repository as default
+          # gh repo set-default ${{ github.event.pull_request.head.repo.full_name }} # Set the fork repository as default
 
           # Fetch the list of changed files in the PR
           echo "Getting list of changed files from PR..."
-          gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > changed_files.txt # Filter only matching property files
+          gh pr view ${{ github.event.pull_request.number }} --repo ${{ github.event.pull_request.head.repo.full_name }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > changed_files.txt # Filter only matching property files
 
       - name: Get PR data
         id: get-pr-data
