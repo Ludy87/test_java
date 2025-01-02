@@ -42,6 +42,39 @@ jobs:
           echo "Getting list of changed files from PR..."
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > changed_files.txt # Filter only matching property files
 
+      - name: Get PR data
+        id: get-pr
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const prNumber = context.payload.issue.number;
+            console.log(`PR Number: ${prNumber}`);
+            core.setOutput("pr_number", prNumber);
+
+      - name: Get PR repository and ref
+        id: get-pr-info
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            console.log(${{ steps.get-pr.outputs.pr_number }})
+            const { owner, repo } = context.repo;
+            const prNumber = context.payload.issue.number;
+
+            const { data: pr } = await github.rest.pulls.get({
+              owner,
+              repo,
+              pull_number: prNumber,
+            });
+
+            // For forks, use the full repository name, for internal PRs use the current repo
+            const repository = pr.head.repo.fork ? pr.head.repo.full_name : `${owner}/${repo}`;
+
+            console.log(`PR Repository: ${repository}`);
+            console.log(`PR Branch: ${pr.head.ref}`);
+
+            core.setOutput('repository', repository);
+            core.setOutput('ref', pr.head.ref);
+
       - name: Determine reference file
         id: determine-file
         env:
