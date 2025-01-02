@@ -124,10 +124,9 @@ jobs:
               recursive: true,
             });
 
-            const changedFiles = commitData.tree
-              .filter(file => file.type === "blob")
-              .map(file => file.path)
-              .filter(path => /^src\/main\/resources\/messages_[a-zA-Z_]+\.properties$/.test(path));
+            const changedFiles = files
+              .map(file => file.filename)
+              .filter(file => /^src\/main\/resources\/messages_[a-zA-Z_]+\.properties$/.test(file));
 
             if (!changedFiles.length) {
               throw new Error("No valid changed files found.");
