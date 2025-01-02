@@ -111,7 +111,6 @@ jobs:
             core.setOutput('branch', branch);
 
             console.log(`PR Number: ${prNumber}`);
-            console.log(`Commit SHA: ${commitSha}`);
 
             // Get the list of changed files in the PR
             const { data: files } = await github.rest.pulls.listFiles({
