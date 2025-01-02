@@ -110,11 +110,21 @@ jobs:
 
             core.setOutput('branch', branch);
 
-            // Get changed files
-            const { data: files } = await github.rest.pulls.listFiles({
+            // Get PR data and specific commit
+            const prNumber = github.context.payload.pull_request.number;
+            const repoOwner = github.context.payload.repository.owner.login;
+            const repoName = github.context.payload.repository.name;
+            const commitSha = github.context.payload.pull_request.head.sha;
+
+            console.log(`PR Number: ${prNumber}`);
+            console.log(`Commit SHA: ${commitSha}`);
+
+            // Use commit SHA to fetch file contents
+            const { data: commitData } = await github.rest.git.getTree({
               owner: repoOwner,
               repo: repoName,
-              pull_number: prNumber,
+              tree_sha: commitSha,
+              recursive: true,
             });
 
             const changedFiles = files
