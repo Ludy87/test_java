@@ -60,10 +60,8 @@ jobs:
           echo "Fetching PR changed files..."
 
           echo "${{ github.event.pull_request.head.repo.owner.login }}"
-          # core.setOutput("pr_repo_owner", ${{ github.event.pull_request.head.repo.owner.login }});
 
           echo "${{ github.event.pull_request.head.repo.name }}"
-          # core.setOutput("pr_repo_name", "${{ github.event.pull_request.head.repo.name }}");
 
           gh repo view "${{ github.event.pull_request.head.repo.full_name }}" --branch "${{ steps.get-pr-data.outputs.branch }}"
 
@@ -101,8 +99,8 @@ jobs:
 
             // Get the list of changed files in the PR
             const { data: files } = await github.rest.pulls.listFiles({
-              owner: prRepoOwner,
-              repo: prRepoName,
+              owner: repoOwner,
+              repo: repoName,
               pull_number: prNumber,
             });
 
