@@ -80,6 +80,89 @@ jobs:
             core.setOutput('repository', repository);
             core.setOutput('ref', pr.head.ref);
         continue-on-error: true
+      - name: Determine reference file test
+        id: determine-file
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { context, core, github } = require('@actions/github');
+            const prNumber = context.payload.pull_request.number;
+            const repoOwner = context.payload.repository.owner.login;
+            const repoName = context.payload.repository.name;
+
+            console.log(`Determining reference file for PR #${prNumber}`);
+
+            const ghToken = process.env.GH_TOKEN;
+            const octokit = github.getOctokit(ghToken);
+
+            // Validate inputs
+            const validateInput = (input, regex, name) => {
+              if (!regex.test(input)) {
+                throw new Error(`Invalid ${name}: ${input}`);
+              }
+            };
+
+            const branch = context.payload.pull_request.head.ref;
+
+            validateInput(repoOwner, /^[a-zA-Z0-9_-]+$/, "repository owner");
+            validateInput(repoName, /^[a-zA-Z0-9._-]+$/, "repository name");
+            validateInput(branch, /^[a-zA-Z0-9._/-]+$/, "branch name");
+
+            console.log(`Repo owner: ${repoOwner}`);
+            console.log(`Repo name: ${repoName}`);
+            console.log(`Branch: ${branch}`);
+
+            // Get changed files
+            const { data: files } = await octokit.rest.pulls.listFiles({
+              owner: repoOwner,
+              repo: repoName,
+              pull_number: prNumber,
+            });
+
+            const changedFiles = files
+              .map(file => file.filename)
+              .filter(file => /^src\/main\/resources\/messages_[a-zA-Z_]+\.properties$/.test(file));
+
+            if (!changedFiles.length) {
+              throw new Error("No valid changed files found.");
+            }
+
+            console.log("Changed files:", changedFiles);
+
+            const fileList = changedFiles.join(" ");
+            core.exportVariable("FILES_LIST", fileList);
+
+            // Determine reference file
+            let referenceFilePath;
+            if (changedFiles.includes("src/main/resources/messages_en_GB.properties")) {
+              console.log("Using PR branch reference file.");
+              const { data: fileContent } = await octokit.rest.repos.getContent({
+                owner: repoOwner,
+                repo: repoName,
+                path: "src/main/resources/messages_en_GB.properties",
+                ref: branch,
+              });
+
+              referenceFilePath = "pr-branch-messages_en_GB.properties";
+              const content = Buffer.from(fileContent.content, "base64").toString("utf-8");
+              require("fs").writeFileSync(referenceFilePath, content);
+            } else {
+              console.log("Using main branch reference file.");
+              const { data: fileContent } = await octokit.rest.repos.getContent({
+                owner: "Ludy87",
+                repo: "test_java",
+                path: "src/main/resources/messages_en_GB.properties",
+                ref: "main",
+              });
+
+              referenceFilePath = "main-branch-messages_en_GB.properties";
+              const content = Buffer.from(fileContent.content, "base64").toString("utf-8");
+              require("fs").writeFileSync(referenceFilePath, content);
+            }
+
+            console.log(`Reference file path: ${referenceFilePath}`);
+            core.exportVariable("REFERENCE_FILE", referenceFilePath);
+
 
       - name: Determine reference file
         id: determine-file
