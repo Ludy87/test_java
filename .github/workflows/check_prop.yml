@@ -39,6 +39,8 @@ jobs:
 
           gh repo view "${{ github.event.pull_request.head.repo.full_name }}"
 
+          gh repo view ${{ github.event.pull_request.number }} --repo "${{ github.event.pull_request.head.repo.full_name }}"
+
           # gh repo set-default "${{ github.event.pull_request.head.repo.full_name }}" # Set the fork repository as default
 
           # Fetch the list of changed files in the PR
