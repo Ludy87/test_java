@@ -47,7 +47,7 @@ jobs:
           gh pr view ${{ github.event.pull_request.number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > changed_files.txt # Filter only matching property files
 
       - name: Get PR data
-        id: get-pr
+        id: get-pr-data
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
@@ -59,9 +59,12 @@ jobs:
       - name: Get PR repository and ref
         id: get-pr-info
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        env:
+          PR_NUMBER: ${{ steps.get-pr-data.outputs.pr_number }}
         with:
           script: |
-            console.log(${{ steps.get-pr.outputs.pr_number }})
+            console.log(${{ steps.get-pr-data.outputs.pr_number }})
+            console.log($PR_NUMBER)
             const { owner, repo } = context.repo;
             const prNumber = context.payload.pull_request.number;
 
@@ -100,9 +103,9 @@ jobs:
 
             const branch = context.payload.pull_request.head.ref;
 
-            // validateInput(repoOwner, /^[a-zA-Z0-9_-]+$/, "repository owner");
-            // validateInput(repoName, /^[a-zA-Z0-9._-]+$/, "repository name");
-            // validateInput(branch, /^[a-zA-Z0-9._/-]+$/, "branch name");
+            validateInput(repoOwner, /^[a-zA-Z0-9_-]+$/, "repository owner");
+            validateInput(repoName, /^[a-zA-Z0-9._-]+$/, "repository name");
+            validateInput(branch, /^[a-zA-Z0-9._/-]+$/, "branch name");
 
             console.log(`Repo owner: ${repoOwner}`);
             console.log(`Repo name: ${repoName}`);
