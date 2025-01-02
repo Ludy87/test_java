@@ -108,6 +108,8 @@ jobs:
             console.log(`Repo name: ${repoName}`);
             console.log(`Branch: ${branch}`);
 
+            core.setOutput('branch', branch);
+
             // Get changed files
             const { data: files } = await github.rest.pulls.listFiles({
               owner: repoOwner,
