@@ -137,8 +137,8 @@ jobs:
 
             // Create a temporary directory for PR files
             const tempDir = "pr-branch";
-            if (!fs.existsSync(tempDir)) {
-              fs.mkdirSync(tempDir, { recursive: true });
+            if (!require("fs").existsSync(tempDir)) {
+              require("fs").mkdirSync(tempDir, { recursive: true });
             }
 
             // Download and save each changed file
