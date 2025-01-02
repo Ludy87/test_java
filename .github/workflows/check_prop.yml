@@ -108,7 +108,15 @@ jobs:
             console.log(`Repo name: ${repoName}`);
             console.log(`Branch: ${branch}`);
 
-            // Get changed files
+            core.setOutput('branch', branch);
+
+            // Get PR data and specific commit
+            const commitSha = context.payload.pull_request.head.sha;
+
+            console.log(`PR Number: ${prNumber}`);
+            console.log(`Commit SHA: ${commitSha}`);
+
+            // Use commit SHA to fetch file contents
             const { data: files } = await github.rest.pulls.listFiles({
               owner: repoOwner,
               repo: repoName,
@@ -125,8 +133,37 @@ jobs:
 
             console.log("Changed files:", changedFiles);
 
+            // Create a temporary directory for PR files
+            const tempDir = "pr-branch";
+            if (!require("fs").existsSync(tempDir)) {
+              require("fs").mkdirSync(tempDir, { recursive: true });
+            }
+
+            // Download and save each changed file
+            for (const file of changedFiles) {
+              const { data: fileContent } = await github.rest.repos.getContent({
+                owner: repoOwner,
+                repo: repoName,
+                path: file,
+                ref: branch,
+              });
+
+              const content = Buffer.from(fileContent.content, "base64").toString("utf-8");
+              const filePath = `${tempDir}/${file}`;
+              const dirPath = require("path").dirname(filePath);
+
+              if (!require("fs").existsSync(dirPath)) {
+                require("fs").mkdirSync(dirPath, { recursive: true });
+              }
+
+              require("fs").writeFileSync(filePath, content);
+              console.log(`Saved file: ${filePath}`);
+            }
+
+            // Output the list of changed files for further processing
             const fileList = changedFiles.join(" ");
             core.exportVariable("FILES_LIST", fileList);
+            console.log("Files saved and listed in FILES_LIST.");
 
             // Determine reference file
             let referenceFilePath;
