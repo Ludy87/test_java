@@ -154,11 +154,11 @@ jobs:
               const filePath = `${tempDir}/${file}`;
               const dirPath = require("path").dirname(filePath);
 
-              if (!fs.existsSync(dirPath)) {
-                fs.mkdirSync(dirPath, { recursive: true });
+              if (!require("fs").existsSync(dirPath)) {
+                require("fs").mkdirSync(dirPath, { recursive: true });
               }
 
-              fs.writeFileSync(filePath, content);
+              require("fs").writeFileSync(filePath, content);
               console.log(`Saved file: ${filePath}`);
             }
 
