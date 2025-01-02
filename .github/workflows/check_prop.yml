@@ -100,9 +100,9 @@ jobs:
 
             const branch = context.payload.pull_request.head.ref;
 
-            # validateInput(repoOwner, /^[a-zA-Z0-9_-]+$/, "repository owner");
-            # validateInput(repoName, /^[a-zA-Z0-9._-]+$/, "repository name");
-            # validateInput(branch, /^[a-zA-Z0-9._/-]+$/, "branch name");
+            // validateInput(repoOwner, /^[a-zA-Z0-9_-]+$/, "repository owner");
+            // validateInput(repoName, /^[a-zA-Z0-9._-]+$/, "repository name");
+            // validateInput(branch, /^[a-zA-Z0-9._/-]+$/, "branch name");
 
             console.log(`Repo owner: ${repoOwner}`);
             console.log(`Repo name: ${repoName}`);
