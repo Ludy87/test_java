@@ -235,7 +235,7 @@ jobs:
           python .github/scripts/check_language_properties.py \
             --actor ${{ github.event.pull_request.user.login }} \
             --reference-file "${REFERENCE_FILE}" \
-            --branch ${{ steps.determine-file-1.outputs.branch }} \
+            --branch "" \
             --files "${FILES_LIST[@]}" > result.txt
         continue-on-error: true # Continue the job even if this step fails
 
