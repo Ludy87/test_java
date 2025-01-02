@@ -58,13 +58,13 @@ jobs:
         run: |
           echo "Fetching PR changed files..."
 
-          gh repo view --repo "${{ github.event.pull_request.head.repo.full_name }}" --branch "${{ steps.get-pr-data.outputs.branch }}"
+          gh repo view "${{ github.event.pull_request.head.repo.full_name }}" --branch "${{ steps.get-pr-data.outputs.branch }}"
 
           # gh repo set-default "${{ github.event.pull_request.head.repo.full_name }}" # Set the fork repository as default
 
           # Fetch the list of changed files in the PR
           echo "Getting list of changed files from PR..."
-          gh pr view --branch "${{ steps.get-pr-data.outputs.branch }}" --repo "${{ github.event.pull_request.head.repo.full_name }}" --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > changed_files.txt # Filter only matching property files
+          gh pr view "${{ github.event.pull_request.head.repo.full_name }}" --branch "${{ steps.get-pr-data.outputs.branch }}" --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > changed_files.txt # Filter only matching property files
 
       - name: Determine reference file test
         id: determine-file-1
