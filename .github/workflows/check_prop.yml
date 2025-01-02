@@ -110,26 +110,20 @@ jobs:
 
             core.setOutput('branch', branch);
 
-            // Get PR data and specific commit
-            const commitSha = context.payload.pull_request.head.sha;
-
             console.log(`PR Number: ${prNumber}`);
             console.log(`Commit SHA: ${commitSha}`);
 
-            // Use commit SHA to fetch file contents
+            // Get the list of changed files in the PR
             const { data: files } = await github.rest.pulls.listFiles({
               owner: repoOwner,
               repo: repoName,
               pull_number: prNumber,
             });
 
+            // Filter for relevant files based on the PR changes
             const changedFiles = files
               .map(file => file.filename)
               .filter(file => /^src\/main\/resources\/messages_[a-zA-Z_]+\.properties$/.test(file));
-
-            if (!changedFiles.length) {
-              throw new Error("No valid changed files found.");
-            }
 
             console.log("Changed files:", changedFiles);
 
