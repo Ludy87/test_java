@@ -60,10 +60,10 @@ jobs:
           echo "Fetching PR changed files..."
 
           echo "${{ github.event.pull_request.head.repo.owner.login }}"
-          core.setOutput("pr_repo_owner", ${{ github.event.pull_request.head.repo.owner.login }});
+          # core.setOutput("pr_repo_owner", ${{ github.event.pull_request.head.repo.owner.login }});
 
           echo "${{ github.event.pull_request.head.repo.name }}"
-          core.setOutput("pr_repo_name", ${{ github.event.pull_request.head.repo.name }}");
+          # core.setOutput("pr_repo_name", "${{ github.event.pull_request.head.repo.name }}");
 
           gh repo view "${{ github.event.pull_request.head.repo.full_name }}" --branch "${{ steps.get-pr-data.outputs.branch }}"
 
@@ -82,8 +82,8 @@ jobs:
             const repoOwner = "${{ steps.get-pr-data.outputs.repo_owner }}";
             const repoName = "${{ steps.get-pr-data.outputs.repo_name }}";
 
-            const prRepoOwner = "${{ steps.fetch-pr-changes.outputs.pr_repo_owner }}";
-            const prRepoName = "${{ steps.fetch-pr-changes.outputs.pr_repo_name }}";
+            const prRepoOwner = "${{ github.event.pull_request.head.repo.owner.login }}";
+            const prRepoName = "${{ github.event.pull_request.head.repo.name }}";
             const branch = "${{ steps.get-pr-data.outputs.branch }}";
 
             console.log(`Determining reference file for PR #${prNumber}`);
