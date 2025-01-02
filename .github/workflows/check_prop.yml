@@ -63,7 +63,7 @@ jobs:
           script: |
             console.log(${{ steps.get-pr.outputs.pr_number }})
             const { owner, repo } = context.repo;
-            const prNumber = context.payload.issue.number;
+            const prNumber = context.payload.pull_request.number;
 
             const { data: pr } = await github.rest.pulls.get({
               owner,
