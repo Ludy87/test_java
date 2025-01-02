@@ -64,7 +64,7 @@ jobs:
         with:
           script: |
             console.log(${{ steps.get-pr-data.outputs.pr_number }})
-            console.log($PR_NUMBER)
+            console.log("$PR_NUMBER")
             const { owner, repo } = context.repo;
             const prNumber = context.payload.pull_request.number;
 
