@@ -81,7 +81,7 @@ jobs:
             core.setOutput('ref', pr.head.ref);
         continue-on-error: true
       - name: Determine reference file test
-        id: determine-file
+        id: determine-file-1
         uses: actions/github-script@v7
         with:
           script: |
