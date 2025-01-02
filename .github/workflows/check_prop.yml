@@ -30,23 +30,6 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Fetch PR changed files
-        id: fetch-pr-changes
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Fetching PR changed files..."
-
-          gh repo view "${{ github.event.pull_request.head.repo.full_name }}"
-
-          gh repo view ${{ github.event.pull_request.number }} --repo "${{ github.event.pull_request.head.repo.full_name }}"
-
-          # gh repo set-default "${{ github.event.pull_request.head.repo.full_name }}" # Set the fork repository as default
-
-          # Fetch the list of changed files in the PR
-          echo "Getting list of changed files from PR..."
-          gh pr view ${{ github.event.pull_request.number }} --repo "${{ github.event.pull_request.head.repo.full_name }}" --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > changed_files.txt # Filter only matching property files
-
       - name: Get PR data
         id: get-pr-data
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
@@ -67,6 +50,22 @@ jobs:
             core.setOutput("repo_name", repoName);
             core.setOutput("branch", branch);
         continue-on-error: true
+
+      - name: Fetch PR changed files
+        id: fetch-pr-changes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Fetching PR changed files..."
+
+          gh repo view --repo "${{ github.event.pull_request.head.repo.full_name }}" --branch "${{ steps.get-pr-data.outputs.branch }}"
+
+          # gh repo set-default "${{ github.event.pull_request.head.repo.full_name }}" # Set the fork repository as default
+
+          # Fetch the list of changed files in the PR
+          echo "Getting list of changed files from PR..."
+          gh pr view --branch "${{ steps.get-pr-data.outputs.branch }}" --repo "${{ github.event.pull_request.head.repo.full_name }}" --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]+\.properties$' > changed_files.txt # Filter only matching property files
+
       - name: Determine reference file test
         id: determine-file-1
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
