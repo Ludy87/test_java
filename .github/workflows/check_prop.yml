@@ -59,6 +59,8 @@ jobs:
         run: |
           echo "Fetching PR changed files..."
 
+          echo "${{ github.event.pull_request.head.repo.full_name }}"
+
           gh repo view "${{ github.event.pull_request.head.repo.full_name }}" --branch "${{ steps.get-pr-data.outputs.branch }}"
 
           # gh repo set-default "${{ github.event.pull_request.head.repo.full_name }}" # Set the fork repository as default
