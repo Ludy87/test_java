@@ -60,7 +60,8 @@ jobs:
           echo "Fetching PR changed files..."
 
           echo "${{ github.event.pull_request.head.repo.full_name }}"
-          echo "${{ github.event.pull_request.head.repo.owner }}"
+          echo "${{ github.event.pull_request.head.repo.owner.login }}"
+          echo "${{ github.event.pull_request.head.repo.name }}"
 
           gh repo view "${{ github.event.pull_request.head.repo.full_name }}" --branch "${{ steps.get-pr-data.outputs.branch }}"
 
