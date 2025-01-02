@@ -117,11 +117,10 @@ jobs:
             console.log(`Commit SHA: ${commitSha}`);
 
             // Use commit SHA to fetch file contents
-            const { data: commitData } = await github.rest.git.getTree({
+            const { data: files } = await github.rest.pulls.listFiles({
               owner: repoOwner,
               repo: repoName,
-              tree_sha: commitSha,
-              recursive: true,
+              pull_number: prNumber,
             });
 
             const changedFiles = files
