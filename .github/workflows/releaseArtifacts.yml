@@ -55,7 +55,7 @@ jobs:
       - name: Rename binarie
         run: cp ./build/launch4j/Stirling-PDF.exe ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
 
-      - name: Upload Assets binarie
+      - name: Upload Assets exe binarie
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
         with:
           path: ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
@@ -64,20 +64,44 @@ jobs:
           retention-days: 1
           if-no-files-found: error
 
-      - name: Generate artifact attestation
-        id: attestation
+      - name: Rename jar binaries
+        run: cp ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+
+      - name: Upload Assets jar binaries
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+        with:
+          path: ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+          name: Stirling-PDF${{ matrix.file_suffix }}.jar
+          overwrite: true
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Generate exe artifact attestation
+        id: attestation-exe
         uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
         with:
           subject-path: ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
 
-      - name: Debug attestation output
+      - name: Debug exe attestation output
         run: |
-          echo "Bundle path: ${{ steps.attestation.outputs.bundle-path }}"
-          ls -l "${{ steps.attestation.outputs.bundle-path }}"
+          echo "Bundle path: ${{ steps.attestation-exe.outputs.bundle-path }}"
+          ls -l "${{ steps.attestation-exe.outputs.bundle-path }}"
+
+      - name: Generate jar artifact attestation
+        id: attestation-jar
+        uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
+        with:
+          subject-path: ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+
+      - name: Debug jar attestation output
+        run: |
+          echo "Bundle path: ${{ steps.attestation-jar.outputs.bundle-path }}"
+          ls -l "${{ steps.attestation-jar.outputs.bundle-path }}"
 
       - name: Copy attestation
         run: |
-          cp "${{ steps.attestation.outputs.bundle-path }}" ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.intoto.jsonl
+          cp "${{ steps.attestation-exe.outputs.bundle-path }}" ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.intoto.jsonl
+          cp "${{ steps.attestation-jar.outputs.bundle-path }}" ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.intoto.jsonl
 
       - name: Import GPG key
         env:
@@ -108,7 +132,10 @@ jobs:
         run: |
           gpg --detach-sign --batch --yes --pinentry-mode loopback --passphrase "$PASSPHRASE" \
             -o ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.asc \
-                ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+               ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+          gpg --detach-sign --batch --yes --pinentry-mode loopback --passphrase "$PASSPHRASE" \
+            -o ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.asc \
+               ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
 
       - name: Upload binaries to release
         uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
@@ -118,21 +145,6 @@ jobs:
             ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
             ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.asc
             ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.intoto.jsonl
-
-      - name: Rename jar binaries
-        run: cp ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
-
-      - name: Upload Assets jar binaries
-        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
-        with:
-          path: ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
-          name: Stirling-PDF${{ matrix.file_suffix }}.jar
-          overwrite: true
-          retention-days: 1
-          if-no-files-found: error
-
-      - name: Upload jar binaries to release
-        uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
-        with:
-          tag_name: v${{ steps.versionNumber.outputs.versionNumber }}
-          files: ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.asc
+            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.intoto.jsonl
