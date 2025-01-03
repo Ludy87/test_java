@@ -70,8 +70,6 @@ jobs:
         uses: sigstore/cosign-installer@v3.7.0
 
       - name: Sign JAR with Cosign OIDC
-        env:
-          COSIGN_EXPERIMENTAL: "1"
         run: |
           cosign sign-blob \
             --yes \
@@ -81,8 +79,6 @@ jobs:
             > ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.sig
 
       - name: Sign EXE with Cosign OIDC
-        env:
-          COSIGN_EXPERIMENTAL: "1"
         run: |
           cosign sign-blob  \
             --yes \
@@ -101,12 +97,7 @@ jobs:
             --oidc-client-id sigstore \
             --oidc-issuer https://token.actions.githubusercontent.com \
             ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar \
-            > ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.attestation.jsonl
-
-      - run: |
-          cosign verify-blob --signature ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.sig \
-                                         ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
-        continue-on-error: true
+            > ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.intoto.jsonl
 
       - name: Generate Attestations for EXE
         env:
@@ -118,15 +109,7 @@ jobs:
             --oidc-client-id sigstore \
             --oidc-issuer https://token.actions.githubusercontent.com \
             ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe \
-            > ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.attestation.jsonl
-
-      - run: |
-          cosign verify-blob-attestation --signature ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.sig \
-                                                     ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
-          cosign verify-blob-attestation --signature ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.sig \
-                                                     ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.attestation.jsonl
-        continue-on-error: true
-
+            > ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.intoto.jsonl
 
       - name: Upload binaries and signatures to release
         uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
