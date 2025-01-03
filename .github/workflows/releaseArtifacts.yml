@@ -103,6 +103,10 @@ jobs:
             ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar \
             > ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.attestation.jsonl
 
+      - run: |
+          cosign verify-blob --signature ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.sig \
+                                                     ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+
       - name: Generate Attestations for EXE
         env:
           COSIGN_EXPERIMENTAL: "1"
@@ -114,6 +118,12 @@ jobs:
             --oidc-issuer https://token.actions.githubusercontent.com \
             ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe \
             > ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.attestation.jsonl
+
+      - run: |
+          cosign verify-blob-attestation --signature ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.sig \
+                                                     ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+          cosign verify-blob-attestation --signature ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.sig \
+                                                     ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.attestation.jsonl
 
 
       - name: Upload binaries and signatures to release
