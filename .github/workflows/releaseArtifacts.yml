@@ -88,8 +88,8 @@ jobs:
             --yes \
             --oidc-client-id sigstore \
             --oidc-issuer https://token.actions.githubusercontent.com \
-            ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe \
-            > ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe.sig
+            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe \
+            > ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.sig
 
       - name: Generate Attestations for JAR
         env:
