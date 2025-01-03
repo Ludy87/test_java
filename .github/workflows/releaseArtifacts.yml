@@ -73,7 +73,7 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "1"
         run: |
-          cosign sign-blob \
+          cosign sign \
             --yes \
             --oidc-client-id sigstore \
             --oidc-issuer https://token.actions.githubusercontent.com \
@@ -84,7 +84,7 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "1"
         run: |
-          cosign sign-blob \
+          cosign sign \
             --yes \
             --oidc-client-id sigstore \
             --oidc-issuer https://token.actions.githubusercontent.com \
@@ -95,10 +95,10 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "1"
         run: |
-          cosign attest-blob \
+          cosign attest \
+            --yes \
             --oidc-client-id sigstore \
             --oidc-issuer https://token.actions.githubusercontent.com \
-            --predicate predicate.json \
             ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar \
             > ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.attestation.jsonl
 
@@ -106,10 +106,10 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "1"
         run: |
-          cosign attest-blob \
+          cosign attest \
+            --yes \
             --oidc-client-id sigstore \
             --oidc-issuer https://token.actions.githubusercontent.com \
-            --predicate predicate.json \
             ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe \
             > ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe.attestation.jsonl
 
