@@ -52,103 +52,76 @@ jobs:
         id: versionNumber
         run: echo "versionNumber=$(./gradlew printVersion --quiet | tail -1)" >> $GITHUB_OUTPUT
 
-      - name: Rename binarie
-        run: cp ./build/launch4j/Stirling-PDF.exe ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
-
-      - name: Upload Assets exe binarie
-        id: upload-exe
-        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
-        with:
-          path: ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
-          name: Stirling-PDF-Server${{ matrix.file_suffix }}.exe
-          overwrite: true
-          retention-days: 1
-          if-no-files-found: error
-
-      - name: Rename jar binaries
-        run: cp ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
-
-      - name: Upload Assets jar binaries
-        id: upload-jar
-        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
-        with:
-          path: ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
-          name: Stirling-PDF${{ matrix.file_suffix }}.jar
-          overwrite: true
-          retention-days: 1
-          if-no-files-found: error
-
-      - name: Generate exe artifact attestation
-        id: attestation-exe
-        uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
-        with:
-          subject-digest: sha256:${{ steps.upload-exe.outputs.artifact-digest }}
-          subject-name: Stirling-PDF-Server${{ matrix.file_suffix }}.exe
-
-      - name: Debug exe attestation output
+      - name: Rename binaries
         run: |
-          echo "Bundle path: ${{ steps.attestation-exe.outputs.bundle-path }}"
-          ls -l "${{ steps.attestation-exe.outputs.bundle-path }}"
+          cp ./build/launch4j/Stirling-PDF.exe ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+          cp ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
 
-      - name: Generate jar artifact attestation
-        id: attestation-jar
-        uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
-        with:
-          subject-digest: sha256:${{ steps.upload-jar.outputs.artifact-digest }}
-          subject-name: Stirling-PDF${{ matrix.file_suffix }}.jar
+      # - name: Upload Assets
+      #   id: upload-assets
+      #   uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
+      #   with:
+      #     name: "release-artifacts"
+      #     path: |
+      #       ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+      #       ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
 
-      - name: Debug jar attestation output
-        run: |
-          echo "Bundle path: ${{ steps.attestation-jar.outputs.bundle-path }}"
-          ls -l "${{ steps.attestation-jar.outputs.bundle-path }}"
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
 
-      - name: Copy attestation
-        run: |
-          cp "${{ steps.attestation-exe.outputs.bundle-path }}" ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.intoto.jsonl
-          cp "${{ steps.attestation-jar.outputs.bundle-path }}" ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.intoto.jsonl
-
-      - name: Import GPG key
+      - name: Sign JAR with Cosign OIDC
         env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-          PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          COSIGN_EXPERIMENTAL: "1"
         run: |
-          mkdir -p ~/.gnupg
-          chmod 700 ~/.gnupg
-          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-          echo "use-agent" > ~/.gnupg/gpg.conf
-          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg.conf
-          gpg --list-keys
+          cosign sign-blob \
+            --yes \
+            --oidc-client-id sigstore \
+            --oidc-issuer https://token.actions.githubusercontent.com \
+            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar \
+            > ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.sig
 
-      - name: Debug Passphrase
-        run: |
-          if [ -z "$PASSPHRASE" ]; then
-            echo "Passphrase is empty!"
-            exit 1
-          else
-            echo "Passphrase is set."
-          fi
+      - name: Sign EXE with Cosign OIDC
         env:
-          PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-
-      - name: Sign file
-        env:
-          PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          COSIGN_EXPERIMENTAL: "1"
         run: |
-          gpg --detach-sign --batch --yes --pinentry-mode loopback --passphrase "$PASSPHRASE" \
-            -o ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.asc \
-               ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
-          gpg --detach-sign --batch --yes --pinentry-mode loopback --passphrase "$PASSPHRASE" \
-            -o ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.asc \
-               ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+          cosign sign-blob \
+            --yes \
+            --oidc-client-id sigstore \
+            --oidc-issuer https://token.actions.githubusercontent.com \
+            ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe \
+            > ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe.sig
 
-      - name: Upload binaries to release
-        uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
-        with:
-          tag_name: v${{ steps.versionNumber.outputs.versionNumber }}
-          files: |
-            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
-            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.asc
-            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.intoto.jsonl
-            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
-            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.asc
-            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.intoto.jsonl
+      - name: Generate Attestations for JAR
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          cosign attest-blob \
+            --oidc-client-id sigstore \
+            --oidc-issuer https://token.actions.githubusercontent.com \
+            --predicate-type custom \
+            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar \
+            > ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.attestation.jsonl
+
+      - name: Generate Attestations for EXE
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          cosign attest-blob \
+            --oidc-client-id sigstore \
+            --oidc-issuer https://token.actions.githubusercontent.com \
+            --predicate-type custom \
+            ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe \
+            > ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe.attestation.jsonl
+
+
+      # - name: Upload binaries and signatures to release
+      #   uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
+      #   with:
+      #     tag_name: v${{ steps.versionNumber.outputs.versionNumber }}
+      #     files: |
+      #       ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+      #       ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.sig
+      #       ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.attestation.jsonl
+      #       ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
+      #       ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe.sig
+      #       ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe.attestation.jsonl
