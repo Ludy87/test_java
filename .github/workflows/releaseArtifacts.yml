@@ -83,7 +83,7 @@ jobs:
         uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
         with:
           subject-digest: sha256:${{ steps.upload-exe.outputs.artifact-digest }}
-          subject-path: ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+          subject-name: Stirling-PDF-Server${{ matrix.file_suffix }}.exe
 
       - name: Debug exe attestation output
         run: |
@@ -95,7 +95,7 @@ jobs:
         uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
         with:
           subject-digest: sha256:${{ steps.upload-jar.outputs.artifact-digest }}
-          subject-path: ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
+          subject-name: Stirling-PDF${{ matrix.file_suffix }}.jar
 
       - name: Debug jar attestation output
         run: |
