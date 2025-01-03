@@ -98,7 +98,6 @@ jobs:
           cosign attest-blob \
             --oidc-client-id sigstore \
             --oidc-issuer https://token.actions.githubusercontent.com \
-            --predicate-type custom \
             ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar \
             > ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.attestation.jsonl
 
@@ -109,7 +108,6 @@ jobs:
           cosign attest-blob \
             --oidc-client-id sigstore \
             --oidc-issuer https://token.actions.githubusercontent.com \
-            --predicate-type custom \
             ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe \
             > ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe.attestation.jsonl
 
