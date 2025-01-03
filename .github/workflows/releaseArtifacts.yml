@@ -113,7 +113,7 @@ jobs:
       - name: Upload binaries to release
         uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
         with:
-          tag_name: ${{ steps.versionNumber.outputs.versionNumber }}
+          tag_name: v${{ steps.versionNumber.outputs.versionNumber }}
           files: |
             ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
             ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.asc
@@ -134,5 +134,5 @@ jobs:
       - name: Upload jar binaries to release
         uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
         with:
-          tag_name: ${{ steps.versionNumber.outputs.versionNumber }}
+          tag_name: v${{ steps.versionNumber.outputs.versionNumber }}
           files: ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
