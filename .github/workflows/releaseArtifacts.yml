@@ -112,8 +112,8 @@ jobs:
             --yes \
             --oidc-client-id sigstore \
             --oidc-issuer https://token.actions.githubusercontent.com \
-            ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe \
-            > ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe.attestation.jsonl
+            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe \
+            > ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.attestation.jsonl
 
 
       - name: Upload binaries and signatures to release
@@ -121,9 +121,5 @@ jobs:
         with:
           tag_name: v${{ steps.versionNumber.outputs.versionNumber }}
           files: |
-            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
-            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.sig
-            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.attestation.jsonl
-            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
-            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.sig
-            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.attestation.jsonl
+            ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.*
+            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.*
