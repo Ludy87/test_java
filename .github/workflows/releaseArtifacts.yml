@@ -117,7 +117,7 @@ jobs:
           files: |
             ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
             ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.asc
-            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.intoto.jsonl
+            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.intoto.jsonl
 
       - name: Rename jar binaries
         run: cp ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
