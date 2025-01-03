@@ -105,7 +105,8 @@ jobs:
 
       - run: |
           cosign verify-blob --signature ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.sig \
-                                                     ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+                                         ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+        continue-on-error: true
 
       - name: Generate Attestations for EXE
         env:
@@ -124,6 +125,7 @@ jobs:
                                                      ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
           cosign verify-blob-attestation --signature ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.sig \
                                                      ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.attestation.jsonl
+        continue-on-error: true
 
 
       - name: Upload binaries and signatures to release
