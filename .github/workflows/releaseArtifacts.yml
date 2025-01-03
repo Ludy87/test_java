@@ -14,6 +14,8 @@ jobs:
     permissions:
       contents: write
       packages: write
+      id-token: write
+      attestations: write
     strategy:
       matrix:
         enable_security: [true, false]
@@ -62,10 +64,59 @@ jobs:
           retention-days: 1
           if-no-files-found: error
 
+      - name: Generate artifact attestation
+        id: attestation
+        uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
+        with:
+          subject-path: ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+
+      - name: Debug attestation output
+        run: |
+          echo "Bundle path: ${{ steps.attestation.outputs.bundle-path }}"
+          ls -l "${{ steps.attestation.outputs.bundle-path }}"
+
+      - name: Copy attestation
+        run: |
+          cp "${{ steps.attestation.outputs.bundle-path }}" ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.intoto.jsonl
+
+      - name: Import GPG key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "use-agent" > ~/.gnupg/gpg.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg.conf
+          gpg --list-keys
+
+      - name: Debug Passphrase
+        run: |
+          if [ -z "$PASSPHRASE" ]; then
+            echo "Passphrase is empty!"
+            exit 1
+          else
+            echo "Passphrase is set."
+          fi
+        env:
+          PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Sign file
+        env:
+          PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          gpg --detach-sign --batch --yes --pinentry-mode loopback --passphrase "$PASSPHRASE" \
+            -o ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.asc \
+                ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+
       - name: Upload binaries to release
         uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974 # v2.1.0
         with:
-          files: ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+          files: |
+            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.asc
+            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.intoto.jsonl
 
       - name: Rename jar binaries
         run: cp ./build/libs/Stirling-PDF-${{ steps.versionNumber.outputs.versionNumber }}.jar ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
