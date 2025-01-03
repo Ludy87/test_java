@@ -124,6 +124,6 @@ jobs:
             ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar
             ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.sig
             ./build/libs/Stirling-PDF${{ matrix.file_suffix }}.jar.attestation.jsonl
-            ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe
-            ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe.sig
-            ./build/launch4j/Stirling-PDF${{ matrix.file_suffix }}.exe.attestation.jsonl
+            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe
+            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.sig
+            ./build/launch4j/Stirling-PDF-Server${{ matrix.file_suffix }}.exe.attestation.jsonl
