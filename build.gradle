@@ -252,7 +252,6 @@ launch4j {
     }
 
 
-
     jreMinVersion="17"
 
     mutexName="Stirling-PDF"
