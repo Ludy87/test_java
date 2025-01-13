@@ -251,7 +251,6 @@ launch4j {
     	variables=["BROWSER_OPEN=true"]
     }
 
-
     jreMinVersion="17"
 
     mutexName="Stirling-PDF"
