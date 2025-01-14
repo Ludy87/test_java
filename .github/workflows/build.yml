@@ -1,13 +1,15 @@
 name: "Build & Docker Test"
 
 on:
-  push:
-    branches: ["main"]
   workflow_run:
     workflows:
       - "Pull Request Labeler"
     types:
       - completed
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -103,7 +105,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        uses: step-security/harden-runner@c95a14d0e5bab51a9f56296a4eb0e416910cd350 # v2.10.3
         with:
           egress-policy: audit
 
@@ -131,9 +133,10 @@ jobs:
 
       - name: Pip requirements
         run: |
-           pip install --require-hashes -r ./cucumber/requirements.txt
+          pip install --require-hashes -r ./cucumber/requirements.txt
 
       - name: Run Docker Compose Tests
         run: |
+          chmod +x ./cucumber/test_webpages.sh
           chmod +x ./test.sh
           ./test.sh
