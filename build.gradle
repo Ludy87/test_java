@@ -325,7 +325,7 @@ dependencies {
 		implementation "org.springframework.session:spring-session-core:$springBootVersion"
         implementation "org.springframework:spring-jdbc:6.2.1"
 
-	    implementation 'com.unboundid.product.scim2:scim2-sdk-client:2.3.5'
+	    implementation 'com.unboundid.product.scim2:scim2-sdk-client:3.2.0'
         // Don't upgrade h2database
         runtimeOnly "com.h2database:h2:2.3.232"
         runtimeOnly "org.postgresql:postgresql:42.7.4"
