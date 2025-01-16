@@ -165,8 +165,13 @@ def check_for_differences(reference_file, file_list, branch, actor):
         basename_current_file = os.path.basename(os.path.join(branch, file_path))
         if (
             basename_current_file == basename_reference_file
-            or not file_path.startswith(
-                os.path.join("src", "main", "resources", "messages_")
+            or (
+                not file_path.startswith(
+                    os.path.join("", "src", "main", "resources", "messages_")
+                )
+                and not file_path.startswith(
+                    os.path.join(os.getcwd(), "src", "main", "resources", "messages_")
+                )
             )
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
