@@ -59,7 +59,7 @@ jobs:
         run: |
           echo "Fetching PR changed files..."
           echo "Getting list of changed files from PR..."
-          gh pr view ${{ steps.get-pr-data.outputs.pr_number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]{6,11}\.properties$' > changed_files.txt # Filter only matching property files
+          gh pr view ${{ steps.get-pr-data.outputs.pr_number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]{5,10}\.properties$' > changed_files.txt # Filter only matching property files
 
       - name: Determine reference file test
         id: determine-file
@@ -100,7 +100,7 @@ jobs:
             // Filter for relevant files based on the PR changes
             const changedFiles = files
               .map(file => file.filename)
-              .filter(file => /^src\/main\/resources\/messages_[a-zA-Z_]{6,11}\.properties$/.test(file));
+              .filter(file => /^src\/main\/resources\/messages_[a-zA-Z_]{5,10}\.properties$/.test(file));
 
             console.log("Changed files:", changedFiles);
 
