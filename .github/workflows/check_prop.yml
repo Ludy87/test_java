@@ -26,10 +26,10 @@ jobs:
       - name: Checkout main branch first
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Set up Python
-        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
-        with:
-          python-version: "3.12"
+      # - name: Set up Python
+      #   uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+      #   with:
+      #     python-version: "3.12"
 
       - name: Get PR data
         id: get-pr-data
@@ -59,8 +59,19 @@ jobs:
         run: |
           echo "Fetching PR changed files..."
           echo "Getting list of changed files from PR..."
-          gh pr view ${{ steps.get-pr-data.outputs.pr_number }} --json files -q ".files[].path" | \
-              grep -E '^src/main/resources/messages_[a-zA-Z_]{2}_[a-zA-Z_]{2,7}\.properties$' > changed_files.txt # Filter only matching property files
+          CHANGED_FILES=$(gh pr view ${{ steps.get-pr-data.outputs.pr_number }} --json files -q ".files[].path" | \
+              grep -E '^src/main/resources/messages_[a-zA-Z_]{2}_[a-zA-Z_]{2,7}\.properties$')
+
+          # Überprüfen, ob Dateien gefunden wurden
+          if [ $? -eq 0 ]; then
+            echo "Changed files found: $CHANGED_FILES"
+            echo "$CHANGED_FILES" > changed_files.txt  # Speichern der geänderten Dateien
+          else
+            echo "No matching changed files found."
+            echo "No changes detected" > changed_files.txt
+            exit 1  # Fehlerstatus, um anzuzeigen, dass keine passenden Dateien gefunden wurden
+          fi
+        continue-on-error: true
 
       - name: Determine reference file test
         id: determine-file
