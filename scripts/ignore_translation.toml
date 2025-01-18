@@ -50,6 +50,7 @@ ignore = [
     'pipeline.title',
     'pipelineOptions.pipelineHeader',
     'pro',
+    'redact.zoom',
     'sponsor',
     'text',
     'validateSignature.cert.bits',
@@ -210,6 +211,11 @@ ignore = [
     'watermark.type.1',
 ]
 
+[sl_SI]
+ignore = [
+    'language.direction',
+]
+
 [sr_LATN_RS]
 ignore = [
     'language.direction',
@@ -260,4 +266,5 @@ ignore = [
 [zh_TW]
 ignore = [
     'language.direction',
+    'showJS.tags',
 ]
