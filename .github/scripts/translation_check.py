@@ -16,7 +16,7 @@ def read_properties(file_path):
 
 
 # Hauptsprache (en_GB) einlesen
-en_gb_file_path = os.getcwd() + '/src/main/resources/messages_en_GB.properties'
+en_gb_file_path = os.getcwd() + "/src/main/resources/messages_en_GB.properties"
 en_gb_properties = read_properties(en_gb_file_path)
 en_gb_keys = set(en_gb_properties.keys())
 
