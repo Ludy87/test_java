@@ -283,7 +283,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
             report.append("3. **Test Status:** ❌ **_Failed_**")
             report.append("  - **Issue:**")
             report.append("    - duplicate entries were found:")
-            report.append("      " + output)
+            report.append(output)
         else:
             report.append("3. **Test Status:** ✅ **_Passed_**")
 
