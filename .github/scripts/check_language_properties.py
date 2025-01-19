@@ -274,9 +274,9 @@ def check_for_differences(reference_file, file_list, branch, actor):
 
         if find_duplicate_keys(os.path.join(branch, file_path)):
             has_differences = True
-            output = "      - ".join(
+            output = "\n".join(
                 [
-                    f"      - `{key}`: first at line {first}, duplicate at `line {duplicate}`\n"
+                    f"      - `{key}`: first at line {first}, duplicate at `line {duplicate}`"
                     for key, first, duplicate in find_duplicate_keys(os.path.join(branch, file_path))
                 ]
             )
