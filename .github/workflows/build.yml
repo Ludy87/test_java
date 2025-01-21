@@ -51,6 +51,8 @@ jobs:
           git add gradle/verification-keyring.keys
           git commit -m "Update verification files"
           git push origin HEAD:${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build with Gradle and no spring security
         run: ./gradlew clean build
