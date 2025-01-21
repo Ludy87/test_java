@@ -45,6 +45,8 @@ jobs:
           ./gradlew --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
 
       - run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add gradle/verification-metadata.xml
           git add gradle/verification-keyring.keys
           git commit -m "Update verification files"
