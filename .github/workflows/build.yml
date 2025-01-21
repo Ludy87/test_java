@@ -50,7 +50,7 @@ jobs:
           git add gradle/verification-metadata.xml
           git add gradle/verification-keyring.keys
           git commit -m "Update verification files"
-          git push
+          git push origin HEAD:${{ github.ref_name }}
 
       - name: Build with Gradle and no spring security
         run: ./gradlew clean build
