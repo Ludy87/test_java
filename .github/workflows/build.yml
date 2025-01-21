@@ -43,9 +43,6 @@ jobs:
           # Generate verification metadata with signatures and checksums
           ./gradlew --write-verification-metadata sha256 --refresh-dependencies help
           ./gradlew --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
-          rm gradle/verification-keyring.gpg
-          git add gradle/verification-metadata.xml
-          git add gradle/verification-keyring.keys
         env:
           DOCKER_ENABLE_SECURITY: false
 

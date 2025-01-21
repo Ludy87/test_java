@@ -68,9 +68,6 @@ main() {
     # Run the gradlew build command and check if it fails
     ./gradlew --write-verification-metadata sha256 --refresh-dependencies help
     ./gradlew --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
-    rm gradle/verification-keyring.gpg
-    git add gradle/verification-metadata.xml
-    git add gradle/verification-keyring.keys
     if ! ./gradlew clean build; then
         echo "Gradle build failed with security disabled, exiting script."
         exit 1
@@ -83,6 +80,15 @@ main() {
 
     # Test each configuration
     run_tests "Stirling-PDF-Ultra-Lite" "./exampleYmlFiles/docker-compose-latest-ultra-lite.yml"
+
+	echo "Testing webpage accessibility..."
+	if ./cucumber/test_webpages.sh; then
+		passed_tests+=("Webpage-Accessibility")
+	else
+		failed_tests+=("Webpage-Accessibility")
+		echo "Webpage accessibility tests failed"
+	fi
+
 	docker-compose -f "./exampleYmlFiles/docker-compose-latest-ultra-lite.yml" down
 
 
@@ -93,9 +99,6 @@ main() {
     # Run the gradlew build command and check if it fails
     ./gradlew --write-verification-metadata sha256 --refresh-dependencies help
     ./gradlew --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
-    rm gradle/verification-keyring.gpg
-    git add gradle/verification-metadata.xml
-    git add gradle/verification-keyring.keys
     if ! ./gradlew clean build; then
         echo "Gradle build failed with security enabled, exiting script."
         exit 1
