@@ -43,20 +43,11 @@ jobs:
           # Generate verification metadata with signatures and checksums
           ./gradlew --write-verification-metadata sha256 --refresh-dependencies help
           ./gradlew --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
-        env:
-          DOCKER_ENABLE_SECURITY: false
 
       - name: Build with Gradle and no spring security
         run: ./gradlew clean build
         env:
           DOCKER_ENABLE_SECURITY: false
-
-      - run: |
-          # Generate verification metadata with signatures and checksums
-          ./gradlew --write-verification-metadata sha256 --refresh-dependencies help
-          ./gradlew --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
-        env:
-          DOCKER_ENABLE_SECURITY: true
 
       - name: Build with Gradle and with spring security
         run: ./gradlew clean build
