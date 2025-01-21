@@ -376,7 +376,7 @@ dependencies {
     }
 
     // https://mvnrepository.com/artifact/technology.tabula/tabula
-    implementation ('technology.tabula:tabula:1.0.5')  {
+    implementation ('technology.tabula:tabula:1.2.1')  {
         exclude group: "org.slf4j", module: "slf4j-simple"
         exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
         exclude group: "com.google.code.gson", module: "gson"
