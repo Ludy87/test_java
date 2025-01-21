@@ -66,6 +66,11 @@ main() {
 
     export DOCKER_ENABLE_SECURITY=false
     # Run the gradlew build command and check if it fails
+    ./gradlew --write-verification-metadata sha256 --refresh-dependencies help
+    ./gradlew --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
+    rm gradle/verification-keyring.gpg
+    git add gradle/verification-metadata.xml
+    git add gradle/verification-keyring.keys
     if ! ./gradlew clean build; then
         echo "Gradle build failed with security disabled, exiting script."
         exit 1
@@ -86,6 +91,11 @@ main() {
 
     export DOCKER_ENABLE_SECURITY=true
     # Run the gradlew build command and check if it fails
+    ./gradlew --write-verification-metadata sha256 --refresh-dependencies help
+    ./gradlew --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
+    rm gradle/verification-keyring.gpg
+    git add gradle/verification-metadata.xml
+    git add gradle/verification-keyring.keys
     if ! ./gradlew clean build; then
         echo "Gradle build failed with security enabled, exiting script."
         exit 1
