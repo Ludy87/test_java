@@ -38,9 +38,9 @@ jobs:
           java-version: ${{ matrix.jdk-version }}
           distribution: "temurin"
 
-      - if: github.event.pull_request.user.login == 'dependabot[bot]'
+      - name: Generate verification metadata with signatures and checksums for dependabot[bot]
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
         run: |
-          # Generate verification metadata with signatures and checksums
           ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
           ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
 
@@ -58,41 +58,33 @@ jobs:
         run: |
           if [ -f gradle-exit-code-false.txt ] && [ -s gradle-exit-code-false.txt ]; then
             # Lesen Sie den Fehlercode und die Fehlerausgabe
-            exit_code_false=$(cat gradle-exit-code-false.txt || echo "unknown")
             error_output_false=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
 
             # Erstellen Sie eine Ausgabe für den nächsten Schritt
-            echo "exit_code_false=$exit_code_false" >> $GITHUB_ENV
             echo "error_output_false=$error_output_false" >> $GITHUB_ENV
           else
-            echo "exit_code_false=" >> $GITHUB_ENV
             echo "error_output_false=" >> $GITHUB_ENV
           fi
 
           if [ -f gradle-exit-code-true.txt ] && [ -s gradle-exit-code-true.txt ]; then
             # Lesen Sie den Fehlercode und die Fehlerausgabe
-            exit_code_true=$(cat gradle-exit-code-true.txt || echo "unknown")
             error_output_true=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
 
             # Erstellen Sie eine Ausgabe für den nächsten Schritt
-            echo "exit_code_true=$exit_code_true" >> $GITHUB_ENV
             echo "error_output_true=$error_output_true" >> $GITHUB_ENV
           else
-            echo "exit_code_true=" >> $GITHUB_ENV
             echo "error_output_true=" >> $GITHUB_ENV
           fi
 
-      - name: Post Comment to PR
+      - name: Check Dependency Verfication error to PR
         if: (env.error_output_false || env.error_output_true) && github.event_name == 'pull_request'
         run: |
           if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html' || \
             echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
             echo "FAIL_JOB=true" >> $GITHUB_ENV
           else
-            echo "FAIL_JOB=" >> $GITHUB_ENV
+            echo "FAIL_JOB=false" >> $GITHUB_ENV
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Test Reports
         if: always()
@@ -124,25 +116,16 @@ jobs:
 
             const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
 
-            // Only allow the action user to update comments
-            const expectedActor = "github-actions[bot]";
-
-            if (comment && comment.user.login === expectedActor) {
-              // Update existing comment
-              await github.rest.issues.updateComment({
-                owner: repoOwner,
-                repo: repoName,
-                comment_id: comment.id,
-                body: `🚨 **Gradle Build Failed** 🚨`
-              });
-              console.log("Updated existing comment.");
-            } else if (!comment) {
+            if (!comment) {
               // Create new comment if no existing comment is found
               await github.rest.issues.createComment({
                 owner: repoOwner,
                 repo: repoName,
                 issue_number: prNumber,
-                body: `🚨 **Gradle Build Failed** 🚨`
+                body: `🚨 **Gradle Build Failed** 🚨
+
+                Check: https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies
+                `
               });
               console.log("Created new comment.");
             } else {
