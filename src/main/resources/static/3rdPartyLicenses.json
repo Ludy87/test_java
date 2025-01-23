@@ -936,6 +936,13 @@
             "moduleLicenseUrl": "https://www.bouncycastle.org/licence.html"
         },
         {
+            "moduleName": "org.bouncycastle:bcpg-jdk18on",
+            "moduleUrl": "https://www.bouncycastle.org/java.html",
+            "moduleVersion": "1.79",
+            "moduleLicense": "Bouncy Castle Licence",
+            "moduleLicenseUrl": "https://www.bouncycastle.org/licence.html"
+        },
+        {
             "moduleName": "org.bouncycastle:bcpkix-jdk15on",
             "moduleUrl": "https://www.bouncycastle.org/java.html",
             "moduleVersion": "1.69",
