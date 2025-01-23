@@ -124,4 +124,4 @@ jobs:
         run: |
           # chmod +x ./cucumber/test_webpages.sh
           chmod +x ./test.sh
-          ./test.sh
+          ./test.sh ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Standardwert für den Boolean-Parameter
+BOOLEAN_PARAM=${1:-false}  # Standard ist "false", falls kein Parameter übergeben wird
+
 # Function to check the health of the service with a timeout of 80 seconds
 check_health() {
     local service_name=$1
@@ -65,8 +68,10 @@ main() {
 	SECONDS=0
 
     # Run the gradlew build command and check if it fails
-    ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
-    ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
+    if [[ "$BOOLEAN_PARAM" == "true" ]]; then
+        ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
+        ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
+    fi
 
     export DOCKER_ENABLE_SECURITY=false
     if ! ./gradlew clean build; then
