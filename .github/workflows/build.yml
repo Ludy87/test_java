@@ -38,7 +38,7 @@ jobs:
           java-version: ${{ matrix.jdk-version }}
           distribution: "temurin"
 
-      - if: github.event.pull_request.user.login == 'dependabot[bot]'
+      - if: github.event.pull_request.user.login != 'dependabot[bot]'
         run: |
           # Generate verification metadata with signatures and checksums
           ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
@@ -87,31 +87,34 @@ jobs:
         run: |
           if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html' || \
             echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
-            gh pr comment ${{ github.event.pull_request.number }} \
-              --body "🚨 **Gradle Build Failed** 🚨
 
-            **Exit Code:** ${{ env.exit_code_true }}
+            echo Test
 
-            <details>
-            <summary>Build Logs with spring security</summary>
+            # gh pr comment ${{ github.event.pull_request.number }} \
+            #   --body "🚨 **Gradle Build Failed** 🚨
 
-            \`\`\`
-            ${{ env.error_output_true }}
-            \`\`\`
+            # **Exit Code:** ${{ env.exit_code_true }}
 
-            </details>
+            # <details>
+            # <summary>Build Logs with spring security</summary>
 
-            **Exit Code:** ${{ env.exit_code_false }}
+            # \`\`\`
+            # ${{ env.error_output_true }}
+            # \`\`\`
 
-            <details>
-            <summary>Build Logs without spring security</summary>
+            # </details>
 
-            \`\`\`
-            ${{ env.error_output_false }}
-            \`\`\`
+            # **Exit Code:** ${{ env.exit_code_false }}
 
-            </details>
-            "
+            # <details>
+            # <summary>Build Logs without spring security</summary>
+
+            # \`\`\`
+            # ${{ env.error_output_false }}
+            # \`\`\`
+
+            # </details>
+            # "
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -193,4 +196,4 @@ jobs:
         run: |
           # chmod +x ./cucumber/test_webpages.sh
           chmod +x ./test.sh
-          ./test.sh "${{ github.event.pull_request.user.login == 'dependabot[bot]' }}"
+          ./test.sh "${{ github.event.pull_request.user.login 1= 'dependabot[bot]' }}"
