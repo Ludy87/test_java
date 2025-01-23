@@ -85,31 +85,34 @@ jobs:
       - name: Post Comment to PR
         if: env.exit_code_true && github.event_name == 'pull_request'
         run: |
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body "🚨 **Gradle Build Failed** 🚨
+          if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html' || \
+            echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
+            gh pr comment ${{ github.event.pull_request.number }} \
+              --body "🚨 **Gradle Build Failed** 🚨
 
-          **Exit Code:** ${{ env.exit_code_true }}
+            **Exit Code:** ${{ env.exit_code_true }}
 
-          <details>
-          <summary>Build Logs with spring security</summary>
+            <details>
+            <summary>Build Logs with spring security</summary>
 
-          \`\`\`
-          ${{ env.error_output_true }}
-          \`\`\`
+            \`\`\`
+            ${{ env.error_output_true }}
+            \`\`\`
 
-          </details>
+            </details>
 
-          **Exit Code:** ${{ env.exit_code_false }}
+            **Exit Code:** ${{ env.exit_code_false }}
 
-          <details>
-          <summary>Build Logs without spring security</summary>
+            <details>
+            <summary>Build Logs without spring security</summary>
 
-          \`\`\`
-          ${{ env.error_output_false }}
-          \`\`\`
+            \`\`\`
+            ${{ env.error_output_false }}
+            \`\`\`
 
-          </details>
-          "
+            </details>
+            "
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -185,11 +188,3 @@ jobs:
           # chmod +x ./cucumber/test_webpages.sh
           chmod +x ./test.sh
           ./test.sh "${{ github.event.pull_request.user.login == 'dependabot[bot]' }}"
-
-      - name: Post Comment to PR
-        if: env.exit_code_true && github.event_name == 'pull_request'
-        run: |
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body "🚨 **Gradle Build Failed** 🚨"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
