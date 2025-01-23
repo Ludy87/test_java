@@ -16,8 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      actions: read
-      security-events: write
+      issues: write
 
     strategy:
       fail-fast: false
@@ -84,7 +83,7 @@ jobs:
           fi
 
       - name: Post Comment to PR
-        if: env.exit_code_true
+        if: env.exit_code_true && github.event_name == 'pull_request'
         run: |
           gh pr comment ${{ github.event.pull_request.number }} \
             --body "🚨 **Gradle Build Failed** 🚨
@@ -143,6 +142,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      issues: write
+
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
@@ -185,7 +187,7 @@ jobs:
           ./test.sh "${{ github.event.pull_request.user.login == 'dependabot[bot]' }}"
 
       - name: Post Comment to PR
-        if: failure() # Nur ausführen, wenn der Build fehlschlägt
+        if: env.exit_code_true && github.event_name == 'pull_request'
         run: |
           gh pr comment ${{ github.event.pull_request.number }} \
             --body "🚨 **Gradle Build Failed** 🚨"
