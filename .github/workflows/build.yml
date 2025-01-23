@@ -46,14 +46,64 @@ jobs:
           ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
 
       - name: Build with Gradle and no spring security
-        run: ./gradlew clean build
+        run: ./gradlew clean build 2>gradle-error-false.log || echo $? > gradle-exit-code-false.txt
         env:
           DOCKER_ENABLE_SECURITY: false
 
       - name: Build with Gradle and with spring security
-        run: ./gradlew clean build
+        run: ./gradlew clean build 2>gradle-error-true.log || echo $? > gradle-exit-code-true.txt
         env:
           DOCKER_ENABLE_SECURITY: true
+
+      - name: Check Gradle Build Status
+        if: failure() # Nur ausführen, wenn der vorherige Schritt fehlschlägt
+        run: |
+          # Lesen Sie den Fehlercode und die Fehlerausgabe
+          exit_code_false=$(cat gradle-exit-code-false.txt || echo "unknown")
+          error_output_false=$(cat gradle-error-false.log || echo "No error output captured.")
+
+          # Erstellen Sie eine Ausgabe für den nächsten Schritt
+          echo "exit_code_false=$exit_code_false" >> $GITHUB_ENV
+          echo "error_output_false=$error_output_false" >> $GITHUB_ENV
+
+          # Lesen Sie den Fehlercode und die Fehlerausgabe
+          exit_code_true=$(cat gradle-exit-code-true.txt || echo "unknown")
+          error_output_true=$(cat gradle-error-true.log || echo "No error output captured.")
+
+          # Erstellen Sie eine Ausgabe für den nächsten Schritt
+          echo "exit_code_true=$exit_code_true" >> $GITHUB_ENV
+          echo "error_output_true=$error_output_true" >> $GITHUB_ENV
+
+      - name: Post Comment to PR
+        if: failure() # Nur ausführen, wenn der Build fehlschlägt
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body "🚨 **Gradle Build Failed** 🚨
+
+          **Exit Code:** ${{ env.exit_code_true }}
+
+          <details>
+          <summary>Build Logs with spring security</summary>
+
+          \`\`\`
+          ${{ env.error_output_true }}
+          \`\`\`
+
+          </details>
+
+          **Exit Code:** ${{ env.exit_code_false }}
+
+          <details>
+          <summary>Build Logs without spring security</summary>
+
+          \`\`\`
+          ${{ env.error_output_false }}
+          \`\`\`
+
+          </details>
+          "
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Test Reports
         if: always()
