@@ -85,37 +85,34 @@ jobs:
       - name: Post Comment to PR
         if: env.exit_code_true && github.event_name == 'pull_request'
         run: |
-          if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html' || \
-            echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
+          # if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html' || \
+          #   echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
+          #   # gh pr comment ${{ github.event.pull_request.number }} \
+          #   #   --body "🚨 **Gradle Build Failed** 🚨
 
-            echo Test
+          #   # **Exit Code:** ${{ env.exit_code_true }}
 
-            # gh pr comment ${{ github.event.pull_request.number }} \
-            #   --body "🚨 **Gradle Build Failed** 🚨
+          #   # <details>
+          #   # <summary>Build Logs with spring security</summary>
 
-            # **Exit Code:** ${{ env.exit_code_true }}
+          #   # \`\`\`
+          #   # ${{ env.error_output_true }}
+          #   # \`\`\`
 
-            # <details>
-            # <summary>Build Logs with spring security</summary>
+          #   # </details>
 
-            # \`\`\`
-            # ${{ env.error_output_true }}
-            # \`\`\`
+          #   # **Exit Code:** ${{ env.exit_code_false }}
 
-            # </details>
+          #   # <details>
+          #   # <summary>Build Logs without spring security</summary>
 
-            # **Exit Code:** ${{ env.exit_code_false }}
+          #   # \`\`\`
+          #   # ${{ env.error_output_false }}
+          #   # \`\`\`
 
-            # <details>
-            # <summary>Build Logs without spring security</summary>
-
-            # \`\`\`
-            # ${{ env.error_output_false }}
-            # \`\`\`
-
-            # </details>
-            # "
-          fi
+          #   # </details>
+          #   # "
+          # fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
