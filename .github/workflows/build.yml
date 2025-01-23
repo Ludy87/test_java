@@ -173,3 +173,45 @@ jobs:
           # chmod +x ./cucumber/test_webpages.sh
           chmod +x ./test.sh
           ./test.sh "${{ github.event.pull_request.user.login == 'dependabot[bot]' }}"
+
+      - name: Check Gradle Build Status
+        if: failure() # Nur ausführen, wenn der vorherige Schritt fehlschlägt
+        run: |
+          # Lesen Sie den Fehlercode und die Fehlerausgabe
+          exit_code=$(cat gradle-exit-code-true.txt || echo "unknown")
+          error_output=$(cat gradle-error-true.log || echo "No error output captured.")
+
+          # Erstellen Sie eine Ausgabe für den nächsten Schritt
+          echo "exit_code=$exit_code" >> $GITHUB_ENV
+          echo "error_output=$error_output" >> $GITHUB_ENV
+
+      - name: Post Comment to PR
+        if: failure() # Nur ausführen, wenn der Build fehlschlägt
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body "🚨 **Gradle Build Failed** 🚨
+
+          **Exit Code:** ${{ env.exit_code }}
+
+          <details>
+          <summary>Build Logs with spring security</summary>
+
+          \`\`\`
+          ${{ env.error_output }}
+          \`\`\`
+
+          </details>
+
+          **Exit Code:** ${{ env.exit_code_false }}
+
+          <details>
+          <summary>Build Logs without spring security</summary>
+
+          \`\`\`
+          ${{ env.error_output_false }}
+          \`\`\`
+
+          </details>
+          "
+            env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
