@@ -45,17 +45,13 @@ jobs:
           ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
           ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
 
-      - if: github.event.pull_request.user.login != 'dependabot[bot]'
-        run: |
-
-
       - name: Build with Gradle and no spring security
-        run: ./gradlew clean build || echo "FAIL_JOB=true" >> $GITHUB_ENV
+        run: ./gradlew clean build
         env:
           DOCKER_ENABLE_SECURITY: false
 
       - name: Build with Gradle and with spring security
-        run: ./gradlew clean build || echo "FAIL_JOB=true" >> $GITHUB_ENV
+        run: ./gradlew clean build
         env:
           DOCKER_ENABLE_SECURITY: true
 
@@ -124,4 +120,4 @@ jobs:
         run: |
           # chmod +x ./cucumber/test_webpages.sh
           chmod +x ./test.sh
-          ./test.sh ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
+          ./test.sh ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
