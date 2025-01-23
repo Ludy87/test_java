@@ -38,7 +38,7 @@ jobs:
           java-version: ${{ matrix.jdk-version }}
           distribution: "temurin"
 
-      - name: Generate verification metadata with signatures and checksums for dependabot[bot]
+      - name: PR | Generate verification metadata with signatures and checksums for dependabot[bot]
         if: github.event.pull_request.user.login == 'dependabot[bot]'
         run: |
           ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
@@ -59,7 +59,7 @@ jobs:
           if [ -f gradle-exit-code-false.txt ] && [ -s gradle-exit-code-false.txt ]; then
             # Lesen Sie den Fehlercode und die Fehlerausgabe
             error_output_false=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
-
+            cat gradle-error.log
             # Erstellen Sie eine Ausgabe für den nächsten Schritt
             echo "error_output_false=$error_output_false" >> $GITHUB_ENV
           else
@@ -69,21 +69,25 @@ jobs:
           if [ -f gradle-exit-code-true.txt ] && [ -s gradle-exit-code-true.txt ]; then
             # Lesen Sie den Fehlercode und die Fehlerausgabe
             error_output_true=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
-
+            cat gradle-error.log
             # Erstellen Sie eine Ausgabe für den nächsten Schritt
             echo "error_output_true=$error_output_true" >> $GITHUB_ENV
           else
             echo "error_output_true=" >> $GITHUB_ENV
           fi
 
-      - name: Check Dependency Verfication error to PR
+      - name: PR | Check Dependency Verfication error
         if: (env.error_output_false || env.error_output_true) && github.event_name == 'pull_request'
         run: |
           if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html' || \
             echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
             echo "FAIL_JOB=true" >> $GITHUB_ENV
+          else if echo "${{ env.error_output_false }}" || \
+            echo "${{ env.error_output_true }}"; then
+            echo "FAIL=true" >> $GITHUB_ENV
           else
             echo "FAIL_JOB=false" >> $GITHUB_ENV
+            echo "FAIL=false" >> $GITHUB_ENV
           fi
 
       - name: Upload Test Reports
@@ -92,13 +96,12 @@ jobs:
         with:
           name: test-reports-jdk-${{ matrix.jdk-version }}
           path: |
-            gradle-error.log
             build/reports/tests/
             build/test-results/
             build/reports/problems/
           retention-days: 3
 
-      - name: Post comment on PR
+      - name: PR | Post comment
         if: env.FAIL_JOB == 'true'
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
@@ -132,8 +135,8 @@ jobs:
               console.log("Comment update attempt denied. Actor does not match.");
             }
 
-      - name: Post comment on PR
-        if: env.FAIL_JOB != 'true'
+      - name: PR | Delete comment
+        if: env.FAIL_JOB == 'false'
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
@@ -162,11 +165,11 @@ jobs:
               });
               console.log("Deleted existing comment.");
             } else {
-              console.log("Comment update attempt denied. Actor does not match.");
+              console.log("Comment deleted attempt denied. Actor does not match.");
             }
 
       - name: Fail job if errors found
-        if: env.FAIL_JOB == 'true'
+        if: env.FAIL_JOB == 'true' || env.FAIL == 'true'
         run: |
           echo "Failing the job because errors were detected."
           exit 1
