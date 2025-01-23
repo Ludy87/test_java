@@ -38,7 +38,7 @@ jobs:
           java-version: ${{ matrix.jdk-version }}
           distribution: "temurin"
 
-      - if: github.event.pull_request.user.login != 'dependabot[bot]'
+      - if: github.event.pull_request.user.login == 'dependabot[bot]'
         run: |
           # Generate verification metadata with signatures and checksums
           ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
@@ -83,36 +83,14 @@ jobs:
           fi
 
       - name: Post Comment to PR
-        if: env.exit_code_true && github.event_name == 'pull_request'
+        if: (env.error_output_false || env.error_output_true) && github.event_name == 'pull_request'
         run: |
-          # if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html' || \
-          #   echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
-          #   # gh pr comment ${{ github.event.pull_request.number }} \
-          #   #   --body "🚨 **Gradle Build Failed** 🚨
-
-          #   # **Exit Code:** ${{ env.exit_code_true }}
-
-          #   # <details>
-          #   # <summary>Build Logs with spring security</summary>
-
-          #   # \`\`\`
-          #   # ${{ env.error_output_true }}
-          #   # \`\`\`
-
-          #   # </details>
-
-          #   # **Exit Code:** ${{ env.exit_code_false }}
-
-          #   # <details>
-          #   # <summary>Build Logs without spring security</summary>
-
-          #   # \`\`\`
-          #   # ${{ env.error_output_false }}
-          #   # \`\`\`
-
-          #   # </details>
-          #   # "
-          # fi
+          if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html' || \
+            echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
+            echo "FAIL_JOB=true" >> $GITHUB_ENV
+          else
+            echo "FAIL_JOB=" >> $GITHUB_ENV
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -127,6 +105,82 @@ jobs:
             build/test-results/
             build/reports/problems/
           retention-days: 3
+
+      - name: Post comment on PR
+        if: env.FAIL_JOB == 'true'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
+            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
+            const prNumber = context.issue.number;
+
+            // Find existing comment
+            const comments = await github.rest.issues.listComments({
+              owner: repoOwner,
+              repo: repoName,
+              issue_number: prNumber
+            });
+
+            const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
+
+            // Only allow the action user to update comments
+            const expectedActor = "github-actions[bot]";
+
+            if (comment && comment.user.login === expectedActor) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: repoOwner,
+                repo: repoName,
+                comment_id: comment.id,
+                body: `🚨 **Gradle Build Failed** 🚨`
+              });
+              console.log("Updated existing comment.");
+            } else if (!comment) {
+              // Create new comment if no existing comment is found
+              await github.rest.issues.createComment({
+                owner: repoOwner,
+                repo: repoName,
+                issue_number: prNumber,
+                body: `🚨 **Gradle Build Failed** 🚨`
+              });
+              console.log("Created new comment.");
+            } else {
+              console.log("Comment update attempt denied. Actor does not match.");
+            }
+
+      - name: Post comment on PR
+        if: env.FAIL_JOB != 'true'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
+            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
+            const prNumber = context.issue.number;
+
+            // Find existing comment
+            const comments = await github.rest.issues.listComments({
+              owner: repoOwner,
+              repo: repoName,
+              issue_number: prNumber
+            });
+
+            const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
+
+            // Only allow the action user to update comments
+            const expectedActor = "github-actions[bot]";
+
+            if (comment && comment.user.login === expectedActor) {
+              // deleted existing comment
+              await github.rest.issues.deleteComment({
+                owner: repoOwner,
+                repo: repoName,
+                comment_id: comment.id
+              });
+              console.log("Deleted existing comment.");
+            } else {
+              console.log("Comment update attempt denied. Actor does not match.");
+            }
 
       - name: Fail job if errors found
         if: env.FAIL_JOB == 'true'
@@ -193,4 +247,4 @@ jobs:
         run: |
           # chmod +x ./cucumber/test_webpages.sh
           chmod +x ./test.sh
-          ./test.sh "${{ github.event.pull_request.user.login != 'dependabot[bot]' }}"
+          ./test.sh "${{ github.event.pull_request.user.login == 'dependabot[bot]' }}"
