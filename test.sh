@@ -65,8 +65,8 @@ main() {
 	SECONDS=0
 
     # Run the gradlew build command and check if it fails
-    ./gradlew --write-verification-metadata sha256 --refresh-dependencies help
-    ./gradlew --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
+    ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
+    ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
 
     export DOCKER_ENABLE_SECURITY=false
     if ! ./gradlew clean build; then
