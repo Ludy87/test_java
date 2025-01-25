@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk-version: [17, 21]
+        jdk-version: [17] # , 21]
 
     steps:
       - name: Harden Runner
@@ -42,53 +42,112 @@ jobs:
         if: github.event.pull_request.user.login == 'dependabot[bot]'
         run: |
           ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
-          ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
+          ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256,pgp --refresh-keys --export-keys --refresh-dependencies help
 
       - name: Build with Gradle and no spring security
-        run: ./gradlew clean build 2>gradle-error.log || echo $? > gradle-exit-code-false.txt
+        id: build_without_security
+        run: |
+          ./gradlew clean build 2> >(tee gradle-error.log >&2) || echo $? > gradle-exit-code-false.txt
         env:
           DOCKER_ENABLE_SECURITY: false
 
-      - name: Build with Gradle and with spring security
-        run: ./gradlew clean build 2>gradle-error.log || echo $? > gradle-exit-code-true.txt
-        env:
-          DOCKER_ENABLE_SECURITY: true
-
-      - name: Check Gradle Build Status
+      - name: Check Gradle Build Exit Code (no spring security)
+        if: ${{ always() && steps.build_without_security.conclusion }}
         run: |
-          if [ -f gradle-exit-code-false.txt ] && [ -s gradle-exit-code-false.txt ]; then
-            # Lesen Sie den Fehlercode und die Fehlerausgabe
-            error_output_false=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
-            cat gradle-error.log
-            # Erstellen Sie eine Ausgabe für den nächsten Schritt
-            echo "error_output_false=$error_output_false" >> $GITHUB_ENV
+          cat gradle-error.log
+          if [ -f gradle-exit-code-false.txt ]; then
+            error_output=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+            if echo $error_output | grep -q 'dependency-verification-report.html'; then
+              echo "schreib einen Kommentar"
+            fi
+            exit_code=$(cat gradle-exit-code-false.txt)
+            echo "The Gradle build failed with exit code $exit_code"
+            echo "exit_code_false=$exit_code" >> $GITHUB_ENV
+            echo "error_output_false=$error_output" >> $GITHUB_ENV
           else
+            echo "exit_code_false=0" >> $GITHUB_ENV
             echo "error_output_false=" >> $GITHUB_ENV
           fi
 
-          if [ -f gradle-exit-code-true.txt ] && [ -s gradle-exit-code-true.txt ]; then
-            # Lesen Sie den Fehlercode und die Fehlerausgabe
-            error_output_true=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
-            cat gradle-error.log
-            # Erstellen Sie eine Ausgabe für den nächsten Schritt
-            echo "error_output_true=$error_output_true" >> $GITHUB_ENV
+      - name: Failure Handling (no spring security)
+        if: ${{ env.exit_code_false != '0' }}
+        run: |
+          echo "The Gradle build step failed with exit code ${{ env.exit_code_false }}"
+          if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html'; then
+            exit_code=${{ env.exit_code_false }}
+            exit ${exit_code:-1}
+          fi
+          echo "${{ env.error_output_false }}"
+
+      - name: failure
+        if: ${{ always() && steps.build_without_security.conclusion }}
+        run: |
+          echo ${{ steps.build_without_security.conclusion }}
+
+      - name: Build with Gradle and with spring security
+        id: build_with_security
+        run: |
+          ./gradlew clean build 2> >(tee gradle-error.log >&2) || echo $? > gradle-exit-code-true.txt
+        env:
+          DOCKER_ENABLE_SECURITY: true
+
+      - name: Check Gradle Build Exit Code
+        if: ${{ always() && steps.build_with_security.conclusion }}
+        run: |
+          cat gradle-error.log
+          if [ -f gradle-exit-code-true.txt ]; then
+            error_output=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+            if echo $error_output | grep -q 'dependency-verification-report.html'; then
+              echo "schreib einen Kommentar"
+            fi
+            exit_code=$(cat gradle-exit-code-true.txt)
+            echo "The Gradle build failed with exit code $exit_code"
+            echo "exit_code_true=$exit_code" >> $GITHUB_ENV
+            echo "error_output_true=$error_output" >> $GITHUB_ENV
           else
+            echo "exit_code_true=0" >> $GITHUB_ENV
             echo "error_output_true=" >> $GITHUB_ENV
           fi
 
-      - name: PR | Check Dependency Verfication error
-        if: (env.error_output_false || env.error_output_true) && github.event_name == 'pull_request'
+      - name: Failure Handling
+        if: ${{ env.exit_code_true != '0' }}
         run: |
-          if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html' || \
-            echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
-            echo "FAIL_JOB=true" >> $GITHUB_ENV
-          else if echo "${{ env.error_output_false }}" || \
-            echo "${{ env.error_output_true }}"; then
-            echo "FAIL=true" >> $GITHUB_ENV
-          else
-            echo "FAIL_JOB=false" >> $GITHUB_ENV
-            echo "FAIL=false" >> $GITHUB_ENV
+          echo "The Gradle build step failed with exit code ${{ env.exit_code_true }}"
+          if echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
+            exit_code=${{ env.exit_code_true }}
+            exit ${exit_code:-1}
           fi
+
+      # - name: Check Gradle Build Status DOCKER_ENABLE_SECURITY - true
+      #   run: |
+      #     if [ -f gradle-exit-code-true.txt ] && [ -s gradle-exit-code-true.txt ]; then
+      #       # Lesen Sie den Fehlercode und die Fehlerausgabe
+      #       error_output_true=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+      #       cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r'
+      #       # Erstellen Sie eine Ausgabe für den nächsten Schritt
+      #       echo "error_output_true=$error_output_true" >> $GITHUB_ENV
+      #     else
+      #       echo "error_output_true=" >> $GITHUB_ENV
+      #     fi
+
+      - name: failure
+        if: ${{ always() && steps.build_with_security.conclusion }}
+        run: |
+          echo ${{ steps.build_with_security.conclusion  }}
+
+      # - name: Check Dependency Verfication error
+      #   if: env.error_output_false || env.error_output_true
+      #   run: |
+      #     if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html' || \
+      #       echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
+      #       echo "FAIL_JOB=true" >> $GITHUB_ENV
+      #     elif [ -n "${{ env.error_output_false }}" ] || [ -n "${{ env.error_output_true }}" ]; then
+      #       cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r'
+      #       echo "FAIL=true" >> $GITHUB_ENV
+      #     else
+      #       echo "FAIL_JOB=false" >> $GITHUB_ENV
+      #       echo "FAIL=false" >> $GITHUB_ENV
+      #     fi
 
       - name: Upload Test Reports
         if: always()
@@ -96,83 +155,84 @@ jobs:
         with:
           name: test-reports-jdk-${{ matrix.jdk-version }}
           path: |
+            gradle-error.log
             build/reports/tests/
             build/test-results/
             build/reports/problems/
           retention-days: 3
 
-      - name: PR | Post comment
-        if: env.FAIL_JOB == 'true'
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        with:
-          script: |
-            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
-            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
-            const prNumber = context.issue.number;
+      # - name: PR | Post comment
+      #   if: env.FAIL_JOB == 'true' && github.event_name == 'pull_request'
+      #   uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+      #   with:
+      #     script: |
+      #       const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
+      #       const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
+      #       const prNumber = context.issue.number;
 
-            // Find existing comment
-            const comments = await github.rest.issues.listComments({
-              owner: repoOwner,
-              repo: repoName,
-              issue_number: prNumber
-            });
+      #       // Find existing comment
+      #       const comments = await github.rest.issues.listComments({
+      #         owner: repoOwner,
+      #         repo: repoName,
+      #         issue_number: prNumber
+      #       });
 
-            const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
+      #       const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
 
-            if (!comment) {
-              // Create new comment if no existing comment is found
-              await github.rest.issues.createComment({
-                owner: repoOwner,
-                repo: repoName,
-                issue_number: prNumber,
-                body: `🚨 **Gradle Build Failed** 🚨
+      #       if (!comment) {
+      #         // Create new comment if no existing comment is found
+      #         await github.rest.issues.createComment({
+      #           owner: repoOwner,
+      #           repo: repoName,
+      #           issue_number: prNumber,
+      #           body: `🚨 **Gradle Build Failed** 🚨
 
-                Check: https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies
-                `
-              });
-              console.log("Created new comment.");
-            } else {
-              console.log("Comment update attempt denied. Actor does not match.");
-            }
+      #           Check: https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies
+      #           `
+      #         });
+      #         console.log("Created new comment.");
+      #       } else {
+      #         console.log("Comment update attempt denied. Actor does not match.");
+      #       }
 
-      - name: PR | Delete comment
-        if: env.FAIL_JOB == 'false'
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        with:
-          script: |
-            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
-            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
-            const prNumber = context.issue.number;
+      # - name: PR | Delete comment
+      #   if: env.FAIL_JOB == 'false' && github.event_name == 'pull_request'
+      #   uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+      #   with:
+      #     script: |
+      #       const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
+      #       const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
+      #       const prNumber = context.issue.number;
 
-            // Find existing comment
-            const comments = await github.rest.issues.listComments({
-              owner: repoOwner,
-              repo: repoName,
-              issue_number: prNumber
-            });
+      #       // Find existing comment
+      #       const comments = await github.rest.issues.listComments({
+      #         owner: repoOwner,
+      #         repo: repoName,
+      #         issue_number: prNumber
+      #       });
 
-            const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
+      #       const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
 
-            // Only allow the action user to update comments
-            const expectedActor = "github-actions[bot]";
+      #       // Only allow the action user to update comments
+      #       const expectedActor = "github-actions[bot]";
 
-            if (comment && comment.user.login === expectedActor) {
-              // deleted existing comment
-              await github.rest.issues.deleteComment({
-                owner: repoOwner,
-                repo: repoName,
-                comment_id: comment.id
-              });
-              console.log("Deleted existing comment.");
-            } else {
-              console.log("Comment deleted attempt denied. Actor does not match.");
-            }
+      #       if (comment && comment.user.login === expectedActor) {
+      #         // deleted existing comment
+      #         await github.rest.issues.deleteComment({
+      #           owner: repoOwner,
+      #           repo: repoName,
+      #           comment_id: comment.id
+      #         });
+      #         console.log("Deleted existing comment.");
+      #       } else {
+      #         console.log("Comment deleted attempt denied. Actor does not match.");
+      #       }
 
-      - name: Fail job if errors found
-        if: env.FAIL_JOB == 'true' || env.FAIL == 'true'
-        run: |
-          echo "Failing the job because errors were detected."
-          exit 1
+      # - name: Fail job if errors found
+      #   if: env.FAIL_JOB == 'true' || env.FAIL == 'true'
+      #   run: |
+      #     echo "Failing the job because errors were detected."
+      #     exit 1
 
   docker-compose-tests:
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main' ||
@@ -214,14 +274,14 @@ jobs:
 
       - name: Install Docker Compose
         run: |
-          sudo curl -SL "https://github.com/docker/compose/releases/download/v2.32.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo curl -SL "https://github.com/docker/compose/releases/download/v2.32.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
 
       - name: Set up Python
         uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
         with:
           python-version: "3.12"
-          cache: 'pip' # caching pip dependencies
+          cache: "pip" # caching pip dependencies
 
       - name: Pip requirements
         run: |

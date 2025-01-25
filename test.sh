@@ -70,7 +70,7 @@ main() {
     # Run the gradlew build command and check if it fails
     if [[ "$BOOLEAN_PARAM" == "true" ]]; then
         ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
-        ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata pgp,sha256 --refresh-keys --export-keys --refresh-dependencies help
+        ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256,pgp --refresh-keys --export-keys --refresh-dependencies help
     fi
 
     export DOCKER_ENABLE_SECURITY=false
@@ -107,7 +107,6 @@ main() {
         echo "Gradle build failed with security enabled, exiting script."
         exit 1
     fi
-
 
     # Building Docker images with security enabled
     # docker build --no-cache --pull --build-arg VERSION_TAG=alpha -t ludy87/s-pdf:latest -f ./Dockerfile .
@@ -154,8 +153,6 @@ main() {
         echo -e "\e[31m$test\e[0m"  # Red color for failed tests
     done
 
-
-
     # Check if there are any failed tests and exit with an error code if so
     if [ ${#failed_tests[@]} -ne 0 ]; then
         echo "Some tests failed."
@@ -164,7 +161,6 @@ main() {
         echo "All tests passed successfully."
         exit 0
     fi
-
 }
 
 main
