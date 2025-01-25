@@ -28,7 +28,7 @@ import stirling.software.SPDF.config.ConfigInitializer;
 import stirling.software.SPDF.config.InstallationPathConfig;
 import stirling.software.SPDF.model.ApplicationProperties;
 
-// @Slf4j
+@Slf4j
 @EnableScheduling
 @SpringBootApplication
 public class SPDFApplication {
