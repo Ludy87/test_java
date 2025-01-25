@@ -110,10 +110,6 @@ jobs:
             echo "write_comment_with_security=false" >> $GITHUB_ENV
           fi
 
-      - name: Set MATRIX_JDK_VERSION
-        if: ${{ always() }}
-        run: echo "MATRIX_JDK_VERSION=${{ matrix.jdk-version }}" >> $GITHUB_ENV
-
       - name: Collect all error outputs
         if: always()
         run: |
@@ -141,7 +137,7 @@ jobs:
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT, MATRIX_JDK_VERSION, error_output_true, error_output_false } = process.env;
+            const { GITHUB_REPOSITORY } = process.env;
             const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
             const prNumber = context.issue.number;
 
@@ -151,8 +147,6 @@ jobs:
               repo: repoName,
               issue_number: prNumber
             });
-
-            console.log(comments);
 
             const comment = comments.data.find(c => c.body.includes(`🚨 **Gradle Build Failed** 🚨`));
 
@@ -174,7 +168,7 @@ jobs:
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT, MATRIX_JDK_VERSION, error_output_true, error_output_false } = process.env;
+            const { GITHUB_REPOSITORY, error_output_true, error_output_false, combined_error_logs } = process.env;
             const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
             const prNumber = context.issue.number;
 
@@ -184,8 +178,6 @@ jobs:
               repo: repoName,
               issue_number: prNumber
             });
-
-            console.log(comments);
 
             const comment = comments.data.find(c => c.body.includes(`🚨 **Gradle Build Failed** 🚨`));
 
