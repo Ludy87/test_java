@@ -135,12 +135,12 @@ jobs:
 
             if (process.env.error_output_true) {
               bodyComment += "### Build with Spring Security:\n\n";
-              bodyComment += "```\n" + ${error_output_true} + "\n```\n\n";
+              bodyComment += "```\n" + error_output_true + "\n```\n\n";
             }
 
             if (process.env.error_output_false) {
               bodyComment += "### Build without Spring Security:\n\n";
-              bodyComment += "```\n" + ${error_output_false} + "\n```\n\n";
+              bodyComment += "```\n" + error_output_false + "\n```\n\n";
             }
 
             bodyComment += "For more details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
