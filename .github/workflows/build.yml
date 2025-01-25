@@ -111,7 +111,7 @@ jobs:
           fi
 
       - name: PR | Delete comment
-        if: ${{ always() && github.event_name == 'pull_request' && ((steps.build_with_security_exit_code.conclusion == 'failure' && env.write_comment_with_security == 'true') || (steps.build_without_security_exit_code.conclusion == 'failure' && env.write_comment_without_security == 'true')) }}
+        if: ${{ always() && github.event_name == 'pull_request' && env.write_comment_with_security == 'false' && env.write_comment_without_security == 'false' }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
@@ -167,6 +167,8 @@ jobs:
             bodyComment += "To resolve the dependency verification issue, execute the following commands step by step to update the dependency metadata and push the changes to this pull request:\n\n";
             bodyComment += "```bash\n";
             bodyComment += "./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help\n\n";
+            bodyComment += "```\n\n";
+            bodyComment += "```bash\n";
             bodyComment += "./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256,pgp --refresh-keys --export-keys --refresh-dependencies help\n";
             bodyComment += "```\n\n";
             bodyComment += "For further details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
