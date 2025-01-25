@@ -119,13 +119,17 @@ jobs:
           for jdk_version in 17 21; do
             if [ -f gradle-error-${jdk_version}-true.log ]; then
               echo "### Build with Spring Security (Java $jdk_version):" >> $GITHUB_ENV
+              echo "\n" >> $GITHUB_ENV
               echo "Dependency verification failed" >> $GITHUB_ENV
+              echo "\n" >> $GITHUB_ENV
               echo "" >> $GITHUB_ENV
             fi
 
             if [ -f gradle-error-${jdk_version}-false.log ]; then
               echo "### Build without Spring Security (Java $jdk_version):" >> $GITHUB_ENV
+              echo "\n" >> $GITHUB_ENV
               echo "Dependency verification failed" >> $GITHUB_ENV
+              echo "\n" >> $GITHUB_ENV
               echo "" >> $GITHUB_ENV
             fi
           done
@@ -186,7 +190,8 @@ jobs:
 
             // Build the comment content
             let bodyComment = "🚨 **Gradle Build Failed** 🚨\n\n";
-            bodyComment += combined_error_logs || "No error logs captured.\n\n";
+            bodyComment +=  "```bash\n./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help\n" +
+                            "./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256,pgp --refresh-keys --export-keys --refresh-dependencies help\n```";
 
             // if (process.env.error_output_true) {
             //   bodyComment += "### Build with Spring Security:\n\n";
