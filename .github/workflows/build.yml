@@ -76,7 +76,7 @@ jobs:
           # fi
 
       - name: failure
-        if: ${{ always() && steps.build_without_security_exit_code.conclusion == "failure" }}
+        if: ${{ always() && steps.build_without_security_exit_code.conclusion == 'failure' }}
         run: |
           if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html'; then
             echo "write_comment=true" >> $GITHUB_ENV
