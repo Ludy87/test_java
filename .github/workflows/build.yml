@@ -188,15 +188,15 @@ jobs:
             let bodyComment = "🚨 **Gradle Build Failed** 🚨\n\n";
             bodyComment += combined_error_logs || "No error logs captured.\n\n";
 
-            # if (process.env.error_output_true) {
-            #   bodyComment += "### Build with Spring Security:\n\n";
-            #   bodyComment += "```\n" + error_output_true.trim() + "\n```\n\n";
-            # }
+            // if (process.env.error_output_true) {
+            //   bodyComment += "### Build with Spring Security:\n\n";
+            //   bodyComment += "```\n" + error_output_true.trim() + "\n```\n\n";
+            // }
 
-            # if (process.env.error_output_false) {
-            #   bodyComment += "### Build without Spring Security:\n\n";
-            #   bodyComment += "```\n" + error_output_false.trim() + "\n```\n\n";
-            # }
+            // if (process.env.error_output_false) {
+            //   bodyComment += "### Build without Spring Security:\n\n";
+            //   bodyComment += "```\n" + error_output_false.trim() + "\n```\n\n";
+            // }
 
             bodyComment += "For more details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
 
@@ -209,23 +209,23 @@ jobs:
                 body: bodyComment
               });
               console.log("Created new comment.");
-            # } else if (comment && comment.user.login === expectedActor && (process.env.error_output_true || process.env.error_output_false)) {
-            #   // Update existing comment
-            #   await github.rest.issues.updateComment({
-            #     owner: repoOwner,
-            #     repo: repoName,
-            #     comment_id: comment.id,
-            #     body: bodyComment
-            #   });
-            #   console.log("Updated existing comment.");
-            # } else if (comment && comment.user.login === expectedActor) {
-            #   // deleted existing comment
-            #   await github.rest.issues.deleteComment({
-            #     owner: repoOwner,
-            #     repo: repoName,
-            #     comment_id: comment.id
-            #   });
-            #   console.log("Deleted existing comment.");
+            // } else if (comment && comment.user.login === expectedActor && (process.env.error_output_true || process.env.error_output_false)) {
+            //   // Update existing comment
+            //   await github.rest.issues.updateComment({
+            //     owner: repoOwner,
+            //     repo: repoName,
+            //     comment_id: comment.id,
+            //     body: bodyComment
+            //   });
+            //   console.log("Updated existing comment.");
+            // } else if (comment && comment.user.login === expectedActor) {
+            //   // deleted existing comment
+            //   await github.rest.issues.deleteComment({
+            //     owner: repoOwner,
+            //     repo: repoName,
+            //     comment_id: comment.id
+            //   });
+            //   console.log("Deleted existing comment.");
             } else {
               console.log("Comment update attempt denied. Actor does not match.");
             }
