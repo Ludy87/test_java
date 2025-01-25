@@ -131,13 +131,13 @@ jobs:
 
             console.log(comments);
 
-            const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed - Java MATRIX_JDK_VERSION** 🚨"));
+            const comment = comments.data.find(c => c.body.includes(`🚨 **Gradle Build Failed - Java ${process.env.MATRIX_JDK_VERSION}** 🚨`));
 
             // Only allow the action user to update comments
             const expectedActor = "github-actions[bot]";
 
             // Build the comment content
-            let bodyComment = "🚨 **Gradle Build Failed - Java MATRIX_JDK_VERSION** 🚨\n\n";
+            let bodyComment = `🚨 **Gradle Build Failed - Java ${process.env.MATRIX_JDK_VERSION}** 🚨\n\n`;
 
             if (process.env.error_output_true) {
               bodyComment += "### Build with Spring Security:\n\n";
