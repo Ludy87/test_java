@@ -109,6 +109,10 @@ jobs:
             echo "write_comment_with_security=false"
             echo "write_comment_with_security=false" >> $GITHUB_ENV
           fi
+
+      - name: Set MATRIX_JDK_VERSION
+        run: echo "MATRIX_JDK_VERSION=${{ matrix.jdk-version }}" >> $GITHUB_ENV
+
       - name: PR | Post comment
         if: ${{ always() && github.event_name == 'pull_request' && ((steps.build_with_security_exit_code.conclusion == 'failure' && env.write_comment_with_security == 'true') || (steps.build_without_security_exit_code.conclusion == 'failure' && env.write_comment_without_security == 'true')) }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
@@ -125,24 +129,24 @@ jobs:
               issue_number: prNumber
             });
 
-            echo comments;
+            console.log(comments);
 
-            const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
+            const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed - Java ${process.env.MATRIX_JDK_VERSION}** 🚨"));
 
             // Only allow the action user to update comments
             const expectedActor = "github-actions[bot]";
 
             // Build the comment content
-            let bodyComment = "🚨 **Gradle Build Failed** 🚨\n\n";
+            let bodyComment = "🚨 **Gradle Build Failed - Java ${process.env.MATRIX_JDK_VERSION}** 🚨\n\n";
 
             if (process.env.error_output_true) {
               bodyComment += "### Build with Spring Security:\n\n";
-              bodyComment += "```\n" + error_output_true + "\n```\n\n";
+              bodyComment += "```\n" + error_output_true.trim() + "\n```\n\n";
             }
 
             if (process.env.error_output_false) {
               bodyComment += "### Build without Spring Security:\n\n";
-              bodyComment += "```\n" + error_output_false + "\n```\n\n";
+              bodyComment += "```\n" + error_output_false.trim() + "\n```\n\n";
             }
 
             bodyComment += "For more details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
