@@ -57,7 +57,7 @@ jobs:
         run: |
           if [ -f gradle-exit-code-${{ matrix.jdk-version }}-false.txt ]; then
             # error_output=$(cat gradle-error-${{ matrix.jdk-version }}-false.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
-            error_output=$(cat gradle-output-false.log || echo "No error output captured.")
+            error_output=$(cat gradle-error-${{ matrix.jdk-version }}-false.log || echo "No error output captured.")
             echo "error_output_false=$error_output" >> $GITHUB_ENV
             exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-false.txt)
             exit ${exit_code:-1}
@@ -87,7 +87,7 @@ jobs:
         run: |
           if [ -f gradle-exit-code-${{ matrix.jdk-version }}-true.txt ]; then
             # error_output=$(cat gradle-error-${{ matrix.jdk-version }}-true.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
-            error_output=$(cat gradle-output-true.log || echo "No error output captured.")
+            error_output=$(cat gradle-error-${{ matrix.jdk-version }}-true.log || echo "No error output captured.")
             echo "error_output_true=$error_output" >> $GITHUB_ENV
             exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-true.txt)
             exit ${exit_code:-1}
