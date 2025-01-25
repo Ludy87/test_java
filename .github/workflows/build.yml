@@ -70,7 +70,7 @@ jobs:
           fi
 
       - name: Failure Handling (no spring security)
-        if: ${{ env.exit_code_false != '0' }}
+        # if: ${{ env.exit_code_false != '0' }}
         run: |
           echo "The Gradle build step failed with exit code ${{ env.exit_code_false }}"
           if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html'; then
