@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk-version: [17] # , 21]
+        jdk-version: [17, 21]
 
     steps:
       - name: Harden Runner
@@ -124,6 +124,8 @@ jobs:
               repo: repoName,
               issue_number: prNumber
             });
+
+            echo comments;
 
             const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
 
