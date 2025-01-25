@@ -84,7 +84,7 @@ jobs:
             echo "write_comment=false" >> $GITHUB_ENV
           fi
       - name: PR | Post comment
-        if: ${{ always() && github.event_name == 'pull_request' && steps.build_without_security_exit_code.conclusion == 'failure' && env.write_comment == "true" }}
+        if: ${{ always() && github.event_name == 'pull_request' && steps.build_without_security_exit_code.conclusion == 'failure' && env.write_comment == 'true' }}
         run: |
           echo ${{ steps.build_without_security_exit_code.conclusion }}
       #   uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
