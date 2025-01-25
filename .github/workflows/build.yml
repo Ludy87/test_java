@@ -171,8 +171,58 @@ jobs:
           fi
       - name: PR | Post comment
         if: ${{ always() && github.event_name == 'pull_request' && steps.build_with_security_exit_code.conclusion == 'failure' && env.write_comment_with_security == 'true' }}
-        run: |
-          echo ${{ steps.build_with_security_exit_code.conclusion }}
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
+            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
+            const prNumber = context.issue.number;
+
+            // Find existing comment
+            const comments = await github.rest.issues.listComments({
+              owner: repoOwner,
+              repo: repoName,
+              issue_number: prNumber
+            });
+
+            const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
+
+            let body_comment;
+
+            if ${process.env.write_comment_with_security) == 'true' {
+              body_comment +=
+
+\`\`\`
+${process.env.error_output_true}
+\`\`\`
+            }
+
+            if ${process.env.write_comment_without_security) == 'true' {
+              body_comment +=
+
+\`\`\`
+${process.env.error_output_false}
+\`\`\`
+            }
+
+
+            if (!comment) {
+              // Create new comment if no existing comment is found
+              await github.rest.issues.createComment({
+                owner: repoOwner,
+                repo: repoName,
+                issue_number: prNumber,
+                body: "🚨 **Gradle Build Failed** 🚨
+
+                body_comment
+
+                Check: https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies
+                "
+              });
+              console.log("Created new comment.");
+            } else {
+              console.log("Comment update attempt denied. Actor does not match.");
+            }
 
       - name: Upload Test Reports
         if: always()
