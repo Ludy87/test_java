@@ -72,74 +72,6 @@ jobs:
             echo "write_comment_without_security=false"
             echo "write_comment_without_security=false" >> $GITHUB_ENV
           fi
-      - name: PR | Post comment
-        if: ${{ always() && github.event_name == 'pull_request' && steps.build_without_security_exit_code.conclusion == 'failure' && env.write_comment_without_security == 'true' }}
-        run: |
-          echo ${{ steps.build_without_security_exit_code.conclusion }}
-      #   uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-      #   with:
-      #     script: |
-      #       const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
-      #       const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
-      #       const prNumber = context.issue.number;
-
-      #       // Find existing comment
-      #       const comments = await github.rest.issues.listComments({
-      #         owner: repoOwner,
-      #         repo: repoName,
-      #         issue_number: prNumber
-      #       });
-
-      #       const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
-
-      #       if (!comment) {
-      #         // Create new comment if no existing comment is found
-      #         await github.rest.issues.createComment({
-      #           owner: repoOwner,
-      #           repo: repoName,
-      #           issue_number: prNumber,
-      #           body: `🚨 **Gradle Build Failed** 🚨
-
-      #           Check: https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies
-      #           `
-      #         });
-      #         console.log("Created new comment.");
-      #       } else {
-      #         console.log("Comment update attempt denied. Actor does not match.");
-      #       }
-
-      # - name: PR | Delete comment
-      #   if: env.FAIL_JOB == 'false' && github.event_name == 'pull_request'
-      #   uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-      #   with:
-      #     script: |
-      #       const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
-      #       const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
-      #       const prNumber = context.issue.number;
-
-      #       // Find existing comment
-      #       const comments = await github.rest.issues.listComments({
-      #         owner: repoOwner,
-      #         repo: repoName,
-      #         issue_number: prNumber
-      #       });
-
-      #       const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
-
-      #       // Only allow the action user to update comments
-      #       const expectedActor = "github-actions[bot]";
-
-      #       if (comment && comment.user.login === expectedActor) {
-      #         // deleted existing comment
-      #         await github.rest.issues.deleteComment({
-      #           owner: repoOwner,
-      #           repo: repoName,
-      #           comment_id: comment.id
-      #         });
-      #         console.log("Deleted existing comment.");
-      #       } else {
-      #         console.log("Comment deleted attempt denied. Actor does not match.");
-      #       }
 
       - name: Build with Gradle and with spring security
         id: build_with_security
@@ -170,7 +102,7 @@ jobs:
             echo "write_comment_with_security=false" >> $GITHUB_ENV
           fi
       - name: PR | Post comment
-        if: ${{ always() && github.event_name == 'pull_request' && steps.build_with_security_exit_code.conclusion == 'failure' && env.write_comment_with_security == 'true' }}
+        if: ${{ always() && github.event_name == 'pull_request' && ((steps.build_with_security_exit_code.conclusion == 'failure' && env.write_comment_with_security == 'true') || (steps.build_without_security_exit_code.conclusion == 'failure' && env.write_comment_without_security == 'true')) }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
@@ -187,24 +119,20 @@ jobs:
 
             const comment = comments.data.find(c => c.body.includes("🚨 **Gradle Build Failed** 🚨"));
 
-            let body_comment;
+            // Build the comment content
+            let bodyComment = "🚨 **Gradle Build Failed** 🚨\n\n";
 
-            if ${process.env.write_comment_with_security) == 'true' {
-              body_comment +=
-
-\`\`\`
-${process.env.error_output_true}
-\`\`\`
+            if (process.env.error_output_true) {
+              bodyComment += "### Build with Spring Security:\n";
+              bodyComment += "```\n" + process.env.error_output_true + "\n```\n\n";
             }
 
-            if ${process.env.write_comment_without_security) == 'true' {
-              body_comment +=
-
-\`\`\`
-${process.env.error_output_false}
-\`\`\`
+            if (process.env.error_output_false) {
+              bodyComment += "### Build without Spring Security:\n";
+              bodyComment += "```\n" + process.env.error_output_false + "\n```\n\n";
             }
 
+            bodyComment += "For more details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
 
             if (!comment) {
               // Create new comment if no existing comment is found
@@ -212,12 +140,7 @@ ${process.env.error_output_false}
                 owner: repoOwner,
                 repo: repoName,
                 issue_number: prNumber,
-                body: "🚨 **Gradle Build Failed** 🚨
-
-                body_comment
-
-                Check: https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies
-                "
+                body: bodyComment
               });
               console.log("Created new comment.");
             } else {
