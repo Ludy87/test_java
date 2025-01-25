@@ -85,7 +85,7 @@ jobs:
         id: build_with_security_exit_code
         run: |
           if [ -f gradle-exit-code-${{ matrix.jdk-version }}-true.txt ]; then
-            error_output=$(cat gradle-error-${{ matrix.jdk-version }}-true.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+            error_output=$(cat gradle-error-${{ matrix.jdk-version }}-true.log 2>/dev/null | tr -d '\r' || echo "No error output captured.")
             echo "error_output_true=$error_output" >> $GITHUB_ENV
             exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-true.txt)
             exit ${exit_code:-1}
@@ -126,16 +126,26 @@ jobs:
             let bodyComment = "🚨 **Gradle Build Failed** 🚨\n\n";
 
             if (process.env.error_output_true) {
-              bodyComment += "### Build with Spring Security:\n";
+              bodyComment += "### Build with Spring Security:\n\n";
               bodyComment += "```\n" + process.env.error_output_true + "\n```\n\n";
             }
 
             if (process.env.error_output_false) {
-              bodyComment += "### Build without Spring Security:\n";
+              bodyComment += "### Build without Spring Security:\n\n";
               bodyComment += "```\n" + process.env.error_output_false + "\n```\n\n";
             }
 
             bodyComment += "For more details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
+
+             if (comment && comment.user.login === expectedActor) {
+              // deleted existing comment
+              await github.rest.issues.deleteComment({
+                owner: repoOwner,
+                repo: repoName,
+                comment_id: comment.id
+              });
+              console.log("Deleted existing comment.");
+            }
 
             if (!comment && (process.env.error_output_true || process.env.error_output_false)) {
               // Create new comment if no existing comment is found
@@ -155,14 +165,6 @@ jobs:
                 body: bodyComment
               });
               console.log("Updated existing comment.");
-            } else if (comment && comment.user.login === expectedActor && !process.env.error_output_true && !process.env.error_output_false) {
-              // deleted existing comment
-              await github.rest.issues.deleteComment({
-                owner: repoOwner,
-                repo: repoName,
-                comment_id: comment.id
-              });
-              console.log("Deleted existing comment.");
             } else {
               console.log("Comment update attempt denied. Actor does not match.");
             }
