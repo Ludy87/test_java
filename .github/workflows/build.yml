@@ -73,16 +73,17 @@ jobs:
         # if: ${{ env.exit_code_false != '0' }}
         run: |
           echo "The Gradle build step failed with exit code ${{ env.exit_code_false }}"
-          if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html'; then
+          if echo "${{ env.error_output_false }}"; then
             exit_code=${{ env.exit_code_false }}
             exit ${exit_code:-1}
           fi
-          echo "${{ env.error_output_false }}"
 
       - name: failure
         if: ${{ always() && steps.build_without_security.conclusion }}
         run: |
-          echo ${{ steps.build_without_security.conclusion }}
+          if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html'; then
+            echo ${{ steps.build_without_security.conclusion }}
+          fi
 
       - name: Build with Gradle and with spring security
         id: build_with_security
@@ -113,7 +114,7 @@ jobs:
         if: ${{ env.exit_code_true != '0' }}
         run: |
           echo "The Gradle build step failed with exit code ${{ env.exit_code_true }}"
-          if echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
+          if echo "${{ env.error_output_true }}"; then
             exit_code=${{ env.exit_code_true }}
             exit ${exit_code:-1}
           fi
@@ -133,7 +134,9 @@ jobs:
       - name: failure
         if: ${{ always() && steps.build_with_security.conclusion }}
         run: |
-          echo ${{ steps.build_with_security.conclusion  }}
+          if echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
+            echo ${{ steps.build_with_security.conclusion  }}
+          fi
 
       # - name: Check Dependency Verfication error
       #   if: env.error_output_false || env.error_output_true
