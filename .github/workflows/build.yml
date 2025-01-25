@@ -56,7 +56,8 @@ jobs:
         id: build_without_security_exit_code
         run: |
           if [ -f gradle-exit-code-${{ matrix.jdk-version }}-false.txt ]; then
-            cat gradle-error-${{ matrix.jdk-version }}-false.log
+            error_output=$(cat gradle-error-${{ matrix.jdk-version }}-false.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+            echo "error_output_false=$error_output" >> $GITHUB_ENV
             exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-false.txt)
             exit ${exit_code:-1}
           fi
@@ -79,8 +80,10 @@ jobs:
         if: ${{ always() && steps.build_without_security_exit_code.conclusion == 'failure' }}
         run: |
           if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html'; then
+            echo "write_comment=true"
             echo "write_comment=true" >> $GITHUB_ENV
           else
+            echo "write_comment=false"
             echo "write_comment=false" >> $GITHUB_ENV
           fi
       - name: PR | Post comment
