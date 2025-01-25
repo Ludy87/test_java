@@ -145,16 +145,6 @@ jobs:
 
             bodyComment += "For more details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
 
-             if (comment && comment.user.login === expectedActor) {
-              // deleted existing comment
-              await github.rest.issues.deleteComment({
-                owner: repoOwner,
-                repo: repoName,
-                comment_id: comment.id
-              });
-              console.log("Deleted existing comment.");
-            }
-
             if (!comment && (process.env.error_output_true || process.env.error_output_false)) {
               // Create new comment if no existing comment is found
               await github.rest.issues.createComment({
@@ -173,6 +163,14 @@ jobs:
                 body: bodyComment
               });
               console.log("Updated existing comment.");
+            } else if (comment && comment.user.login === expectedActor) {
+              // deleted existing comment
+              await github.rest.issues.deleteComment({
+                owner: repoOwner,
+                repo: repoName,
+                comment_id: comment.id
+              });
+              console.log("Deleted existing comment.");
             } else {
               console.log("Comment update attempt denied. Actor does not match.");
             }
