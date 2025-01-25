@@ -44,14 +44,14 @@ jobs:
           ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
           ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256,pgp --refresh-keys --export-keys --refresh-dependencies help
 
-      - name: Build with Gradle and no spring security
+      - name: Build with Gradle (without spring security)
         id: build_without_security
         run: |
           ./gradlew clean build 2> >(tee gradle-error-${{ matrix.jdk-version }}-false.log >&2) || echo $? > gradle-exit-code-${{ matrix.jdk-version }}-false.txt
         env:
           DOCKER_ENABLE_SECURITY: false
 
-      - name: Check Gradle Build Exit Code (no spring security)
+      - name: Check Gradle Build Exit Code (without spring security)
         if: ${{ always() && steps.build_without_security.conclusion }}
         id: build_without_security_exit_code
         run: |
@@ -66,25 +66,23 @@ jobs:
             exit ${exit_code:-1}
           fi
 
-      - name: failure
+      - name: Check Gradle Build failure (without spring security)
         if: ${{ always() && steps.build_without_security_exit_code.conclusion == 'failure' }}
         run: |
           if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html'; then
-            echo "write_comment_without_security=true"
             echo "write_comment_without_security=true" >> $GITHUB_ENV
           else
-            echo "write_comment_without_security=false"
             echo "write_comment_without_security=false" >> $GITHUB_ENV
           fi
 
-      - name: Build with Gradle and with spring security
+      - name: Build with Gradle (with spring security)
         id: build_with_security
         run: |
           ./gradlew clean build 2> >(tee gradle-error-${{ matrix.jdk-version }}-true.log >&2) || echo $? > gradle-exit-code-${{ matrix.jdk-version }}-true.txt
         env:
           DOCKER_ENABLE_SECURITY: true
 
-      - name: Check Gradle Build Exit Code (no spring security)
+      - name: Check Gradle Build Exit Code (with spring security)
         if: ${{ always() && steps.build_with_security.conclusion }}
         id: build_with_security_exit_code
         run: |
@@ -99,19 +97,17 @@ jobs:
             exit ${exit_code:-1}
           fi
 
-      - name: failure
+      - name: Check Gradle Build failure (with spring security)
         if: ${{ always() && steps.build_with_security_exit_code.conclusion == 'failure' }}
         run: |
           if echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
-            echo "write_comment_with_security=true"
             echo "write_comment_with_security=true" >> $GITHUB_ENV
           else
-            echo "write_comment_with_security=false"
             echo "write_comment_with_security=false" >> $GITHUB_ENV
           fi
 
       - name: PR | Delete comment
-        if: ${{ always() && github.event_name == 'pull_request' && env.write_comment_with_security == 'false' && env.write_comment_without_security == 'false' }}
+        if: ${{ always() && github.event_name == 'pull_request' && steps.build_with_security_exit_code.conclusion == 'success' && steps.build_without_security_exit_code.conclusion == 'success' }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
