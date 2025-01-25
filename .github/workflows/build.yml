@@ -111,6 +111,7 @@ jobs:
           fi
 
       - name: Set MATRIX_JDK_VERSION
+        if: ${{ always() }}
         run: echo "MATRIX_JDK_VERSION=${{ matrix.jdk-version }}" >> $GITHUB_ENV
 
       - name: PR | Post comment
