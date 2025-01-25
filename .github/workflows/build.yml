@@ -56,7 +56,8 @@ jobs:
         id: build_without_security_exit_code
         run: |
           if [ -f gradle-exit-code-${{ matrix.jdk-version }}-false.txt ]; then
-            error_output=$(cat gradle-error-${{ matrix.jdk-version }}-false.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+            # error_output=$(cat gradle-error-${{ matrix.jdk-version }}-false.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+            error_output=$(cat gradle-output-true.log || echo "No error output captured.")
             echo "error_output_false=$error_output" >> $GITHUB_ENV
             exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-false.txt)
             exit ${exit_code:-1}
@@ -85,7 +86,8 @@ jobs:
         id: build_with_security_exit_code
         run: |
           if [ -f gradle-exit-code-${{ matrix.jdk-version }}-true.txt ]; then
-            error_output=$(cat gradle-error-${{ matrix.jdk-version }}-true.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+            # error_output=$(cat gradle-error-${{ matrix.jdk-version }}-true.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+            error_output=$(cat gradle-output-true.log || echo "No error output captured.")
             echo "error_output_true=$error_output" >> $GITHUB_ENV
             exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-true.txt)
             exit ${exit_code:-1}
@@ -106,7 +108,7 @@ jobs:
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
+            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT, error_output_true, error_output_false } = process.env;
             const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
             const prNumber = context.issue.number;
 
@@ -127,12 +129,12 @@ jobs:
 
             if (process.env.error_output_true) {
               bodyComment += "### Build with Spring Security:\n\n";
-              bodyComment += "```\n" + cat gradle-error-${{ matrix.jdk-version }}-true.log + "\n```\n\n";
+              bodyComment += "```\n" + ${error_output_true} + "\n```\n\n";
             }
 
             if (process.env.error_output_false) {
               bodyComment += "### Build without Spring Security:\n\n";
-              bodyComment += "```\n" + cat gradle-error-${{ matrix.jdk-version }}-false.log + "\n```\n\n";
+              bodyComment += "```\n" + ${error_output_false} + "\n```\n\n";
             }
 
             bodyComment += "For more details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
