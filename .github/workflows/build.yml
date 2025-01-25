@@ -47,20 +47,20 @@ jobs:
       - name: Build with Gradle and no spring security
         id: build_without_security
         run: |
-          ./gradlew clean build 2> >(tee gradle-error.log >&2) || echo $? > gradle-exit-code-false.txt
+          ./gradlew clean build 2> >(tee gradle-error-${{ matrix.jdk-version }}-false.log >&2) || echo $? > gradle-exit-code-${{ matrix.jdk-version }}-false.txt
         env:
           DOCKER_ENABLE_SECURITY: false
 
       - name: Check Gradle Build Exit Code (no spring security)
         if: ${{ always() && steps.build_without_security.conclusion }}
         run: |
-          cat gradle-error.log
-          if [ -f gradle-exit-code-false.txt ]; then
-            error_output=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+          cat gradle-error-${{ matrix.jdk-version }}-false.log
+          if [ -f gradle-exit-code-${{ matrix.jdk-version }}-false.txt ]; then
+            error_output=$(cat gradle-error-${{ matrix.jdk-version }}-false.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
             if echo $error_output | grep -q 'dependency-verification-report.html'; then
               echo "schreib einen Kommentar"
             fi
-            exit_code=$(cat gradle-exit-code-false.txt)
+            exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-false.txt)
             echo "The Gradle build failed with exit code $exit_code"
             echo "exit_code_false=$exit_code" >> $GITHUB_ENV
             echo "error_output_false=$error_output" >> $GITHUB_ENV
@@ -69,14 +69,14 @@ jobs:
             echo "error_output_false=" >> $GITHUB_ENV
           fi
 
-      - name: Failure Handling (no spring security)
-        # if: ${{ env.exit_code_false != '0' }}
-        run: |
-          echo "The Gradle build step failed with exit code ${{ env.exit_code_false }}"
-          if echo "${{ env.error_output_false }}"; then
-            exit_code=${{ env.exit_code_false }}
-            exit ${exit_code:-1}
-          fi
+      # - name: Failure Handling (no spring security)
+      #   # if: ${{ env.exit_code_false != '0' }}
+      #   run: |
+      #     echo "The Gradle build step failed with exit code ${{ env.exit_code_false }}"
+      #     if echo "${{ env.error_output_false }}"; then
+      #       exit_code=${{ env.exit_code_false }}
+      #       exit ${exit_code:-1}
+      #     fi
 
       - name: failure
         if: ${{ always() && steps.build_without_security.conclusion }}
@@ -88,20 +88,20 @@ jobs:
       - name: Build with Gradle and with spring security
         id: build_with_security
         run: |
-          ./gradlew clean build 2> >(tee gradle-error.log >&2) || echo $? > gradle-exit-code-true.txt
+          ./gradlew clean build 2> >(tee gradle-error-${{ matrix.jdk-version }}-true.log >&2) || echo $? > gradle-exit-code-${{ matrix.jdk-version }}-true.txt
         env:
           DOCKER_ENABLE_SECURITY: true
 
       - name: Check Gradle Build Exit Code
         if: ${{ always() && steps.build_with_security.conclusion }}
         run: |
-          cat gradle-error.log
-          if [ -f gradle-exit-code-true.txt ]; then
-            error_output=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+          cat gradle-error-${{ matrix.jdk-version }}-true.log
+          if [ -f gradle-exit-code-${{ matrix.jdk-version }}-true.txt ]; then
+            error_output=$(cat gradle-error-${{ matrix.jdk-version }}-true.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
             if echo $error_output | grep -q 'dependency-verification-report.html'; then
               echo "schreib einen Kommentar"
             fi
-            exit_code=$(cat gradle-exit-code-true.txt)
+            exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-true.txt)
             echo "The Gradle build failed with exit code $exit_code"
             echo "exit_code_true=$exit_code" >> $GITHUB_ENV
             echo "error_output_true=$error_output" >> $GITHUB_ENV
@@ -110,25 +110,13 @@ jobs:
             echo "error_output_true=" >> $GITHUB_ENV
           fi
 
-      - name: Failure Handling
-        if: ${{ env.exit_code_true != '0' }}
-        run: |
-          echo "The Gradle build step failed with exit code ${{ env.exit_code_true }}"
-          if echo "${{ env.error_output_true }}"; then
-            exit_code=${{ env.exit_code_true }}
-            exit ${exit_code:-1}
-          fi
-
-      # - name: Check Gradle Build Status DOCKER_ENABLE_SECURITY - true
+      # - name: Failure Handling
+      #   if: ${{ env.exit_code_true != '0' }}
       #   run: |
-      #     if [ -f gradle-exit-code-true.txt ] && [ -s gradle-exit-code-true.txt ]; then
-      #       # Lesen Sie den Fehlercode und die Fehlerausgabe
-      #       error_output_true=$(cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
-      #       cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r'
-      #       # Erstellen Sie eine Ausgabe für den nächsten Schritt
-      #       echo "error_output_true=$error_output_true" >> $GITHUB_ENV
-      #     else
-      #       echo "error_output_true=" >> $GITHUB_ENV
+      #     echo "The Gradle build step failed with exit code ${{ env.exit_code_true }}"
+      #     if echo "${{ env.error_output_true }}"; then
+      #       exit_code=${{ env.exit_code_true }}
+      #       exit ${exit_code:-1}
       #     fi
 
       - name: failure
@@ -138,34 +126,61 @@ jobs:
             echo ${{ steps.build_with_security.conclusion  }}
           fi
 
-      # - name: Check Dependency Verfication error
-      #   if: env.error_output_false || env.error_output_true
-      #   run: |
-      #     if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html' || \
-      #       echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
-      #       echo "FAIL_JOB=true" >> $GITHUB_ENV
-      #     elif [ -n "${{ env.error_output_false }}" ] || [ -n "${{ env.error_output_true }}" ]; then
-      #       cat gradle-error.log 2>/dev/null | tr '\n' ' ' | tr -d '\r'
-      #       echo "FAIL=true" >> $GITHUB_ENV
-      #     else
-      #       echo "FAIL_JOB=false" >> $GITHUB_ENV
-      #       echo "FAIL=false" >> $GITHUB_ENV
-      #     fi
-
       - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: test-reports-jdk-${{ matrix.jdk-version }}
           path: |
-            gradle-error.log
+            gradle-error-${{ matrix.jdk-version }}-true.log
+            gradle-error-${{ matrix.jdk-version }}-false.log
+            gradle-exit-code-${{ matrix.jdk-version }}-true.txt
+            gradle-exit-code-${{ matrix.jdk-version }}-false.txt
             build/reports/tests/
             build/test-results/
             build/reports/problems/
           retention-days: 3
 
-      # - name: PR | Post comment
-      #   if: env.FAIL_JOB == 'true' && github.event_name == 'pull_request'
+  write-comment:
+    runs-on: ubuntu-latest
+    needs: [build]
+    permissions:
+      pull-requests: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - jdk-version: 17
+            docker_enable_security: true
+          - jdk-version: 17
+            docker_enable_security: false
+          # - jdk-version: 21
+          #   docker_enable_security: [true, false]
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        with:
+          egress-policy: audit
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          name: test-reports-jdk-${{ matrix.jdk-version }}
+
+      - id: error
+        run: |
+          if [ -f gradle-exit-code-${{ matrix.jdk-version }}-${{ matrix.docker_enable_security}}.txt ]; then
+            cat gradle-error-${{ matrix.jdk-version }}-${{ matrix.docker_enable_security}}.log
+            exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-${{ matrix.docker_enable_security}}.txt)
+            exit ${exit_code:-1}
+          fi
+
+      - name: PR | Post comment
+        if: ${{ always() && github.event_name == 'pull_request' && steps.error.conclusion }}
+        run: |
+          echo ${{ steps.error.conclusion }}
       #   uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
       #   with:
       #     script: |
