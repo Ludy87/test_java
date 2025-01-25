@@ -85,7 +85,7 @@ jobs:
         id: build_with_security_exit_code
         run: |
           if [ -f gradle-exit-code-${{ matrix.jdk-version }}-true.txt ]; then
-            error_output=$(cat gradle-error-${{ matrix.jdk-version }}-true.log 2>/dev/null | tr -d '\r' || echo "No error output captured.")
+            error_output=$(cat gradle-error-${{ matrix.jdk-version }}-true.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
             echo "error_output_true=$error_output" >> $GITHUB_ENV
             exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-true.txt)
             exit ${exit_code:-1}
@@ -127,12 +127,12 @@ jobs:
 
             if (process.env.error_output_true) {
               bodyComment += "### Build with Spring Security:\n\n";
-              bodyComment += "```\n" + process.env.error_output_true + "\n```\n\n";
+              bodyComment += "```\n" + cat gradle-error-${{ matrix.jdk-version }}-true.log + "\n```\n\n";
             }
 
             if (process.env.error_output_false) {
               bodyComment += "### Build without Spring Security:\n\n";
-              bodyComment += "```\n" + process.env.error_output_false + "\n```\n\n";
+              bodyComment += "```\n" + cat gradle-error-${{ matrix.jdk-version }}-false.log + "\n```\n\n";
             }
 
             bodyComment += "For more details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
