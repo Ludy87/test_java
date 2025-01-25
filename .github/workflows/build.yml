@@ -114,6 +114,61 @@ jobs:
         if: ${{ always() }}
         run: echo "MATRIX_JDK_VERSION=${{ matrix.jdk-version }}" >> $GITHUB_ENV
 
+      - name: Collect all error outputs
+        if: always()
+        run: |
+          # Prepare combined logs for all JDK versions
+          echo "combined_error_logs<<EOF" >> $GITHUB_ENV
+
+          for jdk_version in 17 21; do
+            if [ -f gradle-error-${jdk_version}-true.log ]; then
+              echo "### Build with Spring Security (Java $jdk_version):" >> $GITHUB_ENV
+              echo "Dependency verification failed" >> $GITHUB_ENV
+              echo "" >> $GITHUB_ENV
+            fi
+
+            if [ -f gradle-error-${jdk_version}-false.log ]; then
+              echo "### Build without Spring Security (Java $jdk_version):" >> $GITHUB_ENV
+              echo "Dependency verification failed" >> $GITHUB_ENV
+              echo "" >> $GITHUB_ENV
+            fi
+          done
+
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: PR | Delete comment
+        if: ${{ always() && github.event_name == 'pull_request' && ((steps.build_with_security_exit_code.conclusion == 'failure' && env.write_comment_with_security == 'true') || (steps.build_without_security_exit_code.conclusion == 'failure' && env.write_comment_without_security == 'true')) }}
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const { GITHUB_REPOSITORY, SCRIPT_OUTPUT, MATRIX_JDK_VERSION, error_output_true, error_output_false } = process.env;
+            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
+            const prNumber = context.issue.number;
+
+            // Find existing comment
+            const comments = await github.rest.issues.listComments({
+              owner: repoOwner,
+              repo: repoName,
+              issue_number: prNumber
+            });
+
+            console.log(comments);
+
+            const comment = comments.data.find(c => c.body.includes(`🚨 **Gradle Build Failed** 🚨`));
+
+            // Only allow the action user to update comments
+            const expectedActor = "github-actions[bot]";
+
+            if (comment && comment.user.login === expectedActor) {
+              // deleted existing comment
+              await github.rest.issues.deleteComment({
+                owner: repoOwner,
+                repo: repoName,
+                comment_id: comment.id
+              });
+              console.log("Deleted existing comment.");
+            }
+
       - name: PR | Post comment
         if: ${{ always() && github.event_name == 'pull_request' && ((steps.build_with_security_exit_code.conclusion == 'failure' && env.write_comment_with_security == 'true') || (steps.build_without_security_exit_code.conclusion == 'failure' && env.write_comment_without_security == 'true')) }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
@@ -132,23 +187,24 @@ jobs:
 
             console.log(comments);
 
-            const comment = comments.data.find(c => c.body.includes(`🚨 **Gradle Build Failed - Java ${process.env.MATRIX_JDK_VERSION}** 🚨`));
+            const comment = comments.data.find(c => c.body.includes(`🚨 **Gradle Build Failed** 🚨`));
 
             // Only allow the action user to update comments
             const expectedActor = "github-actions[bot]";
 
             // Build the comment content
-            let bodyComment = `🚨 **Gradle Build Failed - Java ${process.env.MATRIX_JDK_VERSION}** 🚨\n\n`;
+            let bodyComment = "🚨 **Gradle Build Failed** 🚨\n\n";
+            bodyComment += combined_error_logs || "No error logs captured.\n\n";
 
-            if (process.env.error_output_true) {
-              bodyComment += "### Build with Spring Security:\n\n";
-              bodyComment += "```\n" + error_output_true.trim() + "\n```\n\n";
-            }
+            # if (process.env.error_output_true) {
+            #   bodyComment += "### Build with Spring Security:\n\n";
+            #   bodyComment += "```\n" + error_output_true.trim() + "\n```\n\n";
+            # }
 
-            if (process.env.error_output_false) {
-              bodyComment += "### Build without Spring Security:\n\n";
-              bodyComment += "```\n" + error_output_false.trim() + "\n```\n\n";
-            }
+            # if (process.env.error_output_false) {
+            #   bodyComment += "### Build without Spring Security:\n\n";
+            #   bodyComment += "```\n" + error_output_false.trim() + "\n```\n\n";
+            # }
 
             bodyComment += "For more details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
 
@@ -161,23 +217,23 @@ jobs:
                 body: bodyComment
               });
               console.log("Created new comment.");
-            } else if (comment && comment.user.login === expectedActor && (process.env.error_output_true || process.env.error_output_false)) {
-              // Update existing comment
-              await github.rest.issues.updateComment({
-                owner: repoOwner,
-                repo: repoName,
-                comment_id: comment.id,
-                body: bodyComment
-              });
-              console.log("Updated existing comment.");
-            } else if (comment && comment.user.login === expectedActor) {
-              // deleted existing comment
-              await github.rest.issues.deleteComment({
-                owner: repoOwner,
-                repo: repoName,
-                comment_id: comment.id
-              });
-              console.log("Deleted existing comment.");
+            # } else if (comment && comment.user.login === expectedActor && (process.env.error_output_true || process.env.error_output_false)) {
+            #   // Update existing comment
+            #   await github.rest.issues.updateComment({
+            #     owner: repoOwner,
+            #     repo: repoName,
+            #     comment_id: comment.id,
+            #     body: bodyComment
+            #   });
+            #   console.log("Updated existing comment.");
+            # } else if (comment && comment.user.login === expectedActor) {
+            #   // deleted existing comment
+            #   await github.rest.issues.deleteComment({
+            #     owner: repoOwner,
+            #     repo: repoName,
+            #     comment_id: comment.id
+            #   });
+            #   console.log("Deleted existing comment.");
             } else {
               console.log("Comment update attempt denied. Actor does not match.");
             }
