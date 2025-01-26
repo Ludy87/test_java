@@ -25,20 +25,13 @@
          <trusted-key id="0B1B71E813C226033B16D8C5F0D228D8FF31B515" group="^io[.]zipkin($|([.].*))" regex="true"/>
          <trusted-key id="0B743A794876D3C78AB542A118D239B1CBCD2236" group="org.glassfish.jersey" name="jersey-bom"/>
          <trusted-key id="0CC641C3A62453AB390066C4A41F13C999945293" group="commons-collections" name="commons-collections" version="3.2.2"/>
-         <trusted-key id="0CDE80149711EB46DFF17AE421A24B3F8B0F594A" group="org.apache" name="apache" version="16"/>
          <trusted-key id="0CFA413799E2464C7D7E26220A4B343F2A55FDAE" group="com.h2database" name="h2" version="2.3.232"/>
          <trusted-key id="0D35D3F60078655126908E8AF3D1600878E85A3D" group="io.netty" name="netty-bom"/>
          <trusted-key id="0E0CA56D354132B5E646C25F49A1796B9B494CB8" group="org.opensaml"/>
          <trusted-key id="0E9BD9062B021BBA50F41EEB9549F6CB1E679A56" group="org.locationtech.jts"/>
-         <trusted-key id="10F3C7A02ECA55E502BADCF3991EFB94DB91127D" group="org.ow2" name="ow2" version="1.5.1"/>
-         <trusted-key id="1452F35849B50750F6A3BBB4B54011358B352F85">
-            <trusting group="org.hibernate.orm" name="hibernate-core" version="6.6.4.Final"/>
-            <trusting group="org.hibernate.orm" name="hibernate-core" version="6.6.5.Final"/>
-         </trusted-key>
+         <trusted-key id="1452F35849B50750F6A3BBB4B54011358B352F85" group="org.hibernate.orm" name="hibernate-core" version="6.6.5.Final"/>
          <trusted-key id="147B691A19097624902F4EA9689CBE64F4BC997F" group="org.mockito"/>
-         <trusted-key id="190D5A957FF22273E601F7A7C92C5FEC70161C62" group="org.apache" name="apache" version="18"/>
          <trusted-key id="19BEAB2D799C020F17C69126B16698A4ADF4D638" group="org.checkerframework" name="checker-qual"/>
-         <trusted-key id="1AA8CF92D409A73393D0B736BFF2EE42C8282E76" group="org.apache.activemq" name="activemq-bom" version="6.1.4"/>
          <trusted-key id="1D04A424F505394DBED15D451D0690E353BE126D" group="net.minidev"/>
          <trusted-key id="1D2C7EF8ADA0F794B58C7C63436902AF59EDF60E" group="dev.equo.ide" name="solstice" version="1.8.1"/>
          <trusted-key id="20FC6EC5F628F0EB66F157B8DC97B815CAC4E847" group="io.github.pixee" name="java-security-toolkit" version="1.2.1"/>
@@ -48,7 +41,6 @@
          <trusted-key id="28417C95E8906D108392822354A43F3254868410" group="org.apache.activemq"/>
          <trusted-key id="2B1DD4CE9223D4E19C73531E5657B51F13E59DBE" group="com.unboundid.product.scim2"/>
          <trusted-key id="2B34821418CF19CF1F2A8352953E02E4F573B46F" group="jakarta.platform"/>
-         <trusted-key id="2BCBDD0F23EA1CAFCC11D4860374CF2E8DD1BDFD" group="net.java"/>
          <trusted-key id="2DB4F1EF0FA761ECC4EA935C86FDC7E2A11262CB">
             <trusting group="commons-beanutils"/>
             <trusting group="commons-codec"/>
@@ -57,17 +49,13 @@
             <trusting group="org.apache.commons"/>
             <trusting group="xml-apis"/>
          </trusted-key>
-         <trusted-key id="2DC48CBB4352B4953AF6F803D433B437192A0FD1" group="com.datastax.oss" name="java-driver-bom" version="4.15.0"/>
          <trusted-key id="2E3A1AFFE42B5F53AF19F780BCF4173966770193" group="org.jetbrains" name="annotations" version="13.0"/>
          <trusted-key id="2FC53E6B1F681184F4CCD637F5C81DE10A0B8ECC" group="org.yaml" name="snakeyaml" version="2.3"/>
          <trusted-key id="3262A061C42FC4C7BBB5C25C1CF0293FA53CA458" group="org.apache.tomcat.embed"/>
          <trusted-key id="33FD4BFD33554634053D73C0C2148900BCD3C2AF" group="org.jetbrains" name="annotations" version="24.0.1"/>
          <trusted-key id="34441E504A937F43EB0DAEF96A65176A0FB1CD0B" group="org.apache.groovy" name="groovy-bom"/>
          <trusted-key id="3690C240CE51B4670D30AD1C38EE757D69184620" group="org.tukaani" name="xz" version="1.9"/>
-         <trusted-key id="3750777B9C4B7D233B9D0C40307A96FBA0292109">
-            <trusting group="org.postgresql" name="postgresql" version="42.7.4"/>
-            <trusting group="org.postgresql" name="postgresql" version="42.7.5"/>
-         </trusted-key>
+         <trusted-key id="3750777B9C4B7D233B9D0C40307A96FBA0292109" group="org.postgresql" name="postgresql"/>
          <trusted-key id="38319E05F62674572CDF886170B2EBE96C112CC9" group="org.cryptacular" name="cryptacular" version="1.2.5"/>
          <trusted-key id="3E61D8C230332482009D7F0EDB901B24CAD38BC4" group="io.swagger.core.v3"/>
          <trusted-key id="3F05DDA9F317301E927136D417A27CE7A60FF5F0" group="io.opentelemetry" name="opentelemetry-bom"/>
@@ -77,7 +65,6 @@
             <trusting group="jakarta.inject"/>
          </trusted-key>
          <trusted-key id="41D266DB4427983A1A4AFB0C3684155E9365C30E" group="com.jayway.jsonpath" name="json-path" version="2.9.0"/>
-         <trusted-key id="44FBDBBC1A00FE414F1C1873586654072EAD6677" group="org.sonatype.oss" name="oss-parent" version="9"/>
          <trusted-key id="453EA31328DE7D8AAA55AD4ED56C721C1CFF1424" group="^com[.]twelvemonkeys($|([.].*))" regex="true"/>
          <trusted-key id="475F3B8E59E6E63AA78067482C7B12F2A511E325" group="org.slf4j"/>
          <trusted-key id="477E62A656AD5475A1882855C809CA3C41BA6E96" group="jakarta.validation" name="jakarta.validation-api" version="3.0.2"/>
@@ -91,12 +78,7 @@
             <trusting group="io.spring.gradle"/>
             <trusting group="^org[.]springframework($|([.].*))" regex="true"/>
          </trusted-key>
-         <trusted-key id="498AAC354AA5CB36FAAB7608B6E83A2D2E447E56" group="org.apache.cassandra" name="java-driver-bom" version="4.18.1"/>
-         <trusted-key id="4F7E32D440EF90A83011A8FC6425559C47CC79C4">
-            <trusting group="com.sun.activation"/>
-            <trusting group="javax.activation"/>
-         </trusted-key>
-         <trusted-key id="53C935821AA6A755BD337DB53595395EB3D8E1BA" group="org.apache.logging.log4j" name="log4j-bom" version="2.20.0"/>
+         <trusted-key id="4F7E32D440EF90A83011A8FC6425559C47CC79C4" group="javax.activation"/>
          <trusted-key id="5719E50EAC5A4B1DD390B72C2A742740E08E7F8D" group="org.antlr"/>
          <trusted-key id="57312C37B064EE0FDAB0130490D5CE79E1DE6A2C" group="com.querydsl" name="querydsl-bom"/>
          <trusted-key id="5989BAF76217B843D66BE55B2D0E1FB8FE4B68B4" group="^org[.]eclipse[.]jetty($|([.].*))" regex="true"/>
@@ -106,9 +88,7 @@
             <trusting group="ch.qos.logback"/>
             <trusting group="org.slf4j"/>
          </trusted-key>
-         <trusted-key id="694621A7227D8D5289699830ABE9F3126BB741C1" group="com.google.guava" name="guava-parent" version="26.0-android"/>
          <trusted-key id="6DD3B8C64EF75253BEB2C53AD908A43FB7EC07AC" group="jakarta.activation" name="jakarta.activation-api" version="2.1.3"/>
-         <trusted-key id="6E13156C0EE653F0B984663AB95BBD3FA43C4492" group="org.apache" name="apache" version="3"/>
          <trusted-key id="6F538074CCEBF35F28AF9B066A0975F8B1127B83" group="org.jetbrains.kotlin"/>
          <trusted-key id="70CD19BFD9F6C330027D6F260315BFB7970A144F" group="javax.xml.bind"/>
          <trusted-key id="71EBF1CA4125B10AAB1E17CDB7DC526C17E3608B" group="jakarta.persistence" name="jakarta.persistence-api" version="3.1.0"/>
@@ -118,7 +98,6 @@
          <trusted-key id="7A1D848E7C2AF85EEBA69C99E7BF252CF360097E" group="org.latencyutils" name="LatencyUtils" version="2.0.3"/>
          <trusted-key id="7B121B76A7ED6CE6E60AD51784E913A8E3A748C0" group="org.bouncycastle"/>
          <trusted-key id="7C669810892CBD3148FA92995B05CCDE140C2876" group="org.eclipse.jgit"/>
-         <trusted-key id="808D78B17A5A2D7C3668E31FBFFC9B54721244AD" group="org.apache.commons" name="commons-parent" version="39"/>
          <trusted-key id="80F6D6B0D90C6747753344CAB5A9E81B565E89E0" group="org.tomlj" name="tomlj" version="1.0.0"/>
          <trusted-key id="81BE0C38ACE8AEDC7735A05F4C2AFF633F3A7223" group="org.seleniumhq.selenium" name="selenium-bom"/>
          <trusted-key id="81CCDC71C7D61C179B27002D6A9FBE152D4C64D1" group="org.openjfx"/>
@@ -131,12 +110,9 @@
          </trusted-key>
          <trusted-key id="84789D24DF77A32433CE1F079EB80E92EB2135B1" group="org.apache" name="apache"/>
          <trusted-key id="8756C4F765C9AC3CB6B85D62379CE192D401AB61" group="com.diffplug.durian"/>
-         <trusted-key id="894F14D98D7F20D5E82645E3DFE102108BF9381F" group="org.hibernate.search" name="hibernate-search-bom" version="7.1.2.Final"/>
          <trusted-key id="94976E17E18DD3201447286954963C3E875A56AE" group="io.smallrye"/>
          <trusted-key id="9579802DC3E15DE9C389239FC0D48A119CE7EE7B" group="com.zaxxer" name="HikariCP" version="5.1.0"/>
          <trusted-key id="9790B1EC52577244529621F38C77ED250E495230" group="com.bucket4j" name="bucket4j_jdk17-core" version="8.14.0"/>
-         <trusted-key id="982C26A0C156D986CC2AD19E3FBA8E8E719022D7" group="org.jboss" name="jboss-parent" version="39"/>
-         <trusted-key id="9B32CBC0F3F6BA4C13D611FC21871D2A9AB66A31" group="io.rsocket" name="rsocket-bom" version="1.1.3"/>
          <trusted-key id="9E3044071B758EBCB7E45673700E4F39BC05364B" group="org.eclipse.platform" name="org.eclipse.osgi" version="3.18.500"/>
          <trusted-key id="A41A5960555F8CBBC7D8B2D7787F3A057B828D36" group="org.springdoc"/>
          <trusted-key id="A5BD02B93E7A40482EB1D66A5F69AD087600B22C" group="org.ow2.asm"/>
@@ -149,24 +125,18 @@
          <trusted-key id="AB1DC33940689C44669107094989E0E939C2999B" group="com.opencsv" name="opencsv" version="5.10"/>
          <trusted-key id="B1F250C1F371EBF0E31E86E30E31BBB30C940D01" group="com.posthog.java" name="posthog" version="1.1.1"/>
          <trusted-key id="B6E73D84EA4FCC47166087253FAAD2CD5ECBB314" group="org.apache.commons" name="commons-parent"/>
-         <trusted-key id="BA926F64CA647B6D853A38672E2010F8A7FF4A41" group="org.apache" name="apache" version="7"/>
          <trusted-key id="BB785E0400E71390977E4D1ADF3CC7C64D56297B" group="jakarta.interceptor" name="jakarta.interceptor-api" version="2.1.0"/>
          <trusted-key id="BCA1F17506AF088F3A964A9C0459A2B383ED8C11" group="org.eclipse.angus"/>
          <trusted-key id="BDB5FA4FE719D787FB3D3197F6D4A1D411E9D1AE" group="^com[.]google($|([.].*))" regex="true"/>
          <trusted-key id="BE685132AFD2740D9095F9040CC0B712FEE75827" group="org.assertj"/>
          <trusted-key id="C1D1ADA83198AA7FEAD102483FFE64C7506FCCC9" group="com.coveo" name="saml-client" version="5.0.0"/>
-         <trusted-key id="C663D2F64DA2CA09DB28D9ABD3FA67D522C55256" group="org.apache.pulsar" name="pulsar-bom" version="3.3.3"/>
          <trusted-key id="C7BE5BCC9FEC15518CFDA882B0F3710FA64900E7" group="com.google.code.gson"/>
          <trusted-key id="C89074FC8BE681B7C7EAAB6E4C5EED3C53B75933" group="org.skyscreamer" name="jsonassert" version="1.5.3"/>
-         <trusted-key id="CA62ED130E4053944406DF640181B45EA58677BC" group="org.apache.logging" name="logging-parent" version="7"/>
          <trusted-key id="CC57399D74CD7E4768ED6FA4CA62973FBF0451C0" group="com.vaadin.external.google" name="android-json" version="0.0.20131108.vaadin1"/>
          <trusted-key id="CD5464315F0B98C77E6E8ECD9DAADC1C9FCC82D0" group="commons-cli" name="commons-cli" version="1.4"/>
          <trusted-key id="CE3285F320685193D11FEA01F6CE9695C9318406" group="com.google.zxing"/>
          <trusted-key id="CE4439C1BEF3DA83B1832F9DBEFEEF227A98B809" group="org.apache.velocity"/>
-         <trusted-key id="CE8075A251547BEE249BC151A2115AE15F6B8B72">
-            <trusting group="org.apache.commons"/>
-            <trusting group="org.xmlunit"/>
-         </trusted-key>
+         <trusted-key id="CE8075A251547BEE249BC151A2115AE15F6B8B72" group="org.xmlunit"/>
          <trusted-key id="D421D1DF4570BFB13E485D0BF95ADD0A28D2F139" group="org.projectlombok" name="lombok" version="1.18.36"/>
          <trusted-key id="D54A395B5CF3F86EB45F6E426B1B008864323B92" group="org.antlr"/>
          <trusted-key id="DB45ECD19B97514F727105AE67BF80B10AD53983" group="org.apache.santuario" name="xmlsec" version="2.3.4"/>
@@ -188,7 +158,6 @@
          <trusted-key id="EE0CA873074092F806F59B65D364ABAA39A47320" group="^com[.]google($|([.].*))" regex="true"/>
          <trusted-key id="EED29BAB8D4FD882D62308CD72D1B04BC7E6AA04" group="me.friwi"/>
          <trusted-key id="EF5214AD654CD05F0DA91609ECEAC3B11AD0E0A0" group="com.adobe.xmp" name="xmpcore" version="6.1.11"/>
-         <trusted-key id="F046369B06B761AC86D9849F71B329993BFFCFDD" group="com.oracle.database.jdbc" name="ojdbc-bom" version="21.9.0.0"/>
          <trusted-key id="F0E31196852A34F8855710BD4A6CE7EBC7F4F54B" group="io.prometheus"/>
          <trusted-key id="F1232CDCD94176E7FBA9CFE289A2C76A5EE16E57" group="technology.tabula" name="tabula" version="1.0.5"/>
          <trusted-key id="F3184BCD55F4D016E30D4C9BF42E87F9665015C9" group="org.jsoup" name="jsoup" version="1.15.4"/>
@@ -207,14 +176,6 @@
       </trusted-keys>
    </configuration>
    <components>
-      <component group="ch.qos.logback" name="logback-classic" version="1.5.12">
-         <artifact name="logback-classic-1.5.12.jar">
-            <sha256 value="ebe1a2ce1072b365090d58af40fcb7482d7864a31cd2b1c62c9b1d13f9a80c09" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="logback-classic-1.5.12.pom">
-            <sha256 value="edd540e1a8a2b015a13812867a04f22e8b1ec808e9289b6b9199df5dea489688" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="ch.qos.logback" name="logback-classic" version="1.5.16">
          <artifact name="logback-classic-1.5.16.jar">
             <sha256 value="f985a33a68d900badec5b0c3c613ab9db66415d2cf378987357ded9da5370e32" origin="Generated by Gradle"/>
@@ -223,25 +184,12 @@
             <sha256 value="cbbc96b250008d587a067377c736b017a7c1a82c5280687c2a90860c1e2eb987" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="ch.qos.logback" name="logback-core" version="1.5.12">
-         <artifact name="logback-core-1.5.12.jar">
-            <sha256 value="3f35b41621c2cbf72a9d9f3ce2270ba2040e4808bd6befdd720866e926d3e84a" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="logback-core-1.5.12.pom">
-            <sha256 value="abdb6e589878db68c9ad8612cadf0a2109b785877c64666705a7f16a24e5a2e0" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="ch.qos.logback" name="logback-core" version="1.5.16">
          <artifact name="logback-core-1.5.16.jar">
             <sha256 value="f15e206b98ca25294506d2dadfe5ce2a6da9df9cf7c85d8e7191f99a422df3c9" origin="Generated by Gradle"/>
          </artifact>
          <artifact name="logback-core-1.5.16.pom">
             <sha256 value="67a9f90f798691dcd5776c5193a6ff4126ba945b03462bfaedd657a146762195" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="ch.qos.logback" name="logback-parent" version="1.5.12">
-         <artifact name="logback-parent-1.5.12.pom">
-            <sha256 value="e660e1f070d503850ae0752170e055ce02eb6f82956f4c2af35e8014c3ee5ad5" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="ch.qos.logback" name="logback-parent" version="1.5.16">
@@ -275,6 +223,7 @@
       </component>
       <component group="com.datastax.oss" name="java-driver-bom" version="4.15.0">
          <artifact name="java-driver-bom-4.15.0.pom">
+            <pgp value="2DC48CBB4352B4953AF6F803D433B437192A0FD1"/>
             <sha256 value="5c9e31eff95cf375c5bdfff85ce28287d59afcf5134b4e6a24a763db171a5e67" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -720,6 +669,7 @@
       </component>
       <component group="com.google.guava" name="guava-parent" version="26.0-android">
          <artifact name="guava-parent-26.0-android.pom">
+            <pgp value="694621A7227D8D5289699830ABE9F3126BB741C1"/>
             <sha256 value="f8698ab46ca996ce889c1afc8ca4f25eb8ac6b034dc898d4583742360016cc04" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -871,6 +821,7 @@
       </component>
       <component group="com.oracle.database.jdbc" name="ojdbc-bom" version="21.9.0.0">
          <artifact name="ojdbc-bom-21.9.0.0.pom">
+            <pgp value="F046369B06B761AC86D9849F71B329993BFFCFDD"/>
             <sha256 value="616394c5a55cf67ff280ed6976ea7f3316ab09d44c0e29fa20b66acb290ac9a5" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -923,6 +874,7 @@
       </component>
       <component group="com.sun.activation" name="all" version="1.2.0">
          <artifact name="all-1.2.0.pom">
+            <pgp value="4F7E32D440EF90A83011A8FC6425559C47CC79C4"/>
             <sha256 value="1d8518e3ac7532a104e4f7be77def37c982e530723c6bdb3d67708cce2b0c2c4" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -1314,14 +1266,6 @@
             <sha256 value="c01c4cda5e408f41ed1d83e4a0a170cf53801b6338aba49f0f904786bc1214fc" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="commons-codec" name="commons-codec" version="1.17.1">
-         <artifact name="commons-codec-1.17.1.jar">
-            <sha256 value="f9f6cb103f2ddc3c99a9d80ada2ae7bf0685111fd6bffccb72033d1da4e6ff23" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="commons-codec-1.17.1.pom">
-            <sha256 value="7fa0db4d8150daf932958b8aea89ee24abb4d18e2316a5de535278fc131512a0" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="commons-codec" name="commons-codec" version="1.17.2">
          <artifact name="commons-codec-1.17.2.jar">
             <sha256 value="4148332728490cef12b29dac4c385f46982f04285132c6fa51ad7267d7dc7a8b" origin="Generated by Gradle"/>
@@ -1344,11 +1288,6 @@
          </artifact>
          <artifact name="commons-io-2.18.0.pom">
             <sha256 value="63d96941eb44df9c90d2adb2ad8c3f699c2e065e707045c5daf713fca52bcfca" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="commons-logging" name="commons-logging" version="1.0.4">
-         <artifact name="commons-logging-1.0.4.pom">
-            <sha256 value="65d310509352b5425118225ee600a01f83ba72142d035014b5d164bc04b2d284" origin="Generated by Gradle" reason="Artifact is not signed"/>
          </artifact>
       </component>
       <component group="commons-logging" name="commons-logging" version="1.3.3">
@@ -1392,7 +1331,7 @@
       </component>
       <component group="io.dropwizard.metrics" name="metrics-bom" version="4.2.25">
          <artifact name="metrics-bom-4.2.25.pom">
-            <sha256 value="825ad37b8380f992b515050bbd95452f85466feae7b856d5c150d4e5f716a8e9" origin="Generated by Gradle" reason="Artifact is not signed"/>
+            <sha256 value="825ad37b8380f992b515050bbd95452f85466feae7b856d5c150d4e5f716a8e9" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="io.dropwizard.metrics" name="metrics-core" version="4.2.25">
@@ -1415,7 +1354,7 @@
       </component>
       <component group="io.dropwizard.metrics" name="metrics-parent" version="4.2.25">
          <artifact name="metrics-parent-4.2.25.pom">
-            <sha256 value="df7b6371f9b15698e123d9861f2099ca32c9ec966d9f0c60755a2a34ccbfabc2" origin="Generated by Gradle" reason="Artifact is not signed"/>
+            <sha256 value="df7b6371f9b15698e123d9861f2099ca32c9ec966d9f0c60755a2a34ccbfabc2" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="io.github.pixee" name="java-security-toolkit" version="1.2.1">
@@ -1442,22 +1381,9 @@
             <sha256 value="daaa36bdbeaf2a69d3562e80f760fe7f86d4d36b941ac05baa18cfa46b64be10" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="io.micrometer" name="micrometer-bom" version="1.14.2">
-         <artifact name="micrometer-bom-1.14.2.pom">
-            <sha256 value="91b61d90af1dc52c298ca98d80c0376b26807336e644a733d654d6428bc06078" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="io.micrometer" name="micrometer-bom" version="1.14.3">
          <artifact name="micrometer-bom-1.14.3.pom">
             <sha256 value="1b6445fa2046903646f61e2bfdfb4a38a18ab8605adacd72480aa6ecdbbdf011" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="io.micrometer" name="micrometer-commons" version="1.14.2">
-         <artifact name="micrometer-commons-1.14.2.jar">
-            <sha256 value="d1ff22870b51a59a1d3047580a99c703b165e01ae933c06b713ec9a1826cc753" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="micrometer-commons-1.14.2.pom">
-            <sha256 value="1c3aed79af571b1bf3941d12d321ba33f51748635f3b47acbca2067ae80197c4" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="io.micrometer" name="micrometer-commons" version="1.14.3">
@@ -1468,11 +1394,6 @@
             <sha256 value="38ed9bc72d15b060372401be64f75a10bbf180c1e66b71de795e789d5c27dd33" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="io.micrometer" name="micrometer-core" version="1.14.2">
-         <artifact name="micrometer-core-1.14.2.pom">
-            <sha256 value="b03c518bba8b44cbec25b48820a1a40bed3b5491e1a5c4a383ed5d26c2a2cb5e" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="io.micrometer" name="micrometer-core" version="1.14.3">
          <artifact name="micrometer-core-1.14.3.jar">
             <sha256 value="f2c9bd46d5418a36f7a0ca3aba9aa8f30eb00f3e38e96bd40f7d257cd9bfb5c8" origin="Generated by Gradle"/>
@@ -1481,28 +1402,12 @@
             <sha256 value="42dffb540c76754b7d0330b5ff1ba35a1416b039e714ac303ab4a8424908b5f4" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="io.micrometer" name="micrometer-jakarta9" version="1.14.2">
-         <artifact name="micrometer-jakarta9-1.14.2.jar">
-            <sha256 value="42e71ba66999a4a45bacd8683c8bc710e498893e75fe7cd39a16356b5d1c1447" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="micrometer-jakarta9-1.14.2.pom">
-            <sha256 value="aa08b088c219773f1512c04cbf5b15a4ee5e0f6b5b64a1fa6fdccb8acd37e424" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="io.micrometer" name="micrometer-jakarta9" version="1.14.3">
          <artifact name="micrometer-jakarta9-1.14.3.jar">
             <sha256 value="a3275f4705886593a72f3efbe19d19823b16e26afebca67ecd6cbf089714fbd8" origin="Generated by Gradle"/>
          </artifact>
          <artifact name="micrometer-jakarta9-1.14.3.pom">
             <sha256 value="cdba962ab8d18b6226b14f1fc3948c4e8cb168f126769aa8aeb586df74fb5d88" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="io.micrometer" name="micrometer-observation" version="1.14.2">
-         <artifact name="micrometer-observation-1.14.2.jar">
-            <sha256 value="7c639c9a028327f362360c3246e50613f8e120031575ceb557b2ba5feac917aa" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="micrometer-observation-1.14.2.pom">
-            <sha256 value="a43b7c1fe3bad2ebd4961088ee0909ad93fe2526e00823c67162c85bdbfbf7ef" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="io.micrometer" name="micrometer-observation" version="1.14.3">
@@ -1518,11 +1423,6 @@
             <sha256 value="7e9adb6f7a11d20adbf2d6ff7fb34c089f451af41d33bb918ebd7b91c5eccc99" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="io.micrometer" name="micrometer-tracing-bom" version="1.4.1">
-         <artifact name="micrometer-tracing-bom-1.4.1.pom">
-            <sha256 value="073495238ef7331ec5fbf3a2a2b0dd0d3ceb99ab49e4240a0c3e356a9ade9cd0" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="io.micrometer" name="micrometer-tracing-bom" version="1.4.2">
          <artifact name="micrometer-tracing-bom-1.4.2.pom">
             <sha256 value="f4008110f08a25a0fbc6d35ebf40a8da670e814ebf13b9dc950032829f5b82f0" origin="Generated by Gradle"/>
@@ -1531,11 +1431,6 @@
       <component group="io.netty" name="netty-bom" version="4.1.115.Final">
          <artifact name="netty-bom-4.1.115.Final.pom">
             <sha256 value="25dc8bb8337dfc186c49fc8cf4f6a5b6c7cf4146362f5f440dacadcd0df9761b" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="io.netty" name="netty-bom" version="4.1.116.Final">
-         <artifact name="netty-bom-4.1.116.Final.pom">
-            <sha256 value="f06521f4ac88da351ab49a969e1948bb11489ae51712bab3acf5a782a3108603" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="io.netty" name="netty-bom" version="4.1.117.Final">
@@ -1580,14 +1475,6 @@
             <sha256 value="b0f7c24c71f41e5aaa92ed373e6d5223a1d35ee29130380d85e8664a784fa516" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="io.projectreactor" name="reactor-bom" version="2024.0.1">
-         <artifact name="reactor-bom-2024.0.1.module">
-            <sha256 value="95ca331ca4a3302807a701e6bba00abd1e4aaee6f171ecd0095a6865ae5d3085" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="reactor-bom-2024.0.1.pom">
-            <sha256 value="b154c1340f944a6d481f13171e68a2872288bb3ac984acdbc40a8d24261cc314" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="io.projectreactor" name="reactor-bom" version="2024.0.2">
          <artifact name="reactor-bom-2024.0.2.module">
             <sha256 value="ec3d6bdfa89f77d000151bcb78e8ac9f32cb28c865c35754df501d9b010cf347" origin="Generated by Gradle"/>
@@ -1628,6 +1515,7 @@
       </component>
       <component group="io.rsocket" name="rsocket-bom" version="1.1.3">
          <artifact name="rsocket-bom-1.1.3.pom">
+            <pgp value="9B32CBC0F3F6BA4C13D611FC21871D2A9AB66A31"/>
             <sha256 value="e5ccd8fed3415bb4385e4d0787e3e33624cb2c7c002d2550c39788f2bb9b0fae" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -1929,6 +1817,7 @@
       </component>
       <component group="net.java" name="jvnet-parent" version="1">
          <artifact name="jvnet-parent-1.pom">
+            <pgp value="2BCBDD0F23EA1CAFCC11D4860374CF2E8DD1BDFD"/>
             <sha256 value="281440811268e65d9e266b3cc898297e214e04f09740d0386ceeb4a8923d63bf" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -1973,8 +1862,8 @@
          <artifact name="launch4j-3.50-core.jar">
             <sha256 value="d94f1e4f6d1f1e197d12ceefa70a2def938ccf16e283e9a3c740a66ff586bd6f" origin="Generated by Gradle"/>
          </artifact>
-         <artifact name="launch4j-3.50-workdir-win32.jar">
-            <sha256 value="8bf47901a201211e46c6785809861bd255d4f9b3f98e9103474a3501f7c58b14" origin="Generated by Gradle"/>
+         <artifact name="launch4j-3.50-workdir-linux64.jar">
+            <sha256 value="feebe83ab4fe43917eaa7dff272dee0ef3fa854bd68334434430e08e3a12f330" origin="Generated by Gradle"/>
          </artifact>
          <artifact name="launch4j-3.50.pom">
             <sha256 value="d7bd7a12e3e6d5b47f3aed29ff883cf5c4ca9e27b71969106679331fa37ec72d" origin="Generated by Gradle"/>
@@ -1983,7 +1872,7 @@
       <component group="net.shibboleth" name="parent" version="11.3.5">
          <artifact name="parent-11.3.5.pom">
             <pgp value="0E0CA56D354132B5E646C25F49A1796B9B494CB8"/>
-            <sha256 value="7a24e2700485eea087370f1dca6fe0291d7893d38c11aabfe977784fd93b808c" origin="Generated by Gradle" reason="Artifact is not signed"/>
+            <sha256 value="7a24e2700485eea087370f1dca6fe0291d7893d38c11aabfe977784fd93b808c" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="net.shibboleth" name="parent" version="11.3.7">
@@ -2027,11 +1916,13 @@
       </component>
       <component group="org.apache" name="apache" version="16">
          <artifact name="apache-16.pom">
+            <pgp value="0CDE80149711EB46DFF17AE421A24B3F8B0F594A"/>
             <sha256 value="9f85ff2fd7d6cb3097aa47fb419ee7f0ebe869109f98aba9f4eca3f49e74a40e" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.apache" name="apache" version="18">
          <artifact name="apache-18.pom">
+            <pgp value="190D5A957FF22273E601F7A7C92C5FEC70161C62"/>
             <sha256 value="7831307285fd475bbc36b20ae38e7882f11c3153b1d5930f852d44eda8f33c17" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -2057,6 +1948,7 @@
       </component>
       <component group="org.apache" name="apache" version="3">
          <artifact name="apache-3.pom">
+            <pgp value="6E13156C0EE653F0B984663AB95BBD3FA43C4492"/>
             <sha256 value="393c50afb4b7aa6eb57e5377a55a1a0610b19f75b52ece01308db04a1187a20e" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -2082,12 +1974,8 @@
       </component>
       <component group="org.apache" name="apache" version="7">
          <artifact name="apache-7.pom">
+            <pgp value="BA926F64CA647B6D853A38672E2010F8A7FF4A41"/>
             <sha256 value="1397ce1db433adc9f223dbf07496d133681448751f4ae29e58f68e78fb4b6c25" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.apache.activemq" name="activemq-bom" version="6.1.4">
-         <artifact name="activemq-bom-6.1.4.pom">
-            <sha256 value="1e30ba83b9d4b45dfd1be651e846cd230ea65af9c6884b3f946fa593dd5957a4" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.apache.activemq" name="activemq-bom" version="6.1.5">
@@ -2108,6 +1996,7 @@
       </component>
       <component group="org.apache.cassandra" name="java-driver-bom" version="4.18.1">
          <artifact name="java-driver-bom-4.18.1.pom">
+            <pgp value="498AAC354AA5CB36FAAB7608B6E83A2D2E447E56"/>
             <sha256 value="84c8643b0f01ae44762f22cb79820c4961ce58bdb51743329f6f2038713c9b65" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -2117,14 +2006,6 @@
          </artifact>
          <artifact name="commons-collections4-4.4.pom">
             <sha256 value="271bd673839af46e73aff957e2918d4bf96f5ac4f6c6cf4d5be93fd1f1271c4d" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.apache.commons" name="commons-compress" version="1.21">
-         <artifact name="commons-compress-1.21.jar">
-            <sha256 value="6aecfd5459728a595601cfa07258d131972ffc39b492eb48bdd596577a2f244a" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="commons-compress-1.21.pom">
-            <sha256 value="675bb023c9beedde3232949979b9742a5fea946280a55a1b462d4ca7801088cd" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.apache.commons" name="commons-compress" version="1.25.0">
@@ -2169,11 +2050,13 @@
       </component>
       <component group="org.apache.commons" name="commons-parent" version="39">
          <artifact name="commons-parent-39.pom">
+            <pgp value="808D78B17A5A2D7C3668E31FBFFC9B54721244AD"/>
             <sha256 value="87cd27e1a02a5c3eb6d85059ce98696bb1b44c2b8b650f0567c86df60fa61da7" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.apache.commons" name="commons-parent" version="42">
          <artifact name="commons-parent-42.pom">
+            <pgp value="CE8075A251547BEE249BC151A2115AE15F6B8B72"/>
             <sha256 value="cd313494c670b483ec256972af1698b330e598f807002354eb765479f604b09c" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -2341,6 +2224,7 @@
       </component>
       <component group="org.apache.logging" name="logging-parent" version="7">
          <artifact name="logging-parent-7.pom">
+            <pgp value="CA62ED130E4053944406DF640181B45EA58677BC"/>
             <sha256 value="e58911dc9fc6b173a10e5aa9edb93c7994ad06602705dd067edcfc6e1e9e172b" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -2359,6 +2243,7 @@
       </component>
       <component group="org.apache.logging.log4j" name="log4j-bom" version="2.20.0">
          <artifact name="log4j-bom-2.20.0.pom">
+            <pgp value="53C935821AA6A755BD337DB53595395EB3D8E1BA"/>
             <sha256 value="f8bb692e95a6b7bda601e87100958e83d0061b7f123250b68128943a195e9da1" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -2431,11 +2316,6 @@
          </artifact>
          <artifact name="xmpbox-3.0.3.pom">
             <sha256 value="d10a16e7c44ac4c74ac9d9b580f073f9576ce43c579f24b4550716d076b60a17" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.apache.pulsar" name="pulsar-bom" version="3.3.3">
-         <artifact name="pulsar-bom-3.3.3.pom">
-            <sha256 value="10714e27be04509ca839dae123f36b4918b2ad5cc4700a744fab5a460b5494d3" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.apache.pulsar" name="pulsar-bom" version="3.3.4">
@@ -3034,11 +2914,6 @@
             <sha256 value="5a6b2f93282e30095cae14690a2aab5a9c536b57ff32e890ea08aeff8a84c13e" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.glassfish.jersey" name="jersey-bom" version="3.1.9">
-         <artifact name="jersey-bom-3.1.9.pom">
-            <sha256 value="ce371aa4ddbc747dbfe2545101e0763252c2335c3ca83dd5162a04e8cc82c5d9" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.hamcrest" name="hamcrest" version="2.1">
          <artifact name="hamcrest-2.1.jar">
             <sha256 value="ba93b2e3a562322ba432f0a1b53addcc55cb188253319a020ed77f824e692050" origin="Generated by Gradle"/>
@@ -3074,14 +2949,6 @@
             <sha256 value="66f6e607b30740e391989825a5ae076a6c877a99b78eb054a8146650aaff72eb" origin="Generated by Gradle" reason="Artifact is not signed"/>
          </artifact>
       </component>
-      <component group="org.hibernate.orm" name="hibernate-core" version="6.6.4.Final">
-         <artifact name="hibernate-core-6.6.4.Final.jar">
-            <sha256 value="a943d2e1983bfd43e93db4461ee7fff4334093893f228b2f4cdbc4b555f3a649" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="hibernate-core-6.6.4.Final.pom">
-            <sha256 value="bb0f581c87e666e7f06d2ddd5fde641997649cbb51ce1a8f21b0875d853f3d7a" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.hibernate.orm" name="hibernate-core" version="6.6.5.Final">
          <artifact name="hibernate-core-6.6.5.Final.jar">
             <sha256 value="ca6c6fdce59d32ff823888d52db503a727a2b44deb54b42674f276af0949bc2a" origin="Generated by Gradle"/>
@@ -3092,6 +2959,7 @@
       </component>
       <component group="org.hibernate.search" name="hibernate-search-bom" version="7.1.2.Final">
          <artifact name="hibernate-search-bom-7.1.2.Final.pom">
+            <pgp value="894F14D98D7F20D5E82645E3DFE102108BF9381F"/>
             <sha256 value="0406c69684ead410ad6b4135b5286bb60827b0b5a211d5e5d13d223359404cf0" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -3127,6 +2995,7 @@
       </component>
       <component group="org.jboss" name="jboss-parent" version="39">
          <artifact name="jboss-parent-39.pom">
+            <pgp value="982C26A0C156D986CC2AD19E3FBA8E8E719022D7"/>
             <sha256 value="04dff075a00094b63061af407d2816d9cde66795acae376a054bdfe8ba31e664" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -3577,7 +3446,7 @@
       </component>
       <component group="org.opensaml" name="opensaml-bom" version="4.3.0">
          <artifact name="opensaml-bom-4.3.0.pom">
-            <sha256 value="4dfcc7cd96a2645c6e28df9f166f0e5b2b1a44aa109b3100cdb0ee17e01e02d2" origin="Generated by Gradle" reason="Artifact is not signed"/>
+            <sha256 value="4dfcc7cd96a2645c6e28df9f166f0e5b2b1a44aa109b3100cdb0ee17e01e02d2" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.opensaml" name="opensaml-core" version="4.3.2">
@@ -3598,7 +3467,7 @@
       </component>
       <component group="org.opensaml" name="opensaml-parent" version="4.3.0">
          <artifact name="opensaml-parent-4.3.0.pom">
-            <sha256 value="5e9db2f2dc3938835a76f5334997d79c8781511c8b68c1f6df6b384306900319" origin="Generated by Gradle" reason="Artifact is not signed"/>
+            <sha256 value="5e9db2f2dc3938835a76f5334997d79c8781511c8b68c1f6df6b384306900319" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.opensaml" name="opensaml-parent" version="4.3.2">
@@ -3699,6 +3568,7 @@
       </component>
       <component group="org.ow2" name="ow2" version="1.5.1">
          <artifact name="ow2-1.5.1.pom">
+            <pgp value="10F3C7A02ECA55E502BADCF3991EFB94DB91127D"/>
             <sha256 value="321ddbb7ee6fe4f53dea6b4cd6db74154d6bfa42391c1f763b361b9f485acf05" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -3840,6 +3710,7 @@
       </component>
       <component group="org.sonatype.oss" name="oss-parent" version="9">
          <artifact name="oss-parent-9.pom">
+            <pgp value="44FBDBBC1A00FE414F1C1873586654072EAD6677"/>
             <sha256 value="fb40265f982548212ff82e362e59732b2187ec6f0d80182885c14ef1f982827a" origin="Generated by Gradle"/>
          </artifact>
       </component>
@@ -3885,17 +3756,6 @@
             <sha256 value="2d117343231e29be22e489bc1f4825e1d4bbef545905e793244e95221957154f" origin="Generated by Gradle" reason="Artifact is not signed"/>
          </artifact>
       </component>
-      <component group="org.springframework" name="spring-aop" version="6.2.1">
-         <artifact name="spring-aop-6.2.1.jar">
-            <sha256 value="a9cb0dddec1312c1cc6bc6a1762ad880f0e8b2a82ea2243b91abf2ac9debb86b" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-aop-6.2.1.module">
-            <sha256 value="bc76717d91cfaa81e1cf617b6cc937acf7b2150e553abb3b279e298c083ff20b" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-aop-6.2.1.pom">
-            <sha256 value="d41491b3122cec9c06e73501a9317267223e0e0e0083381221bd0f63fc5eec62" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework" name="spring-aop" version="6.2.2">
          <artifact name="spring-aop-6.2.2.jar">
             <sha256 value="359c8ada456a181bbd87be42c53b381feba1f3f2b5820eb6ca713e5dc793a3e2" origin="Generated by Gradle"/>
@@ -3905,17 +3765,6 @@
          </artifact>
          <artifact name="spring-aop-6.2.2.pom">
             <sha256 value="85ceb2c7e6332f6c389b7c60082956030874273532716adefd64f33236575d3f" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework" name="spring-aspects" version="6.2.1">
-         <artifact name="spring-aspects-6.2.1.jar">
-            <sha256 value="c9af641603205859dbf8b1dcea3267170408883f6215693fa19ce2523d7a3f44" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-aspects-6.2.1.module">
-            <sha256 value="b322e1e5d7b354411027b7e859145a88ec2c4003cfbd379fa345bad7795dcab4" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-aspects-6.2.1.pom">
-            <sha256 value="db707a8ddbf7863839db56be4bba165e4537f788ec5a5c6b5d7ba9f0d99aaed4" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework" name="spring-aspects" version="6.2.2">
@@ -3929,17 +3778,6 @@
             <sha256 value="437edb30c3233247af8fb9f96494ef2f14f704166cfb09cfafa2ddf188a4bb8d" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework" name="spring-beans" version="6.2.1">
-         <artifact name="spring-beans-6.2.1.jar">
-            <sha256 value="3afc928c036bc557b650df75ae33ccdd440bc48f9184d19b463df0d2ea74c509" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-beans-6.2.1.module">
-            <sha256 value="143900af19ba6150205298b3787be0c80ea21f4a1af668bd89c591d3e6d5f74c" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-beans-6.2.1.pom">
-            <sha256 value="bb483cdb5510f3cba134d92cbdff5aa831409a3065e86b637a81bd712c32ed81" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework" name="spring-beans" version="6.2.2">
          <artifact name="spring-beans-6.2.2.jar">
             <sha256 value="be9ecf9b0dc6b88a869c9079b9076121e4d658d7e12856cc60598f1fe2d70d8a" origin="Generated by Gradle"/>
@@ -3949,17 +3787,6 @@
          </artifact>
          <artifact name="spring-beans-6.2.2.pom">
             <sha256 value="6d93008a4d434021394ac01ffa3129b069cad5e2e7c33992f0c8e5c4f123d575" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework" name="spring-context" version="6.2.1">
-         <artifact name="spring-context-6.2.1.jar">
-            <sha256 value="226617237451b420f5742517d1aaa27fb20bb3dbe23db6fb5ea1570bf97ce162" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-context-6.2.1.module">
-            <sha256 value="7fb964a2d47c1372d9e389fdd451db7834e0fee96f5c23f11ae9cfba3e060d2d" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-context-6.2.1.pom">
-            <sha256 value="fa387bb89f7b2539e12b46b0d58b29476605c5da3ce50b3961d45b25befb687d" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework" name="spring-context" version="6.2.2">
@@ -3973,17 +3800,6 @@
             <sha256 value="7c5f873d32e314709b2b855950a1a84f85b46b66b3afba4986b5c0882904970e" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework" name="spring-core" version="6.2.1">
-         <artifact name="spring-core-6.2.1.jar">
-            <sha256 value="67f0e17811dc8d5d6c3aed5540afaee02c83e3a8b3f9abbc510d4d95db5cc226" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-core-6.2.1.module">
-            <sha256 value="493541c5afbaca656c95e0e260dfd12457e965683df8b6e3cec158eb51a437e6" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-core-6.2.1.pom">
-            <sha256 value="eb7c2cc0182f883468be339c0a05829af10bd4679e73a3e79a121135f8671f64" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework" name="spring-core" version="6.2.2">
          <artifact name="spring-core-6.2.2.jar">
             <sha256 value="bdb5370f08156ca32be8ed1aa9b879b66d7125a55bc8659c1a60193037b700a3" origin="Generated by Gradle"/>
@@ -3993,17 +3809,6 @@
          </artifact>
          <artifact name="spring-core-6.2.2.pom">
             <sha256 value="18ebd6d3292e219392e8b7ce3531a92eabaaf254740b94dbfd31b292a190d525" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework" name="spring-expression" version="6.2.1">
-         <artifact name="spring-expression-6.2.1.jar">
-            <sha256 value="e4efd330d907a506a4ebc558f5ab2f2320a399527474c95316c16d510c9e222e" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-expression-6.2.1.module">
-            <sha256 value="57be23c1450dce7dfee389a7eb91e222c8ddb8073c8fd882e664a2b81f63775f" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-expression-6.2.1.pom">
-            <sha256 value="0a296bf53f5e55e167ccf34b3f3167a86efd8e685da9027cab687067eae479cf" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework" name="spring-expression" version="6.2.2">
@@ -4030,7 +3835,7 @@
             <sha256 value="5ddd44ba297f3ddeada7815e476685318bd887559d3799aa70b75933b51fd504" origin="Generated by Gradle"/>
          </artifact>
          <artifact name="spring-framework-bom-5.3.34.pom">
-            <sha256 value="6d0616e2544d7115dc249817dd758a34dfa677329182b42e17542e133e55732d" origin="Generated by Gradle" reason="Artifact is not signed"/>
+            <sha256 value="6d0616e2544d7115dc249817dd758a34dfa677329182b42e17542e133e55732d" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework" name="spring-framework-bom" version="5.3.39">
@@ -4057,31 +3862,12 @@
             <sha256 value="73d62f3769734a949463e857852a154baaaba09d0c766e3441066cfeae3a7ec4" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework" name="spring-framework-bom" version="6.2.1">
-         <artifact name="spring-framework-bom-6.2.1.module">
-            <sha256 value="8e3503bcf30be4e4b77b7f6f0776a04782d63bb4045f675b7dd22311a98d2048" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-framework-bom-6.2.1.pom">
-            <sha256 value="510ee5aec7ff508480e1213e094a1fadd8240672fbb7957103e755b49df22a51" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework" name="spring-framework-bom" version="6.2.2">
          <artifact name="spring-framework-bom-6.2.2.module">
             <sha256 value="7b79f9ec857744be48295c8d23cf5631ecdccd690f496a62c7fc36c1e769a1c1" origin="Generated by Gradle"/>
          </artifact>
          <artifact name="spring-framework-bom-6.2.2.pom">
             <sha256 value="dab4a6d0ca1625cf804d49a46f988dd83cfb78e73d1d103c0294156021f7a0cc" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework" name="spring-jcl" version="6.2.1">
-         <artifact name="spring-jcl-6.2.1.jar">
-            <sha256 value="83604b743df124b064836bc930d7e7c8e81832144b9e4292e7b816fca0cd42cd" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-jcl-6.2.1.module">
-            <sha256 value="548bb1dcacdd07fd44e8c15b460998d377655713726475961e58f7ed7ee1d074" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-jcl-6.2.1.pom">
-            <sha256 value="67ab61efbc4d2a9995dc034a6426872cca0198afa29583ddf84af5c77fc08b65" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework" name="spring-jcl" version="6.2.2">
@@ -4102,9 +3888,6 @@
          <artifact name="spring-jdbc-6.2.1.module">
             <sha256 value="2498d8119743bbf636731083a135d038502ec8e3ae21e5e6d97296277e0a983a" origin="Generated by Gradle"/>
          </artifact>
-         <artifact name="spring-jdbc-6.2.1.pom">
-            <sha256 value="0a2f37a2bb1a0a71be8a9235d6d0cb62ff31c9f86edb1b2e5bbd3eecefb04b98" origin="Generated by Gradle"/>
-         </artifact>
       </component>
       <component group="org.springframework" name="spring-jdbc" version="6.2.2">
          <artifact name="spring-jdbc-6.2.2.module">
@@ -4112,17 +3895,6 @@
          </artifact>
          <artifact name="spring-jdbc-6.2.2.pom">
             <sha256 value="270cc27d9020a56a5d9e81421564c1e02a84d6061ce4e7a326d2eec4b37bd6ec" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework" name="spring-orm" version="6.2.1">
-         <artifact name="spring-orm-6.2.1.jar">
-            <sha256 value="a670847a88dac904c698340c9497a1b860924e4135282ba9bd7b6e42100496f7" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-orm-6.2.1.module">
-            <sha256 value="d8e108e12e67abb36a4d398e2eeb457cbf84b4c856398d01552444d52569e193" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-orm-6.2.1.pom">
-            <sha256 value="24989ee16b4bd2f57c9964113e2261183881b789099e47244488eab3639a4e1c" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework" name="spring-orm" version="6.2.2">
@@ -4136,17 +3908,6 @@
             <sha256 value="4238ed9e544605b09d20bd4d7a5f92cf24841b7649a2b73c86becfe8e92520a6" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework" name="spring-test" version="6.2.1">
-         <artifact name="spring-test-6.2.1.jar">
-            <sha256 value="48cbf208e8e2aff87ef0e974d6f19081c13b65e9dfac45bf1b81a5b3eb6c7a68" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-test-6.2.1.module">
-            <sha256 value="ef856aa8d8e60742d792a7115ffd9b38c7f62d11d323da6baf1867699b1b0895" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-test-6.2.1.pom">
-            <sha256 value="66ef1e01dc0c3d8364a30d9af3ab970ece671e3e07f02d563cf3d695a1012afe" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework" name="spring-test" version="6.2.2">
          <artifact name="spring-test-6.2.2.jar">
             <sha256 value="d1bea480f5e00675d58f9a13bfc1d4e853f878d4296c31fc3d32292c1d3523b8" origin="Generated by Gradle"/>
@@ -4158,17 +3919,6 @@
             <sha256 value="72eecc5426334af29862f9bc3a46d6124c807b7ba7f547c83f7eab2c755786ee" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework" name="spring-tx" version="6.2.1">
-         <artifact name="spring-tx-6.2.1.jar">
-            <sha256 value="388ca8b88a8a8e252973a1491e5de5b85b909cc16e5ac6aa426174f161c23b93" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-tx-6.2.1.module">
-            <sha256 value="d01b09a48f14eedd8b8811cd7a2a9adcb6d524915441e443623f4ccfcf02df91" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-tx-6.2.1.pom">
-            <sha256 value="1b34eef2dec410e516900d8544d1d949495107897fc62b585aa93d424de21099" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework" name="spring-tx" version="6.2.2">
          <artifact name="spring-tx-6.2.2.jar">
             <sha256 value="9e745d6c4d375fc661e39ab1af73f488d565b7a6960f867a9f8b13398bfe2f85" origin="Generated by Gradle"/>
@@ -4178,17 +3928,6 @@
          </artifact>
          <artifact name="spring-tx-6.2.2.pom">
             <sha256 value="95bb7cdd69324e1e715b8b3a673d0593a638377daf69025d89ba30b71ebcb5d9" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework" name="spring-web" version="6.2.1">
-         <artifact name="spring-web-6.2.1.jar">
-            <sha256 value="6bf5a036390de810a4e78a07a17051e7f222e802b2249bde18c05740504a7888" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-web-6.2.1.module">
-            <sha256 value="908c22c80283a2cdbae0d101970efc30bdd8d3fe8923b23f82f9e57f7f906fd2" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-web-6.2.1.pom">
-            <sha256 value="90215bcd4d0a07d44419b9f63e2cb33766a5947ed34462bf0b46cca4359255a0" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework" name="spring-web" version="6.2.2">
@@ -4209,9 +3948,6 @@
          <artifact name="spring-webmvc-6.2.1.module">
             <sha256 value="ac42a15f0e13f35d71ed5d7e4a2a449e71d74b5ec631ce4dba7fc8f7555916e2" origin="Generated by Gradle"/>
          </artifact>
-         <artifact name="spring-webmvc-6.2.1.pom">
-            <sha256 value="d5578747d70bd64635b8d1c9e0aea465689c965406ead392058590211c9f79c7" origin="Generated by Gradle"/>
-         </artifact>
       </component>
       <component group="org.springframework" name="spring-webmvc" version="6.2.2">
          <artifact name="spring-webmvc-6.2.2.module">
@@ -4224,14 +3960,6 @@
       <component group="org.springframework.amqp" name="spring-amqp-bom" version="3.0.6">
          <artifact name="spring-amqp-bom-3.0.6.pom">
             <sha256 value="b1c87c9fca261f72d93f3fad0d605f9fa150102bf57d4e9e4fd19ad25b58bc1e" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.amqp" name="spring-amqp-bom" version="3.2.1">
-         <artifact name="spring-amqp-bom-3.2.1.module">
-            <sha256 value="0ec3837a740e0f12f66c97e8d5c8263dc60fc3e88003463b781304071313c61a" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-amqp-bom-3.2.1.pom">
-            <sha256 value="88e615cca976537839e3cbed55b1959fa80bfafec19cbfa236e0d804814bcb8c" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.amqp" name="spring-amqp-bom" version="3.2.2">
@@ -4252,25 +3980,9 @@
             <sha256 value="950385f3e4a017227295de800a4d7812226d3a17447bcb425d2014adc39397f8" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="org.springframework.boot.gradle.plugin" version="3.4.1">
-         <artifact name="org.springframework.boot.gradle.plugin-3.4.1.pom">
-            <sha256 value="f4d1acf98aa55a44b1a23b1c2b5c75aaa84c4408bea955bd81efb38acd68f38d" origin="Generated by Gradle" reason="Artifact is not signed"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="org.springframework.boot.gradle.plugin" version="3.4.2">
          <artifact name="org.springframework.boot.gradle.plugin-3.4.2.pom">
             <sha256 value="e91f80fc6974cd9e62d9f186f5becc07b9cebcd5a48815cd36c831af432ab7bd" origin="Generated by Gradle" reason="Artifact is not signed"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.boot" name="spring-boot" version="3.4.1">
-         <artifact name="spring-boot-3.4.1.jar">
-            <sha256 value="3dffc999ac8eee6b51e8eb9a73c9f29f2a28b7f0f359d45b89aea486268190fa" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-3.4.1.module">
-            <sha256 value="efed2400e7e0d9298c4a645a51337adc75397761dc6b44d78d43d5ac86830d03" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-3.4.1.pom">
-            <sha256 value="65657aab92090e4cb7168584208bc1bb9365d043053550094d545e173f0ab163" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.boot" name="spring-boot" version="3.4.2">
@@ -4284,17 +3996,6 @@
             <sha256 value="373542d133a434ef9aba5c73b27ae897ed4c245a5e96e5b8dbba5230edbefe60" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-actuator" version="3.4.1">
-         <artifact name="spring-boot-actuator-3.4.1.jar">
-            <sha256 value="bee749846a58aa7a6ae859836d689127dc3a37211c7432f790e66a57787b255d" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-actuator-3.4.1.module">
-            <sha256 value="eb1fdb23e747f09522df8a5827ae30986b938f5a166fd2563a56b9b11ca5fadc" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-actuator-3.4.1.pom">
-            <sha256 value="0be928ac71edd5f3d3a82f41587f5b097426345f0f63a6acd70fcb74f3e65aa5" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-actuator" version="3.4.2">
          <artifact name="spring-boot-actuator-3.4.2.jar">
             <sha256 value="bfd9c3d5141ba1c906c56088019a0f3968f9d013f7bca84cae3ba12cb446e22c" origin="Generated by Gradle"/>
@@ -4304,17 +4005,6 @@
          </artifact>
          <artifact name="spring-boot-actuator-3.4.2.pom">
             <sha256 value="7ad248c4c9c44a23bdcb4c7471967a23e89d786bad786aa882fe72b51cafeec2" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.boot" name="spring-boot-actuator-autoconfigure" version="3.4.1">
-         <artifact name="spring-boot-actuator-autoconfigure-3.4.1.jar">
-            <sha256 value="4b9f546c22bbd6012b43b815c6f198bbacd594df7bd07ff59a1397d41ad0be78" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-actuator-autoconfigure-3.4.1.module">
-            <sha256 value="ea24ccee5d4b938d9b23e788cc8dfa50e2fa7b0d66f0c1b266c821e0ad9cb408" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-actuator-autoconfigure-3.4.1.pom">
-            <sha256 value="c7c6b0ffa34a2b3383e8422577d2f5a7bc5c7795946fc92207a07c471e4746ad" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.boot" name="spring-boot-actuator-autoconfigure" version="3.4.2">
@@ -4328,17 +4018,6 @@
             <sha256 value="fc08dc666a121ff0528a0d84ec28822bad086fc0f4fc527bea5bfb6959d1bec0" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-autoconfigure" version="3.4.1">
-         <artifact name="spring-boot-autoconfigure-3.4.1.jar">
-            <sha256 value="dc68c9d977455fb23232cf0771a9079b9e44e246acdc62d872d8acd45edf4783" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-autoconfigure-3.4.1.module">
-            <sha256 value="4ba5d056a0aecd47e2d5da0749d66eb144e635c37cb53510f7e1eec6d8d47558" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-autoconfigure-3.4.1.pom">
-            <sha256 value="7ec0330a82b38873c3f8b4c0f83076103904846a6b9fad3eef7b4083bc07e587" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-autoconfigure" version="3.4.2">
          <artifact name="spring-boot-autoconfigure-3.4.2.jar">
             <sha256 value="2a285264758f3059da30e330ec727985f73cd04df438f7d504cd17e65ab0cec7" origin="Generated by Gradle"/>
@@ -4348,14 +4027,6 @@
          </artifact>
          <artifact name="spring-boot-autoconfigure-3.4.2.pom">
             <sha256 value="1f299c518e9e2d783c1047264c0c178de5fd711c47865943b41a490800b8c516" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.boot" name="spring-boot-buildpack-platform" version="3.4.1">
-         <artifact name="spring-boot-buildpack-platform-3.4.1.jar">
-            <sha256 value="ae03e5def7e6ea17af546611861884f92712c0b15105534f9dd1296df620b481" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-buildpack-platform-3.4.1.module">
-            <sha256 value="006f0a6efeabfd08937f9f48d9b6aba5e83dfe9d989c02d70ca740471b0ad2d7" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.boot" name="spring-boot-buildpack-platform" version="3.4.2">
@@ -4371,25 +4042,9 @@
             <sha256 value="0c8681e907ceda258e594ea5b7cfda072b8ac470da98aac0184a8eeb695057da" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-dependencies" version="3.4.1">
-         <artifact name="spring-boot-dependencies-3.4.1.pom">
-            <sha256 value="296a03b043f3a3896144592cb8d70abb41ae9c4a15bef0a158af040d32c4d5fe" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-dependencies" version="3.4.2">
          <artifact name="spring-boot-dependencies-3.4.2.pom">
             <sha256 value="c3b543e9c811214475fc586c5c08cea20f284c22641af13d13713c807013b388" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.boot" name="spring-boot-devtools" version="3.4.1">
-         <artifact name="spring-boot-devtools-3.4.1.jar">
-            <sha256 value="8a923cd41f7cb0039d312829c470416fb0a4ec2e7a3de357ae4d0e3eda894314" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-devtools-3.4.1.module">
-            <sha256 value="7c4d698e5a83fddbac687a0f44ee24f2faf8a43fff0fa326cb3e490b47f75ca4" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-devtools-3.4.1.pom">
-            <sha256 value="4bcb18adbf2fd97f7ea1f68f6cb5986d3b2130ef6651ce352344884a0444e5a5" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.boot" name="spring-boot-devtools" version="3.4.2">
@@ -4403,14 +4058,6 @@
             <sha256 value="7c3b561198a07e602a4277b4e9c1d199468622e4917e6a1503e517113887612d" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-gradle-plugin" version="3.4.1">
-         <artifact name="spring-boot-gradle-plugin-3.4.1.jar">
-            <sha256 value="c71016ab7458fbd5bab8f082ce534e2c4f8e1637b4124a562a13a023d3b27dbd" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-gradle-plugin-3.4.1.module">
-            <sha256 value="dc139c817cd368510c0c277aa7621e0c8a0e026cd4f353ea66e9de1847912d17" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-gradle-plugin" version="3.4.2">
          <artifact name="spring-boot-gradle-plugin-3.4.2.jar">
             <sha256 value="e3dc4669f7132bacff500321ecf8b38c987b4a31528ea731f53082bf004c0022" origin="Generated by Gradle"/>
@@ -4419,31 +4066,12 @@
             <sha256 value="930faba4cbf9276645da9795bfa25f802dbca50a53f041046d303cd9d2755729" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-loader-tools" version="3.4.1">
-         <artifact name="spring-boot-loader-tools-3.4.1.jar">
-            <sha256 value="187ddb109f2bbd3f667f43ebc43e43fecab13d841be7062621182457a1ff1b7b" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-loader-tools-3.4.1.module">
-            <sha256 value="38fc052a350794a0127df33bb2a52d383939cd11d5ff6798a1654411ac2853cf" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-loader-tools" version="3.4.2">
          <artifact name="spring-boot-loader-tools-3.4.2.jar">
             <sha256 value="6a94fe5506ecd94b20469903e8733ed1999dd64a4063999448c333f4da6528e0" origin="Generated by Gradle"/>
          </artifact>
          <artifact name="spring-boot-loader-tools-3.4.2.module">
             <sha256 value="1af31a7b42f9c1cc48a17aaf90fefab82eb14e7132924c54b15055078858866b" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.boot" name="spring-boot-starter" version="3.4.1">
-         <artifact name="spring-boot-starter-3.4.1.jar">
-            <sha256 value="e095d43127dbc507f49119d43b7cecb0977257855d5eed989f3905acc897d9cb" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-3.4.1.module">
-            <sha256 value="b531851b3947e6d1e4a93995e3f5b5ef2931ac98481d1211b4ad8b99750d5308" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-3.4.1.pom">
-            <sha256 value="f73d9f321ff0ffdec42415ea66a34ac66091f5c75cc72b89cd328570392cae33" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.boot" name="spring-boot-starter" version="3.4.2">
@@ -4457,17 +4085,6 @@
             <sha256 value="f9025a58908cda49478b66dedc4d80fc09c3050270b5278e672ef040f13ae8f6" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-actuator" version="3.4.1">
-         <artifact name="spring-boot-starter-actuator-3.4.1.jar">
-            <sha256 value="6dee39cad9d74d5db6145d4674632e7caa08cd98cec0c58b4cadeb4ec4bcc373" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-actuator-3.4.1.module">
-            <sha256 value="94b4c759c9f06afd35e90247fbcf2d915fa5431af13a724f493ef6033ba54f2b" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-actuator-3.4.1.pom">
-            <sha256 value="a19b1658c52faec7577aef23cd3c38ca7a6784f5cfb10acdaf60d312eb864c54" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-starter-actuator" version="3.4.2">
          <artifact name="spring-boot-starter-actuator-3.4.2.jar">
             <sha256 value="04a55f7ecef1e0eea65bcb09ccefa50f813fbc17a332102f183b4ac76af430dd" origin="Generated by Gradle"/>
@@ -4477,17 +4094,6 @@
          </artifact>
          <artifact name="spring-boot-starter-actuator-3.4.2.pom">
             <sha256 value="2e272784b30f7eb57cd247d11b571351f748deb0139733c24963413f11d54913" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-data-jpa" version="3.4.1">
-         <artifact name="spring-boot-starter-data-jpa-3.4.1.jar">
-            <sha256 value="55e82010f871daea924a9f17a98d784147bd14b7dbb999207f30633a4d4fed0c" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-data-jpa-3.4.1.module">
-            <sha256 value="23e7f542d89569c0c0efff35724fee0c8ab5fc58bb854e457cf232cc9f5b9651" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-data-jpa-3.4.1.pom">
-            <sha256 value="ce41063e75fe2626b960bfbfba0eb26944b23faa4fa7f72d6946ceec2db6fd12" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.boot" name="spring-boot-starter-data-jpa" version="3.4.2">
@@ -4501,17 +4107,6 @@
             <sha256 value="88f86de7af87eec971615242a4e0ae604111bd0e6a316e375dd029169813d0ca" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-jdbc" version="3.4.1">
-         <artifact name="spring-boot-starter-jdbc-3.4.1.jar">
-            <sha256 value="5d10a74f37da0cb07c0c737af84e53e1cda06e40666e9d3e70bd7568b690b676" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-jdbc-3.4.1.module">
-            <sha256 value="9c43271af53a0ad44269caf8ea3921ea83e907fa42e383fc2864a4ebabd56a55" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-jdbc-3.4.1.pom">
-            <sha256 value="c57f3de42e9e03ce2113ee478f339022fd67ec0b40d1ae7f64fe961ae30101e6" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-starter-jdbc" version="3.4.2">
          <artifact name="spring-boot-starter-jdbc-3.4.2.jar">
             <sha256 value="6b4f9b59349967de1be1c97e135adcd01684e74db9988541dea0bdb729123287" origin="Generated by Gradle"/>
@@ -4521,17 +4116,6 @@
          </artifact>
          <artifact name="spring-boot-starter-jdbc-3.4.2.pom">
             <sha256 value="afe27e35f61c101f1d8245533cae863eb525b843a0900b6c54a10882ede0039c" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-jetty" version="3.4.1">
-         <artifact name="spring-boot-starter-jetty-3.4.1.jar">
-            <sha256 value="0545390c8e91cc9b53c39c4cc60d5ab0e201844cc4a0079ed281b19149a74e56" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-jetty-3.4.1.module">
-            <sha256 value="0973c6290ecbb4b3a1dae7e01b942abfb2acd24c66530c4441a6d63987d9b382" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-jetty-3.4.1.pom">
-            <sha256 value="500e3a746b9ea1cf933e59e105f43a5c6096da9df807a5b769fa5427b3693ccb" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.boot" name="spring-boot-starter-jetty" version="3.4.2">
@@ -4545,17 +4129,6 @@
             <sha256 value="013e6f32a1bc23aae84a6a688320cab51b10df851aa6fa69e560c831449fba41" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-json" version="3.4.1">
-         <artifact name="spring-boot-starter-json-3.4.1.jar">
-            <sha256 value="9ed29b5fa76d96f3a6f0756cb91ff7def2d795736d275a540c1e18fa9ea7b460" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-json-3.4.1.module">
-            <sha256 value="4c276febdf2ca15dc2a8afc2b975ca3068bbe0a499edade24ee0671eb330eaf8" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-json-3.4.1.pom">
-            <sha256 value="01d79724c436804c111751a17f8492535683d1ac33e2a77c989437e04eca10fa" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-starter-json" version="3.4.2">
          <artifact name="spring-boot-starter-json-3.4.2.jar">
             <sha256 value="dbe473c917326bc885da45066bbf9dde49e222186f12f49b775d6cb4e300e50e" origin="Generated by Gradle"/>
@@ -4567,17 +4140,6 @@
             <sha256 value="ed992f3a06eeab3bc341b41778f61c0075ad157587b856784cfb556a7351798f" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-logging" version="3.4.1">
-         <artifact name="spring-boot-starter-logging-3.4.1.jar">
-            <sha256 value="3a2b5aa454fa876e08273c8437d340aa24518f774e1c2f2bf8b5970259f2e604" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-logging-3.4.1.module">
-            <sha256 value="e241047e68d2b35343b8a2393fa6eedf4320e77c791c6260e9b196f930a10631" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-logging-3.4.1.pom">
-            <sha256 value="b3a779e3b2b749d4faffe4892b12278b9145b6d75b16522aeabfcbe47b8818c1" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-starter-logging" version="3.4.2">
          <artifact name="spring-boot-starter-logging-3.4.2.jar">
             <sha256 value="c1bd1855d8dd7527d5a245e741144601676533b099e85b9731124a80b29859d4" origin="Generated by Gradle"/>
@@ -4587,17 +4149,6 @@
          </artifact>
          <artifact name="spring-boot-starter-logging-3.4.2.pom">
             <sha256 value="dbca42ac082cdcd911abd28b608cd91716387549f5dfb6f48d0da29f15230e38" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-oauth2-client" version="3.4.1">
-         <artifact name="spring-boot-starter-oauth2-client-3.4.1.jar">
-            <sha256 value="23cf28bb1083598faab660a4b4d9c20b3cbb88394d34fa83b641d1747478bb00" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-oauth2-client-3.4.1.module">
-            <sha256 value="d11ec03670d211e19157ccf8dfdd8a7d6670b8d9d3cfb65084a3e0a3a1f71243" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-oauth2-client-3.4.1.pom">
-            <sha256 value="4b1d824b94e8c117a231c0bd2cbc69861333442658dd52e5456bcf60be550d56" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.boot" name="spring-boot-starter-oauth2-client" version="3.4.2">
@@ -4616,17 +4167,6 @@
             <sha256 value="4c1f4d09fafd720244859083bdfc7b572b47176d818a5f7ae6ad66d1938e0cee" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-security" version="3.4.1">
-         <artifact name="spring-boot-starter-security-3.4.1.jar">
-            <sha256 value="12a88f1f25949f88d13328f7960d4b42a2a71556b8b9d114e85df1d3ccab37c6" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-security-3.4.1.module">
-            <sha256 value="df1feb2d9ff9211ed1f86740c02d698a99f2a4ff7203fd9b00f00b5b3e013835" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-security-3.4.1.pom">
-            <sha256 value="adb096cd121b54d84cbc7c51a28ecfe415f4253f9d3c3059acf5bacd51f115d3" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-starter-security" version="3.4.2">
          <artifact name="spring-boot-starter-security-3.4.2.jar">
             <sha256 value="d893777d92fb37cd526c8108a5acb54896b4eeaedff6bb35dc38c87ed8ab4c70" origin="Generated by Gradle"/>
@@ -4636,17 +4176,6 @@
          </artifact>
          <artifact name="spring-boot-starter-security-3.4.2.pom">
             <sha256 value="0e2effbc19e529d48b72a226b518959614c6fa8b66276d63ef99762509493b4c" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-test" version="3.4.1">
-         <artifact name="spring-boot-starter-test-3.4.1.jar">
-            <sha256 value="f3a04693897e92e297e64b86d912133a6955f816613a25a31d2e2e9777793eea" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-test-3.4.1.module">
-            <sha256 value="563ad39dddfbba65c7961633941c3affa9b7a52017d277bcdd3182847633a084" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-test-3.4.1.pom">
-            <sha256 value="5509ff4a694f91a2e7e003a0ee42cf553761e6bba36956404c1174a56bc19764" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.boot" name="spring-boot-starter-test" version="3.4.2">
@@ -4660,17 +4189,6 @@
             <sha256 value="3ff30b1bc2a2a90c34da28739523cfc6e8185d055c5aeae3d180e8d73a19b4e2" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-thymeleaf" version="3.4.1">
-         <artifact name="spring-boot-starter-thymeleaf-3.4.1.jar">
-            <sha256 value="ba98f3090c28f9c47903f2165b842a5d14b7bfc155e3bfc0170b6d85d0fbda4d" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-thymeleaf-3.4.1.module">
-            <sha256 value="36c80e6c023a2854141eb489f5bf0662b58c78aaf012b0184fd4f1dc3454086a" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-thymeleaf-3.4.1.pom">
-            <sha256 value="d26270df19bcab435d78ccc03954c8e6a1395d4fa3f0c1b641755cccf7bc027e" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-starter-thymeleaf" version="3.4.2">
          <artifact name="spring-boot-starter-thymeleaf-3.4.2.jar">
             <sha256 value="9411b31ef088159d5ec69f4d33f1c9d233eaecb11e3f5b0307af640050f2adc6" origin="Generated by Gradle"/>
@@ -4682,31 +4200,12 @@
             <sha256 value="2160f707bb6104c1e8c99428cb0b3ab915a5d1d36ba2cae04ea79a10f8bd7ec5" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-tomcat" version="3.4.1">
-         <artifact name="spring-boot-starter-tomcat-3.4.1.module">
-            <sha256 value="e4061f759d72b271a134b892f00e327fc2c69a7c0166788785411a1267e73b66" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-tomcat-3.4.1.pom">
-            <sha256 value="86aab5aadf6ebbb2f4254994d94cc57e085244ad9909a95b16e0cbea1d9f376d" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-starter-tomcat" version="3.4.2">
          <artifact name="spring-boot-starter-tomcat-3.4.2.module">
             <sha256 value="698422454af82968f0fd33c1dfa19a8e16c0b24660e8e4a42faee10f12aa05c0" origin="Generated by Gradle"/>
          </artifact>
          <artifact name="spring-boot-starter-tomcat-3.4.2.pom">
             <sha256 value="a2aa85cda9a3ea1af5d1c1a19527f98431ce53c8f903138cb9656a56446f37b3" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.boot" name="spring-boot-starter-web" version="3.4.1">
-         <artifact name="spring-boot-starter-web-3.4.1.jar">
-            <sha256 value="2a8d7c6079209b47f50b2901794988a1cd152aad59f06bd4c31e202ef908937f" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-web-3.4.1.module">
-            <sha256 value="4e78984d26ce29ec9ea1c5c9e1c06ebcdaa3e1524d6ae0626ffcc4b597124a90" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-starter-web-3.4.1.pom">
-            <sha256 value="69705eeccfa58bd7b606779742a830dd4178c4f183fd5695cfff41b06fc915e4" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.boot" name="spring-boot-starter-web" version="3.4.2">
@@ -4720,17 +4219,6 @@
             <sha256 value="ae7f57da01b8a068edcfcdb7b4bda108f6b88d53079d1cd92272b293d54d5fc2" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.boot" name="spring-boot-test" version="3.4.1">
-         <artifact name="spring-boot-test-3.4.1.jar">
-            <sha256 value="3512effadc70e58e97d9f1a9c47cab3ab68907d303f8cc72722ec81bd8c28d19" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-test-3.4.1.module">
-            <sha256 value="a006a90ecd07d0b86a2c6076693042304e73d8de27b2f1f0d2b3f3b1605e3493" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-test-3.4.1.pom">
-            <sha256 value="f31ec04c6635c1a86453082b5bdb6691c4f9657af44d657d3445ef50cba35e41" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.boot" name="spring-boot-test" version="3.4.2">
          <artifact name="spring-boot-test-3.4.2.jar">
             <sha256 value="d94ab4f63234246d74db05eceb41fb1f6428d531eb16ab69e19629141ac236d4" origin="Generated by Gradle"/>
@@ -4740,17 +4228,6 @@
          </artifact>
          <artifact name="spring-boot-test-3.4.2.pom">
             <sha256 value="c5d7aa54a2e9428d087e84da5477066f537f90b6e829287637c44b6800858fc6" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.boot" name="spring-boot-test-autoconfigure" version="3.4.1">
-         <artifact name="spring-boot-test-autoconfigure-3.4.1.jar">
-            <sha256 value="7cb0a84fa16ebfb58362d881a56a704bf33847dd8344b05e4a6ec1286a67f633" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-test-autoconfigure-3.4.1.module">
-            <sha256 value="e4069177543ebae4d571338c236a5ecad35133a43fa2ee0a228c1c44ab02f026" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-boot-test-autoconfigure-3.4.1.pom">
-            <sha256 value="46f31cac62f26d4e117786f01061aeac47420dc3219c7cd3108687db3cb3c449" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.boot" name="spring-boot-test-autoconfigure" version="3.4.2">
@@ -4769,22 +4246,9 @@
             <sha256 value="af925814ed5b7865891fd08610605570b4bb8450a2f51bf9e5b8635cd3681e04" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.data" name="spring-data-bom" version="2024.1.1">
-         <artifact name="spring-data-bom-2024.1.1.pom">
-            <sha256 value="b2f5cc09c6777d972009b8e8e6759e417ec0d77daebc1b30c2b193b354f5f72c" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.data" name="spring-data-bom" version="2024.1.2">
          <artifact name="spring-data-bom-2024.1.2.pom">
             <sha256 value="7173a08355e6743592df5ebddee12a205582ab8a331e560a11af88c8b07c56a3" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.data" name="spring-data-commons" version="3.4.1">
-         <artifact name="spring-data-commons-3.4.1.jar">
-            <sha256 value="8497fdf6952394836e714f00898f429a3a5159fcc9d319636eff987b5c22c662" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-data-commons-3.4.1.pom">
-            <sha256 value="df651b3f68a7a026b26f3f4778bc1fe309428853a550404804992332ec547dd9" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.data" name="spring-data-commons" version="3.4.2">
@@ -4795,14 +4259,6 @@
             <sha256 value="2afb80ffd9b784177b18a2af15398263ce58faa76478bfa8ca062ca17c0ec866" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.data" name="spring-data-jpa" version="3.4.1">
-         <artifact name="spring-data-jpa-3.4.1.jar">
-            <sha256 value="3e83dd3982269446dff646b5f9b84691e361cdd144151a9e1451c50db75268bc" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-data-jpa-3.4.1.pom">
-            <sha256 value="2c8d4e3726e6c7283e91bf7505bd45c5e184d9528d078b094ccd11bb6ac7f34b" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.data" name="spring-data-jpa" version="3.4.2">
          <artifact name="spring-data-jpa-3.4.2.jar">
             <sha256 value="8ec10a21d16d965719a7b5ecf1bc54c276b371d894214602af69d04ecc09f77e" origin="Generated by Gradle"/>
@@ -4811,29 +4267,14 @@
             <sha256 value="4e16ccb49348d3db3360ceecee3af28bcf0373b28c05819746de1e5581917e0c" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.data" name="spring-data-jpa-parent" version="3.4.1">
-         <artifact name="spring-data-jpa-parent-3.4.1.pom">
-            <sha256 value="ed1f016788f10d6e89aeb27d13e77e6dff9fa30ed3b92817882021013eecac54" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.data" name="spring-data-jpa-parent" version="3.4.2">
          <artifact name="spring-data-jpa-parent-3.4.2.pom">
             <sha256 value="cf8674d8cbaf8c855ab17c9126acd151cf0dd8033e5bbf3b216e4ac4edce2781" origin="Generated by Gradle"/>
          </artifact>
       </component>
-      <component group="org.springframework.data.build" name="spring-data-build" version="3.4.1">
-         <artifact name="spring-data-build-3.4.1.pom">
-            <sha256 value="c686253f6a34ffd9a0f9d27f850e968ad3281fc055ecbbbfb20bfc08cf4aaa42" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
       <component group="org.springframework.data.build" name="spring-data-build" version="3.4.2">
          <artifact name="spring-data-build-3.4.2.pom">
             <sha256 value="069f9b5acfe584ce39b7e46ec6d1db0d0f1fba32d62905b225c033e9e7d0459a" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.data.build" name="spring-data-parent" version="3.4.1">
-         <artifact name="spring-data-parent-3.4.1.pom">
-            <sha256 value="fafe374cc076818d1064c383ba5f0b4e306e7fc6132346e7e58864870e1c0f2c" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.data.build" name="spring-data-parent" version="3.4.2">
@@ -4852,14 +4293,6 @@
          </artifact>
          <artifact name="spring-integration-bom-6.4.1.pom">
             <sha256 value="e2a23c177ee2e7b21e2bd493735b6b8c5de1bec9efe62bd8ad130bf47f7d3092" origin="Generated by Gradle"/>
-         </artifact>
-      </component>
-      <component group="org.springframework.pulsar" name="spring-pulsar-bom" version="1.2.1">
-         <artifact name="spring-pulsar-bom-1.2.1.module">
-            <sha256 value="da3a884812d09c5b8fff47e12cc2fd4673cf90682304d81921835612b0389cdb" origin="Generated by Gradle"/>
-         </artifact>
-         <artifact name="spring-pulsar-bom-1.2.1.pom">
-            <sha256 value="f9026cf1a6a3ea96ee1e58e24ad4e64090378dfca1d41d07286a9098f961a10a" origin="Generated by Gradle"/>
          </artifact>
       </component>
       <component group="org.springframework.pulsar" name="spring-pulsar-bom" version="1.2.2">
