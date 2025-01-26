@@ -307,7 +307,7 @@ dependencies {
             exclude group: "org.apache.commons", module: "commons-compress"
         }
         implementation "org.openjfx:javafx-controls:21"
-        implementation "org.openjfx:javafx-swing:21"
+        implementation "org.openjfx:javafx-swing:23.0.2"
     }
 
     //security updates
