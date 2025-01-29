@@ -292,7 +292,7 @@ configurations.all {
     exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
 
     resolutionStrategy {
-        force 'org.apache.commons:commons-compress:1.26.0'
+        force 'org.apache.commons:commons-compress:1.27.1'
     }
 }
 dependencies {
