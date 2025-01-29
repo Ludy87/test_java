@@ -793,13 +793,6 @@
             "moduleLicenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt"
         },
         {
-            "moduleName": "org.apache.commons:commons-compress",
-            "moduleUrl": "https://commons.apache.org/proper/commons-compress/",
-            "moduleVersion": "1.26.0",
-            "moduleLicense": "Apache-2.0",
-            "moduleLicenseUrl": "https://www.apache.org/licenses/LICENSE-2.0.txt"
-        },
-        {
             "moduleName": "org.apache.commons:commons-csv",
             "moduleUrl": "https://commons.apache.org/proper/commons-csv/",
             "moduleVersion": "1.9.0",
