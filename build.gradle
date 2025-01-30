@@ -1,6 +1,7 @@
 buildscript {
   repositories {
     maven { url = 'https://boegl.jfrog.io/artifactory/snapshots-gradle-dev-local/' }
+    maven { url 'https://jitpack.io' }
   }
   dependencies {
     classpath 'edu.sc.seis.launch4j:launch4j:latest.integration'
