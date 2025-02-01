@@ -317,7 +317,7 @@ dependencies {
 
     // implementation "org.yaml:snakeyaml:2.2"
     // implementation 'com.github.Carleslc.Simple-YAML:Simple-Yaml:1.8.4'
-    implementation 'me.carleslc:Simple-Yaml:1.7.2'
+    implementation 'me.carleslc:Simple-Yaml:1.8.4'
 
     // Exclude Tomcat and include Jetty
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
