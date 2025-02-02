@@ -13,6 +13,7 @@ updates:
       interval: daily
       time: "19:45"
       timezone: "Europe/Berlin"
+    rebase-strategy: "auto"
   - package-ecosystem: "composer" # See documentation for possible values
     directory: "/" # Location of package manifests
     labels:
@@ -21,6 +22,7 @@ updates:
       interval: daily
       time: "19:45"
       timezone: "Europe/Berlin"
+    rebase-strategy: "auto"
   - package-ecosystem: "gradle" # See documentation for possible values
     directory: "/" # Location of package manifests
     labels:
@@ -38,6 +40,7 @@ updates:
       interval: daily
       time: "19:45"
       timezone: "Europe/Berlin"
+    rebase-strategy: "auto"
 
   - package-ecosystem: pip
     directory: /cucumber
@@ -45,6 +48,9 @@ updates:
       - "pip cucumber"
     schedule:
       interval: daily
+      time: "19:45"
+      timezone: "Europe/Berlin"
+    rebase-strategy: "auto"
 
   - package-ecosystem: pip
     directory: /
@@ -52,3 +58,6 @@ updates:
       - "pip"
     schedule:
       interval: daily
+      time: "19:45"
+      timezone: "Europe/Berlin"
+    rebase-strategy: "auto"
