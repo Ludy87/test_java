@@ -53,9 +53,9 @@ Docker:
   - changed-files:
     - any-glob-to-any-file: '.github/workflows/build.yml'
     - any-glob-to-any-file: '.github/workflows/push-docker.yml'
+    - all-globs-to-all-files: '!Dockerfile.dev'
     - any-glob-to-any-file: 'Dockerfile'
     - any-glob-to-any-file: 'Dockerfile.*'
-    - all-globs-to-all-files: '!Dockerfile.dev'
     - any-glob-to-any-file: 'exampleYmlFiles/*.yml'
     - any-glob-to-any-file: 'scripts/download-security-jar.sh'
     - any-glob-to-any-file: 'scripts/init.sh'
