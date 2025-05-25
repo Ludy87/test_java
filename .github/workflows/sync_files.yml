@@ -71,7 +71,7 @@ jobs:
           author: ${{ steps.setup-bot.outputs.committer }}
           signoff: true
           branch: sync_readme
-          title: ":globe_with_meridians: Sync Translations + Update README Progress Table + Update Verification Metadata"
+          title: ":globe_with_meridians: Sync Translations + Update README Progress Table"
           body: |
             ### Description of Changes
 
