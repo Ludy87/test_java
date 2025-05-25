@@ -1,18 +1,18 @@
 name: 'Setup GitHub App Bot'
-description: 'Generates a GitHub App Token and configures git for a bot'
+description: 'Generates a GitHub App Token and configures Git for a bot'
 inputs:
   app-id:
     description: 'GitHub App ID'
-    required: true
+    required: True
   private-key:
     description: 'GitHub App Private Key'
-    required: true
+    required: True
 outputs:
   token:
     description: 'Generated GitHub App Token'
     value: ${{ steps.generate-token.outputs.token }}
   committer:
-    description: 'Committer string for git'
+    description: 'Committer string for Git'
     value: "${{ steps.generate-token.outputs.app-slug }}[bot] <${{ steps.generate-token.outputs.app-slug }}[bot]@users.noreply.github.com>"
   app-slug:
     description: 'GitHub App slug'
@@ -20,13 +20,13 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - name: Generate GitHub App Token
+    - name: Generate a GitHub App Token
       id: generate-token
       uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
       with:
         app-id: ${{ inputs.app-id }}
         private-key: ${{ inputs.private-key }}
-    - name: Configure git
+    - name: Configure Git
       run: |
         git config --global user.name "${{ steps.generate-token.outputs.app-slug }}[bot]"
         git config --global user.email "${{ steps.generate-token.outputs.app-slug }}[bot]@users.noreply.github.com"
