@@ -9,6 +9,7 @@ updates:
     directory: "/" # Location of package manifests
     labels:
       - "github-actions"
+    open-pull-requests-limit: 100
     schedule:
       interval: daily
       time: "19:45"
