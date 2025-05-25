@@ -19,7 +19,7 @@ jobs:
       issues: write         # Allow posting comments on issues
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -27,9 +27,16 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       # - name: Set up Python
-      #   uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+      #   uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
       #   with:
       #     python-version: "3.12"
+
+      - name: Cache Python dependencies
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
 
       - name: Get PR data
         id: get-pr-data
@@ -52,28 +59,16 @@ jobs:
             core.setOutput("branch", branch);
         continue-on-error: true
 
-      - name: Fetch PR changed files
-        id: fetch-pr-changes
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Fetching PR changed files..."
-          echo "Getting list of changed files from PR..."
-          CHANGED_FILES=$(gh pr view ${{ steps.get-pr-data.outputs.pr_number }} --json files -q ".files[].path" | \
-              grep -E '^src/main/resources/messages_[a-zA-Z_]{2}_[a-zA-Z_]{2,7}\.properties$')
+      # - name: Fetch PR changed files
+      #   id: fetch-pr-changes
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     echo "Fetching PR changed files..."
+      #     echo "Getting list of changed files from PR..."
+      #     gh pr view ${{ steps.get-pr-data.outputs.pr_number }} --json files -q ".files[].path" | grep -E '^src/main/resources/messages_[a-zA-Z_]{2}_[a-zA-Z_]{2,7}\.properties$' > changed_files.txt # Filter only matching property files
 
-          # Überprüfen, ob Dateien gefunden wurden
-          if [ $? -eq 0 ]; then
-            echo "Changed files found: $CHANGED_FILES"
-            echo "$CHANGED_FILES" > changed_files.txt  # Speichern der geänderten Dateien
-          else
-            echo "No matching changed files found."
-            echo "No changes detected" > changed_files.txt
-            exit 1  # Fehlerstatus, um anzuzeigen, dass keine passenden Dateien gefunden wurden
-          fi
-        continue-on-error: true
-
-      - name: Determine reference file test
+      - name: Determine reference file and fetch changed files
         id: determine-file
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
@@ -84,12 +79,9 @@ jobs:
             const prNumber = ${{ steps.get-pr-data.outputs.pr_number }};
             const repoOwner = "${{ steps.get-pr-data.outputs.repo_owner }}";
             const repoName = "${{ steps.get-pr-data.outputs.repo_name }}";
-
             const prRepoOwner = "${{ github.event.pull_request.head.repo.owner.login }}";
             const prRepoName = "${{ github.event.pull_request.head.repo.name }}";
             const branch = "${{ steps.get-pr-data.outputs.branch }}";
-
-            console.log(`Determining reference file for PR #${prNumber}`);
 
             // Validate inputs
             const validateInput = (input, regex, name) => {
@@ -102,27 +94,27 @@ jobs:
             validateInput(repoName, /^[a-zA-Z0-9._-]+$/, "repository name");
             validateInput(branch, /^[a-zA-Z0-9._/-]+$/, "branch name");
 
-            // Get the list of changed files in the PR
+            // Get changed files
             const { data: files } = await github.rest.pulls.listFiles({
               owner: repoOwner,
               repo: repoName,
               pull_number: prNumber,
             });
 
-            // Filter for relevant files based on the PR changes
             const changedFiles = files
               .map(file => file.filename)
               .filter(file => /^src\/main\/resources\/messages_[a-zA-Z_]{2}_[a-zA-Z_]{2,7}\.properties$/.test(file));
 
             console.log("Changed files:", changedFiles);
+            core.setOutput("changed_files", changedFiles.join(" "));
 
-            // Create a temporary directory for PR files
+            // Create temp directory for PR files
             const tempDir = "pr-branch";
             if (!fs.existsSync(tempDir)) {
               fs.mkdirSync(tempDir, { recursive: true });
             }
 
-            // Download and save each changed file
+            // Download changed files
             for (const file of changedFiles) {
               const { data: fileContent } = await github.rest.repos.getContent({
                 owner: prRepoOwner,
@@ -143,10 +135,7 @@ jobs:
               console.log(`Saved file: ${filePath}`);
             }
 
-            // Output the list of changed files for further processing
-            const fileList = changedFiles.join(" ");
-            core.exportVariable("FILES_LIST", fileList);
-            console.log("Files saved and listed in FILES_LIST.");
+            core.exportVariable("FILES_LIST", changedFiles.join(" "));
 
             // Determine reference file
             let referenceFilePath;
