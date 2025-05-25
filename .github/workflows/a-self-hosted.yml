@@ -1,0 +1,103 @@
+name: A Self-Hosted (Windows & Linux)
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_os:
+        description: 'Target runner OS'
+        required: true
+        default: 'windows'
+        type: choice
+        options:
+          - windows
+          - linux
+
+jobs:
+  build-windows:
+    if: ${{ github.event.inputs.target_os == 'windows' }}
+    runs-on: self-hosted
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🧱 Gradle Build
+        shell: pwsh
+        run: ./gradlew clean build
+
+      - name: 🛠️ Build Docker Image
+        shell: pwsh
+        run: docker build -t stirling-pdf-pr:latest .
+
+      - name: 🧹 Stop old container (Windows)
+        shell: pwsh
+        run: |
+          $exists = docker ps -a --format '{{.Names}}' | Where-Object { $_ -eq 'stirling-pdf-pr' }
+          if ($exists) {
+              docker stop stirling-pdf-pr | Out-Null
+              docker rm stirling-pdf-pr | Out-Null
+          }
+
+      - name: 🚀 Run Container (Windows)
+        shell: pwsh
+        run: |
+          docker run -d `
+            --name stirling-pdf-pr `
+            -p 7777:8080 `
+            -v /stirling/test/data:/usr/share/tessdata:rw `
+            -v /stirling/test/config:/configs:rw `
+            -v /stirling/test/logs:/logs:rw `
+            -e DOCKER_ENABLE_SECURITY=true `
+            -e SECURITY_ENABLELOGIN=true `
+            -e SYSTEM_DEFAULTLOCALE=en-GB `
+            -e UI_APPNAME="Stirling-PDF PR#manual" `
+            -e UI_HOMEDESCRIPTION="Manual Test Deployment for Stirling-PDF" `
+            -e UI_APPNAMENAVBAR="PR#manual" `
+            -e SYSTEM_MAXFILESIZE=100 `
+            -e METRICS_ENABLED=true `
+            -e SYSTEM_GOOGLEVISIBILITY=false `
+            --restart on-failure:5 `
+            stirling-pdf-pr:latest
+
+  build-linux:
+    if: ${{ github.event.inputs.target_os == 'linux' }}
+    runs-on: selfhosted-linux
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🧱 Gradle Build
+        shell: bash
+        run: ./gradlew clean build
+
+      - name: 🛠️ Build Docker Image
+        shell: bash
+        run: docker build -t stirling-pdf-pr:latest .
+
+      - name: 🧹 Stop old container (Linux)
+        shell: bash
+        run: |
+          docker stop stirling-pdf-pr || true
+          docker rm stirling-pdf-pr || true
+
+      - name: 🚀 Run Container (Linux)
+        shell: bash
+        run: |
+          docker run -d \
+            --name stirling-pdf-pr \
+            -p 7777:8080 \
+            -v /stirling/test/data:/usr/share/tessdata:rw \
+            -v /stirling/test/config:/configs:rw \
+            -v /stirling/test/logs:/logs:rw \
+            -e DOCKER_ENABLE_SECURITY=true \
+            -e SECURITY_ENABLELOGIN=true \
+            -e SYSTEM_DEFAULTLOCALE=en-GB \
+            -e UI_APPNAME="Stirling-PDF PR#manual" \
+            -e UI_HOMEDESCRIPTION="Manual Test Deployment for Stirling-PDF" \
+            -e UI_APPNAMENAVBAR="PR#manual" \
+            -e SYSTEM_MAXFILESIZE=100 \
+            -e METRICS_ENABLED=true \
+            -e SYSTEM_GOOGLEVISIBILITY=false \
+            --restart on-failure:5 \
+            stirling-pdf-pr:latest

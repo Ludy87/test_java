@@ -41,7 +41,7 @@ ext {
 }
 
 group = "stirling.software"
-version = "0.39.2"
+version = "0.39.21"
 
 
 java {
