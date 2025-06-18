@@ -54,7 +54,6 @@ labels:
       - 'scripts/ignore_translation.toml'
     title: '^docs:.*'
 
-
   - label: "Docker"
     files:
       - '.github/workflows/build.yml'
@@ -94,3 +93,33 @@ labels:
 
   - label: "Bump"
     title: "^Bump.*"
+
+  - label: "Bug"
+    title: '^bug:.*'
+
+  - label: "Bugfix"
+    title: '^fix:.*'
+
+  - label: "enhancement"
+    title: '^feat:.*'
+
+  - label: "build"
+    title: '^build:.*'
+
+  - label: "chore"
+    title: '^chore:.*'
+
+  - label: "ci"
+    title: '^ci:.*'
+
+  - label: "perf"
+    title: '^perf:.*'
+
+  - label: "refactor"
+    title: '^refactor:.*'
+
+  - label: "revert"
+    title: '^revert:.*'
+
+  - label: "style"
+    title: '^style:.*'
