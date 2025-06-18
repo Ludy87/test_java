@@ -82,10 +82,11 @@ labels:
       - ".pre-commit-config"
       - '.github/workflows\\/pre_commit\\.yml'
       - ".github/workflows/scorecards.yml"
+      - ".github/labeler-config-srvaroa.yml"
 
   - label: "Github"
     files:
       - ".github/.*"
 
   - label: "Bump"
-    title: "^Bump(\\(.*\\))?:.*"
+    title: "^Bump.*"
