@@ -14,6 +14,9 @@ jobs:
       - name: Setup GitHub App Bot
         id: setup-bot
         uses: ./.github/actions/setup-bot
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
 
       - uses: srvaroa/labeler@master
         with:
