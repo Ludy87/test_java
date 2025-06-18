@@ -123,3 +123,6 @@ labels:
 
   - label: "style"
     title: '^style:.*'
+
+  - label: "Documentation"
+    title: '^docs:.*'
