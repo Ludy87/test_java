@@ -85,4 +85,4 @@ labels:
 
   - label: "Github"
     files:
-      - '\\.github/.*'
+      - '.github/.*'
