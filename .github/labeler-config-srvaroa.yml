@@ -82,7 +82,7 @@ labels:
       - ".pre-commit-config"
       - '.github/workflows\\/pre_commit\\.yml'
       - ".github/workflows/scorecards.yml"
-      - ".github/labeler\\-config\\-srvaroa.yml"
+      - ".github/workflows/multiOSReleases.yml"
 
   - label: "Github"
     files:
