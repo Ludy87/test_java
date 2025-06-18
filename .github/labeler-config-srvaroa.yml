@@ -35,6 +35,9 @@ labels:
   - label: "style"
     title: '^style:.*'
 
+  - label: "Documentation"
+    title: '^docs:.*'
+
   - label: "Translation"
     files:
       - 'stirling-pdf/src/main/resources/messages_[a-zA-Z_]{2}_[a-zA-Z_]{2,7}.properties'
