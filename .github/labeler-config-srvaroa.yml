@@ -79,10 +79,13 @@ labels:
       - 'proprietary\\/src\\/test\\/.*'
       - 'stirling-pdf\\/src\\/test\\/.*'
       - 'src\\/testing\\/.*'
-      - '\\.pre-commit-config'
-      - '\\.github\\/workflows\\/pre_commit\\.yml'
-      - '\\.github\\/workflows\\/scorecards\\.yml'
+      - ".pre-commit-config"
+      - '.github/workflows\\/pre_commit\\.yml'
+      - ".github/workflows/scorecards.yml"
 
   - label: "Github"
     files:
-      - '.github/.*'
+      - ".github/.*"
+
+  - label: "Bump"
+    title: "^Bump(\\(.*\\))?:.*"
