@@ -1,5 +1,39 @@
 version: 1
 labels:
+
+  - label: "Bump"
+    title: "^Bump.*"
+
+  - label: "Bug"
+    title: '^bug:.*'
+
+  - label: "Bugfix"
+    title: '^fix:.*'
+
+  - label: "enhancement"
+    title: '^feat:.*'
+
+  - label: "build"
+    title: '^build:.*'
+
+  - label: "chore"
+    title: '^chore:.*'
+
+  - label: "ci"
+    title: '^ci:.*'
+
+  - label: "perf"
+    title: '^perf:.*'
+
+  - label: "refactor"
+    title: '^refactor:.*'
+
+  - label: "revert"
+    title: '^revert:.*'
+
+  - label: "style"
+    title: '^style:.*'
+
   - label: "Translation"
     files:
       - 'stirling-pdf/src/main/resources/messages_[a-zA-Z_]{2}_[a-zA-Z_]{2,7}.properties'
@@ -123,6 +157,3 @@ labels:
 
   - label: "style"
     title: '^style:.*'
-
-  - label: "Documentation"
-    title: '^docs:.*'
