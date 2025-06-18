@@ -54,7 +54,6 @@ labels:
       - 'scripts/ignore_translation.toml'
     title: '^docs:.*'
 
-
   - label: "Docker"
     files:
       - '.github/workflows/build.yml'
