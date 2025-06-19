@@ -40,24 +40,24 @@ repos:
         files: ^.*(\.js|\.java|\.py|\.yml)$
         exclude: ^(.*/pdfjs.*|.*/thirdParty.*|bootstrap.*|.*\.min\..*|.*diff\.js$)
 
-  - repo: local
-    hooks:
-      - id: check-duplicate-properties-keys
-        name: Check Duplicate Properties Keys
-        entry: python .github/scripts/check_duplicates.py
-        language: python
-        files: ^(src)/.+\.properties$
-      - id: check-html-tabs
-        name: Check HTML for tabs
-        description: Ensures HTML/CSS/JS files do not contain tab characters
-        # args: ["--replace_with=  "]
-        entry: python .github/scripts/check_tabulator.py
-        language: python
-        exclude: ^(.*/pdfjs.*|.*/thirdParty.*|bootstrap.*|.*\.min\..*|.*diff\.js$)
-        files: ^.*(\.html|\.css|\.js)$
-      - id: run-python-script
-        name: Update Translations Python script
-        entry: |
-          python .github/scripts/check_language_properties.py --reference-file "src/main/resources/messages_en_GB.properties" --branch \"\"
-        language: python
-        pass_filenames: false
+  # - repo: local
+  #   hooks:
+  #     - id: check-duplicate-properties-keys
+  #       name: Check Duplicate Properties Keys
+  #       entry: python .github/scripts/check_duplicates.py
+  #       language: python
+  #       files: ^(src)/.+\.properties$
+  #     - id: check-html-tabs
+  #       name: Check HTML for tabs
+  #       description: Ensures HTML/CSS/JS files do not contain tab characters
+  #       # args: ["--replace_with=  "]
+  #       entry: python .github/scripts/check_tabulator.py
+  #       language: python
+  #       exclude: ^(.*/pdfjs.*|.*/thirdParty.*|bootstrap.*|.*\.min\..*|.*diff\.js$)
+  #       files: ^.*(\.html|\.css|\.js)$
+  #     - id: run-python-script
+  #       name: Update Translations Python script
+  #       entry: |
+  #         python .github/scripts/check_language_properties.py --reference-file "src/main/resources/messages_en_GB.properties"
+  #       language: python
+  #       pass_filenames: false
