@@ -79,7 +79,7 @@ labels:
       - 'src/main/resources/banner.txt'
       - 'scripts/png_to_webp.py'
       - 'split_photos.py'
-      - 'src/main/resources/application.properties'
+      - 'application.properties'
 
   - label: "Security"
     files:
