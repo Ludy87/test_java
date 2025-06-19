@@ -38,6 +38,9 @@ labels:
   - label: "Documentation"
     title: '^docs:.*'
 
+  - label: 'API'
+    title: '.*openapi.*'
+
   - label: "Translation"
     files:
       - 'stirling-pdf/src/main/resources/messages_[a-zA-Z_]{2}_[a-zA-Z_]{2,7}.properties'
@@ -48,6 +51,7 @@ labels:
   - label: "Front End"
     files:
       - 'stirling-pdf/src/main/resources/templates/**/*'
+      - 'src/main/resources/templates/.*'
       - 'stirling-pdf/src/main/resources/static/**/*'
       - 'stirling-pdf/src/main/java/stirling/software/SPDF/controller/web/**/*'
       - 'stirling-pdf/src/main/java/stirling/software/SPDF/UI/**/*'
