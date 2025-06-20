@@ -23,6 +23,7 @@ plugins {
     id "com.github.jk1.dependency-license-report" version "2.9"
     //id "nebula.lint" version "19.0.3"
     id("org.panteleyev.jpackageplugin") version "1.6.1"
+    id "com.github.ben-manes.versions" version "0.51.0"
 }
 apply plugin: "io.swagger.swaggerhub.v2"
 
@@ -279,7 +280,7 @@ spotless {
     java {
         target project.fileTree('src/main/java')
 
-        googleJavaFormat("1.25.2").aosp().reorderImports(false)
+        googleJavaFormat("1.27.0").aosp().reorderImports(false)
 
         importOrder("java", "javax", "org", "com", "net", "io")
         toggleOffOn()
