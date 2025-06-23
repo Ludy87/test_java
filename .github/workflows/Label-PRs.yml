@@ -1,0 +1,27 @@
+name: Label PRs
+
+on:
+  - pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout your code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup GitHub App Bot
+        id: setup-bot
+        uses: ./.github/actions/setup-bot
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
+      - uses: srvaroa/labeler@e7bef2249506ba9cbbd3ca5cee256abd9f930b04 # master
+        with:
+          config_path: .github/labeler-config-srvaroa.yml
+          use_local_config: false
+          fail_on_error: true
+        env:
+          GITHUB_TOKEN: "${{ steps.setup-bot.outputs.token }}"

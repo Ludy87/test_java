@@ -27,6 +27,7 @@ clientWebUI/
 !testing/cucumber/exampleFiles/
 !testing/cucumber/exampleFiles/example_html.zip
 exampleYmlFiles/stirling/
+!swaggerhub-V2-2*.jar
 
 # Gradle
 .gradle
@@ -189,3 +190,4 @@ id_ed25519.pub
 
 **/jcef-bundle/
 gradle/verification-keyring.gpg
+SwaggerDoc.json
