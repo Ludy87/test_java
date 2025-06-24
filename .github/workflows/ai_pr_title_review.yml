@@ -71,6 +71,17 @@ jobs:
           echo "diff<<EOF" >> $GITHUB_OUTPUT
           cat pr.diff >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+        failure: continue
+
+      - name: Check if PR diff is empty
+        if: steps.actor.outputs.is_repo_dev == 'true'
+        run: |
+          if [ ! -s pr.diff ]; then
+            echo "PR diff is empty. Skipping AI title review." >&2
+            echo "is_repo_dev=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "is_repo_dev=true" >> $GITHUB_OUTPUT
 
       - name: Check and sanitize PR title
         if: steps.actor.outputs.is_repo_dev == 'true'
