@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       target_os:
-        description: 'Target runner OS'
+        description: "Target runner OS"
         required: true
-        default: 'windows'
+        default: "windows"
         type: choice
         options:
           - windows
@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: 🧱 Gradle Build
         shell: pwsh
@@ -65,7 +65,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: 🧱 Gradle Build
         shell: bash

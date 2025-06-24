@@ -1,11 +1,11 @@
 name: AI - PR Title Review
 
 on:
-  pull_request:
-    types: [opened, synchronize, edited]
+  pull_request_target:
+    types: [opened, edited]
     branches: [main]
 
-permissions:  # added using https://github.com/step-security/secure-repo
+permissions:  # required for secure-repo hardening
   contents: read
 
 jobs:
@@ -26,16 +26,15 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
-          filter: blob:none
 
       - name: Configure Git to suppress detached HEAD warning
-        run: |
-          git config --global advice.detachedHead false
+        run: git config --global advice.detachedHead false
 
       - name: Setup GitHub App Bot
         if: github.actor != 'dependabot[bot]'
         id: setup-bot
         uses: ./.github/actions/setup-bot
+        continue-on-error: true
         with:
           # app-id: ${{ secrets.GH_APP_ID }}
           app-id: ${{ vars.GH_APP_ID }}
@@ -53,9 +52,9 @@ jobs:
             echo "Error: .github/config/repo_devs.json not found" >&2
             exit 1
           fi
-          # Validiere JSON-Format und extrahiere repo_devs
+          # Validate JSON and extract repo_devs
           REPO_DEVS=$(jq -r '.repo_devs[]' .github/config/repo_devs.json 2>/dev/null || { echo "Error: Invalid JSON in repo_devs.json" >&2; exit 1; })
-          # Konvertiere Entwicklerliste in ein Bash-Array
+          # Convert developer list into Bash array
           mapfile -t DEVS_ARRAY <<< "$REPO_DEVS"
           if [[ " ${DEVS_ARRAY[*]} " == *" ${{ github.actor }} "* ]]; then
             echo "is_repo_dev=true" >> $GITHUB_OUTPUT
@@ -68,9 +67,7 @@ jobs:
         id: get_diff
         run: |
           git fetch origin ${{ github.base_ref }}
-          git diff origin/${{ github.base_ref }}...HEAD > pr.diff
-          # Begrenze Diff auf 10000 Zeichen und bereinige Sonderzeichen
-          # DIFF=$(cat pr.diff | head -c 10000 | tr -d '\r\n' | sed 's/[^[:print:]]//g')
+          git diff origin/${{ github.base_ref }}...HEAD | head -n 10000 | grep -vP '[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x{202E}\x{200B}]' > pr.diff
           echo "diff<<EOF" >> $GITHUB_OUTPUT
           cat pr.diff >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -78,9 +75,11 @@ jobs:
       - name: Check and sanitize PR title
         if: steps.actor.outputs.is_repo_dev == 'true'
         id: sanitize_pr_title
+        env:
+          PR_TITLE_RAW: ${{ github.event.pull_request.title }}
         run: |
-          # Bereinige PR-Titel: max 72 Zeichen, nur druckbare Zeichen
-          PR_TITLE=$(echo "${{ github.event.pull_request.title }}" | tr -d '\n\r' | head -c 72 | sed 's/[^[:print:]]//g')
+          # Sanitize PR title: max 72 characters, only printable characters
+          PR_TITLE=$(echo "$PR_TITLE_RAW" | tr -d '\n\r' | head -c 72 | sed 's/[^[:print:]]//g')
           if [[ ${#PR_TITLE} -lt 5 ]]; then
             echo "PR title is too short. Must be at least 5 characters." >&2
           fi
@@ -101,8 +100,6 @@ jobs:
               "pr_title": "${{ steps.sanitize_pr_title.outputs.pr_title }}"
             }
 
-            Evaluate the current PR title and suggest an improved version.
-
             Respond ONLY with valid JSON in the format:
             {
               "improved_rating": <0-10>,
@@ -117,24 +114,22 @@ jobs:
           ${{ steps.ai-title-analysis.outputs.response }}
           EOF
 
-          # Validiere JSON-Ausgabe
-          VALID_JSON=$(
+          # Validate JSON structure
           jq -e '
             (keys | sort) == ["improved_ai_title_rating", "improved_rating", "improved_title"] and
             (.improved_rating | type == "number" and . >= 0 and . <= 10) and
             (.improved_ai_title_rating | type == "number" and . >= 0 and . <= 10) and
             (.improved_title | type == "string")
           ' ai_response.json
-          )
-          if [ -z "$VALID_JSON" ]; then
+          if [ $? -ne 0 ]; then
             echo "Invalid AI response format" >&2
             cat ai_response.json >&2
             exit 1
           fi
-          # Parse JSON-Felder
+          # Parse JSON fields
           IMPROVED_RATING=$(jq -r '.improved_rating' ai_response.json)
           IMPROVED_TITLE=$(jq -r '.improved_title' ai_response.json)
-          # Begrenze Kommentar auf 1000 Zeichen
+          # Limit comment length to 1000 characters
           COMMENT=$(cat <<EOF
           ## 🤖 AI PR Title Suggestion
 
@@ -151,13 +146,21 @@ jobs:
           EOF
           )
           echo "$COMMENT" > /tmp/ai-title-comment.md
-          # Logging für Debugging
-          echo "Input PR Title: ${{ steps.sanitize_pr_title.outputs.pr_title }}" >> $GITHUB_STEP_SUMMARY
-          echo "AI Response: $(cat ai_response.json)" >> $GITHUB_STEP_SUMMARY
+          # Log input and output to the GitHub Step Summary
+          echo "### 🤖 AI PR Title Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "### Input PR Title" >> $GITHUB_STEP_SUMMARY
+          echo '```bash' >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.sanitize_pr_title.outputs.pr_title }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '### AI Response (raw JSON)' >> $GITHUB_STEP_SUMMARY
+          echo '```json' >> $GITHUB_STEP_SUMMARY
+          cat ai_response.json >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Post comment on PR if needed
         if: steps.actor.outputs.is_repo_dev == 'true'
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        continue-on-error: true
         with:
           github-token: ${{ steps.setup-bot.outputs.token }}
           script: |
