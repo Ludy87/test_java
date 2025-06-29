@@ -104,29 +104,29 @@ jobs:
         id: cleanup
         run: |
           echo "Checking if cleanup is needed for PR #${{ github.event.pull_request.number }}..."
-          # ssh -i ../private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -T ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'ENDSSH'
-          #   if [ -d "/stirling/PR-${{ github.event.pull_request.number }}" ]; then
-          #     echo "Found PR directory, proceeding with cleanup..."
+          ssh -i ../private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -T ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'ENDSSH'
+            if [ -d "/stirling/PR-${{ github.event.pull_request.number }}" ]; then
+              echo "Found PR directory, proceeding with cleanup..."
 
-          #     # Stop and remove containers
-          #     cd /stirling/PR-${{ github.event.pull_request.number }}
-          #     docker-compose down || true
+              # Stop and remove containers
+              cd /stirling/PR-${{ github.event.pull_request.number }}
+              docker-compose down || true
 
-          #     # Go back to root before removal
-          #     cd /
+              # Go back to root before removal
+              cd /
 
-          #     # Remove PR-specific directories
-          #     rm -rf /stirling/PR-${{ github.event.pull_request.number }}
+              # Remove PR-specific directories
+              rm -rf /stirling/PR-${{ github.event.pull_request.number }}
 
-          #     # Remove the Docker image
-          #     docker rmi --no-prune ${{ secrets.DOCKER_HUB_USERNAME }}/test:pr-${{ github.event.pull_request.number }} || true
+              # Remove the Docker image
+              docker rmi --no-prune ${{ secrets.DOCKER_HUB_USERNAME }}/test:pr-${{ github.event.pull_request.number }} || true
 
-          #     echo "PERFORMED_CLEANUP"
-          #   else
-          #     echo "PR directory not found, nothing to clean up"
-          #     echo "NO_CLEANUP_NEEDED"
-          #   fi
-          # ENDSSH
+              echo "PERFORMED_CLEANUP"
+            else
+              echo "PR directory not found, nothing to clean up"
+              echo "NO_CLEANUP_NEEDED"
+            fi
+          ENDSSH
 
       - name: Cleanup temporary files
         if: always()
