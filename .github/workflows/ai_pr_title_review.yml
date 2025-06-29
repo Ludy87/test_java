@@ -25,6 +25,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Configure Git to suppress detached HEAD warning
         run: git config --global advice.detachedHead false
@@ -66,9 +67,14 @@ jobs:
         if: steps.actor.outputs.is_repo_dev == 'true'
         id: get_diff
         run: |
-          git fetch origin ${{ github.base_ref }}
-          git diff origin/${{ github.base_ref }}...HEAD | head -n 10000 | grep -vP '[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x{202E}\x{200B}]' > pr.diff
+          echo "Base ref: ${{ github.base_ref }}"
+          echo "Head SHA: ${{ github.event.pull_request.head.sha }}"
+          git fetch origin ${{ github.base_ref }} || { echo "Fehler beim Abrufen von origin/${{ github.base_ref }}"; exit 1; }
+          git diff origin/${{ github.base_ref }}...${{ github.event.pull_request.head.sha }} > raw_diff.txt || { echo "Fehler bei git diff"; exit 1; }
+          head -n 10000 raw_diff.txt > trimmed_diff.txt || { echo "Fehler bei head"; exit 1; }
+          grep -vP '[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\x{202E}\x{200B}]' trimmed_diff.txt > pr.diff || { echo "Fehler bei grep"; exit 1; }
           wc -l pr.diff
+          cat pr.diff >> $GITHUB_STEP_SUMMARY
         continue-on-error: true
 
       - name: Check if PR diff is empty
