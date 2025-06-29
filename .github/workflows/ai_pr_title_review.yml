@@ -1,7 +1,7 @@
 name: AI - PR Title Review
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, edited]
 
 permissions:  # required for secure-repo hardening
@@ -36,7 +36,7 @@ jobs:
         continue-on-error: true
         with:
           # app-id: ${{ secrets.GH_APP_ID }}
-          # app-id: ${{ vars.GH_APP_ID }}
+          app-id: ${{ vars.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
 
       - name: Check if actor is repo developer
@@ -75,7 +75,6 @@ jobs:
         if: steps.actor.outputs.is_repo_dev == 'true'
         id: check_diff
         run: |
-          cat pr.diff >> $GITHUB_STEP_SUMMARY
           if [ ! -s pr.diff ]; then
             echo "PR diff is empty. Skipping AI title review." >&2
             echo "is_empty=false" >> $GITHUB_OUTPUT
