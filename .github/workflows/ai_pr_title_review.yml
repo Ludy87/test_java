@@ -75,6 +75,7 @@ jobs:
         if: steps.actor.outputs.is_repo_dev == 'true'
         id: check_diff
         run: |
+          cat pr.diff >> $GITHUB_STEP_SUMMARY
           if [ ! -s pr.diff ]; then
             echo "PR diff is empty. Skipping AI title review." >&2
             echo "is_empty=false" >> $GITHUB_OUTPUT
