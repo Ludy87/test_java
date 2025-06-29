@@ -13,11 +13,11 @@ env:
 
 jobs:
   cleanup:
+    if: github.event.action == 'closed' && github.event.pull_request.closed == true
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
       issues: write
-    if: github.event.action == 'closed'
 
     steps:
       - name: Harden Runner
