@@ -24,6 +24,7 @@ jobs:
         github.event.comment.user.login == 'frooodle' ||
         github.event.comment.user.login == 'sf298' ||
         github.event.comment.user.login == 'Ludy87' ||
+        github.event.comment.user.login == 'Ludy1987' ||
         github.event.comment.user.login == 'LaserKaspar' ||
         github.event.comment.user.login == 'sbplat' ||
         github.event.comment.user.login == 'reecebrowne' ||
@@ -147,7 +148,6 @@ jobs:
     needs: check-comment
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       issues: write
       pull-requests: write
 
