@@ -3,40 +3,40 @@ version: 1
 labels:
 
   - label: "Bump"
-    title: "^Bump.*"
+    title: '^Bump(\([^)]*\))?:|^Bump:.*'
 
   - label: "Bug"
-    title: '^bug:.*'
+    title: '^bug(\([^)]*\))?:|^bug:.*'
 
   - label: "Bugfix"
-    title: '^fix:.*'
+    title: '^fix(\([^)]*\))?:|^fix:.*'
 
   - label: "enhancement"
-    title: '^feat:.*'
+    title: '^feature(\([^)]*\))?:|^feature:.*'
 
   - label: "build"
-    title: '^build:.*'
+    title: '^build(\([^)]*\))?:|^build:.*'
 
   - label: "chore"
-    title: '^chore(\([^)]*\))?:|^chore:'
+    title: '^chore(\([^)]*\))?:|^chore:.*'
 
   - label: "ci"
-    title: '^ci:.*'
+    title: '^ci(\([^)]*\))?:|^ci:.*'
 
   - label: "perf"
-    title: '^perf:.*'
+    title: '^perf(\([^)]*\))?:|^perf:.*'
 
   - label: "refactor"
-    title: '^refactor:.*'
+    title: '^refactor(\([^)]*\))?:|^refactor:.*'
 
   - label: "revert"
-    title: '^revert:.*'
+    title: '^revert(\([^)]*\))?:|^revert:.*'
 
   - label: "style"
-    title: '^style:.*'
+    title: '^style(\([^)]*\))?:|^style:.*'
 
   - label: "Documentation"
-    title: '^docs:.*'
+    title: '^docs(\([^)]*\))?:|^docs:.*'
 
   - label: 'API'
     title: '.*openapi.*'
