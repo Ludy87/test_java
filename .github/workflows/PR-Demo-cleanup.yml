@@ -39,6 +39,7 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
 
       - name: Remove 'pr-deployed' label if present
+        id: remove-label-comment
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           github-token: ${{ steps.setup-bot.outputs.token }}
@@ -67,7 +68,6 @@ jobs:
             } else {
               console.log("Label 'pr-deployed' not found. Nothing to do.");
             }
-            core.setOutput('present', hasLabel);
 
             // Find existing comment
             const comments = await github.rest.issues.listComments({
@@ -91,16 +91,17 @@ jobs:
             } else {
               console.log("No matching deployment comment found.");
             }
+            core.setOutput('present', hasLabel || deploymentComment ? 'true' : 'false');
 
       - name: Set up SSH
-        if: steps.remove-label.outputs.present == 'true'
+        if: steps.remove-label-comment.outputs.present == 'true'
         run: |
           mkdir -p ~/.ssh/
           echo "${{ secrets.VPS_SSH_KEY }}" > ../private.key
           sudo chmod 600 ../private.key
 
       - name: Cleanup PR deployment
-        if: steps.remove-label.outputs.present == 'true'
+        if: steps.remove-label-comment.outputs.present == 'true'
         id: cleanup
         run: |
           echo "Checking if cleanup is needed for PR #${{ github.event.pull_request.number }}..."
