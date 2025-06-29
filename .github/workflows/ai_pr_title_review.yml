@@ -1,10 +1,9 @@
 name: AI - PR Title Review
 
 on:
-  pull_request_target:
-    types: [opened, edited]
   pull_request:
     types: [opened, edited]
+    branches: [main]
 
 permissions:  # required for secure-repo hardening
   contents: read
@@ -102,8 +101,7 @@ jobs:
         id: ai-title-analysis
         uses: actions/ai-inference@d645f067d89ee1d5d736a5990e327e504d1c5a4a # v1.1.0
         with:
-          token: ${{ steps.setup-bot.outputs.token }}
-          model: xai/grok-3-mini
+          model: openai/gpt-4.1
           system-prompt-file: ".github/config/system-prompt.txt"
           prompt: |
             Based on the following input data:
