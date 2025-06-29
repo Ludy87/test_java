@@ -4,6 +4,7 @@ inputs:
   app-id:
     description: 'GitHub App ID'
     required: True
+    default: 1114328 # Example ID, replace with your actual GitHub App ID
   private-key:
     description: 'GitHub App Private Key'
     required: True
