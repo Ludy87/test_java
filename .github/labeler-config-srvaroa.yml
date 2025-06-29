@@ -3,7 +3,7 @@ version: 1
 labels:
 
   - label: "Bump"
-    title: '^Bump(\([^)]*\))?:|^Bump:.*''
+    title: '^Bump(\([^)]*\))?:|^Bump:.*'
 
   - label: "Bug"
     title: '^bug(\([^)]*\))?:|^bug:.*'
