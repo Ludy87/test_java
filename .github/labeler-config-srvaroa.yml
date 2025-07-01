@@ -23,6 +23,9 @@ labels:
   - label: "ci"
     title: '^ci(\([^)]*\))?:|^ci:.*'
 
+  - label: "ci"
+    title: '^.*(ci):.*'
+
   - label: "perf"
     title: '^perf(\([^)]*\))?:|^perf:.*'
 
