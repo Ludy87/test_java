@@ -3,40 +3,49 @@ version: 1
 labels:
 
   - label: "Bump"
-    title: "^Bump.*"
+    title: '^Bump(\([^)]*\))?:|^Bump:.*'
 
   - label: "Bug"
-    title: '^bug:.*'
+    title: '^bug(\([^)]*\))?:|^bug:.*'
 
   - label: "Bugfix"
-    title: '^fix:.*'
+    title: '^fix(\([^)]*\))?:|^fix:.*'
+
+  - label: "Bugfix"
+    title: '^bugfix(\([^)]*\))?:|^bugfix:.*'
 
   - label: "enhancement"
-    title: '^feat:.*'
+    title: '^feature(\([^)]*\))?:|^feature:.*'
 
   - label: "build"
-    title: '^build:.*'
+    title: '^build(\([^)]*\))?:|^build:.*'
+
+  - label: "build"
+    title: '^.*\(build\):.*'
 
   - label: "chore"
-    title: '^chore:.*'
+    title: '^chore(\([^)]*\))?:|^chore:.*'
 
   - label: "ci"
-    title: '^ci:.*'
+    title: '^ci(\([^)]*\))?:|^ci:.*'
+
+  - label: "ci"
+    title: '^.*\(ci\):.*'
 
   - label: "perf"
-    title: '^perf:.*'
+    title: '^perf(\([^)]*\))?:|^perf:.*'
 
   - label: "refactor"
-    title: '^refactor:.*'
+    title: '^refactor(\([^)]*\))?:|^refactor:.*'
 
   - label: "revert"
-    title: '^revert:.*'
+    title: '^revert(\([^)]*\))?:|^revert:.*'
 
   - label: "style"
-    title: '^style:.*'
+    title: '^style(\([^)]*\))?:|^style:.*'
 
   - label: "Documentation"
-    title: '^docs:.*'
+    title: '^docs(\([^)]*\))?:|^docs:.*'
 
   - label: 'API'
     title: '.*openapi.*'
@@ -107,7 +116,6 @@ labels:
       - '.*.md'
       - 'scripts/counter_translation.py'
       - 'scripts/ignore_translation.toml'
-    title: '^docs:.*'
 
   - label: "Docker"
     files:
