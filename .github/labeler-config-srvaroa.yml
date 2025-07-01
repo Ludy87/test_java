@@ -39,7 +39,7 @@ labels:
     title: '^docs(\([^)]*\))?:|^docs:.*'
 
   - label: "ci"
-    title: '^.*(ci):.*'
+    title: '.*(ci):.*'
 
   - label: 'API'
     title: '.*openapi.*'
