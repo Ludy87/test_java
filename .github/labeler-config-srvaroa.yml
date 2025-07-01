@@ -11,11 +11,17 @@ labels:
   - label: "Bugfix"
     title: '^fix(\([^)]*\))?:|^fix:.*'
 
+  - label: "Bugfix"
+    title: '^bugfix(\([^)]*\))?:|^bugfix:.*'
+
   - label: "enhancement"
     title: '^feature(\([^)]*\))?:|^feature:.*'
 
   - label: "build"
     title: '^build(\([^)]*\))?:|^build:.*'
+
+  - label: "build"
+    title: '^.*\(build\):.*'
 
   - label: "chore"
     title: '^chore(\([^)]*\))?:|^chore:.*'
