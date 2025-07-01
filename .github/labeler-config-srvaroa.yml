@@ -23,9 +23,6 @@ labels:
   - label: "ci"
     title: '^ci(\([^)]*\))?:|^ci:.*'
 
-  - label: "ci"
-    title: '^.*(ci):.*'
-
   - label: "perf"
     title: '^perf(\([^)]*\))?:|^perf:.*'
 
@@ -40,6 +37,9 @@ labels:
 
   - label: "Documentation"
     title: '^docs(\([^)]*\))?:|^docs:.*'
+
+  - label: "ci"
+    title: '^.*(ci):.*'
 
   - label: 'API'
     title: '.*openapi.*'
