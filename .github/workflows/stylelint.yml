@@ -91,7 +91,7 @@ jobs:
 
       - name: Commit fixed files
         run: |
-          git add .
+          git add src/main/**/*.css
           git diff --quiet || git commit -m "chore: Apply stylelint auto-fixes"
 
       - name: Open Pull Request for fixes
