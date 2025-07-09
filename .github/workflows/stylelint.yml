@@ -1,0 +1,131 @@
+name: "Stylelint Check & Auto-Fix"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # 1. Lint-Check (JSON-Ausgabe)
+  lint:
+    name: Lint CSS (check)
+    runs-on: ubuntu-latest
+    outputs:
+      lint_errors: ${{ steps.report.outputs.errors }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "23"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Stylelint and collect errors
+        id: report
+        run: |
+          # JSON-Report erzeugen, aber Workflow nicht abbrechen lassen
+          npx stylelint \
+            "stirling-pdf/src/main/**/*.css" \
+            "proprietary/src/main/resources/static/css/*.css" \
+            --formatter json > stylelint-report.json || true
+
+          # Nur echte Errors extrahieren
+          ERRORS=$(jq -c '[.[] | {file: .source, errors: [.warnings[] | select(.severity=="error") | {line, column, text}]}]' stylelint-report.json)
+          # Auf 63 000 Zeichen kürzen (GitHub-Kommentar-Limit berücksichtigen)
+          TRUNC=$(echo "$ERRORS" | head -c 63000)
+          echo "::set-output name=errors::$TRUNC"
+
+  # 2. Auto-Fix & PR
+  autofix:
+    permissions:
+      contents: write # for peter-evans/create-pull-request to create branch
+      pull-requests: write # for peter-evans/create-pull-request to create a PR
+    name: Auto-Fix CSS & Pull Request
+    needs: lint
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository (full history)
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Stylelint Auto-Fix
+        run: npm run lint:css
+
+      - name: Commit fixed files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --quiet || git commit -m "chore: Apply stylelint auto-fixes"
+
+      - name: Open Pull Request for fixes
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
+        with:
+          branch: stylelint-auto-fix
+          title: "stylelint: Auto-Fix CSS"
+          body: |
+            Dieser PR führt Stylelint Auto-Fix durch und richtet deine CSS:
+            - Einrückungen gemäß `.stylelintrc.json`
+            - Legacy-Farbnotation mit Kommas
+            - Multiline-Comma-Regeln für Funktionen und Value-Lists
+          labels: automated, stylelint
+
+  # 3. Report unfixable errors as PR-Kommentar
+  report:
+    name: Comment Unfixable Errors
+    needs: lint
+    if: ${{ needs.lint.outputs.lint_errors != '[]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+
+      - name: Post Stylelint errors as comment
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const errors = process.env.LINT_ERRORS;
+            const body = `
+            **Stylelint hat nicht automatisch behebbare Fehler gefunden:**
+            ```json
+            ${errors}
+            ```
+            `;
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });
+        env:
+          LINT_ERRORS: ${{ needs.lint.outputs.lint_errors }}
