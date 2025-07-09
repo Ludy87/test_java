@@ -98,6 +98,9 @@ jobs:
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           token: ${{ steps.setup-bot.outputs.token }}
+          committer: ${{ steps.setup-bot.outputs.committer }}
+          author: ${{ steps.setup-bot.outputs.committer }}
+          signoff: true
           branch: stylelint-auto-fix
           title: "stylelint: Auto-Fix CSS"
           body: |
@@ -106,6 +109,11 @@ jobs:
             - Legacy-Farbnotation mit Kommas
             - Multiline-Comma-Regeln für Funktionen und Value-Lists
           labels: automated, stylelint
+          draft: false
+          delete-branch: true
+          sign-commits: true
+          add-paths: |
+            src/main/**/*.css
 
   # 3. Report unfixable errors as PR-Kommentar
   report:
