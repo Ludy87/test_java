@@ -111,7 +111,7 @@ jobs:
   report:
     name: Comment Unfixable Errors
     needs: lint
-    if: ${{ needs.lint.outputs.lint_errors != '[]' }}
+    if: ${{ github.event_name == 'pull_request' && needs.lint.outputs.lint_errors != '[]' }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -137,8 +137,9 @@ jobs:
         with:
           github-token: ${{ steps.setup-bot.outputs.token }}
           script: |
-            const errors = process.env.LINT_ERRORS;
+            const errors = process.env.LINT_ERRORS || '';
+            const prNumber = context.payload.pull_request.number;
             const body = "**Stylelint hat nicht automatisch behebbare Fehler gefunden:**\n```json\n" + errors + "\n```";
-            await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body });
+            await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: prNumber, body });
         env:
           LINT_ERRORS: ${{ needs.lint.outputs.lint_errors }}
