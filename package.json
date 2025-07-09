@@ -2,7 +2,7 @@
   "name": "stirling-pdf",
   "version": "1.0.0",
   "scripts": {
-    "lint:css": "stylelint \"stirling-pdf/src/main/**/*.css\" \"proprietary/src/main/resources/static/css/*.css\" --fix"
+    "lint:css": "stylelint \"src/main/**/*.css\" --fix"
   },
   "devDependencies": {
     "@stylistic/stylelint-plugin": "^3.1.3",
