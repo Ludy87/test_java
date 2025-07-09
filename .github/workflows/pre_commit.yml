@@ -43,6 +43,8 @@ jobs:
 
       - run: pre-commit run run-python-script --all-files -c .pre-commit-config.yaml
         continue-on-error: true
+      - run: pre-commit run stylelint --all-files -c .pre-commit-config.yaml
+        continue-on-error: true
 
       - name: git add
         run: |
