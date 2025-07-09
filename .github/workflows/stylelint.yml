@@ -37,7 +37,7 @@ jobs:
         run: |
           # JSON-Report erzeugen, aber Workflow nicht abbrechen lassen
           npx stylelint \
-            "stirling-pdf/src/main/**/*.css" \
+            "src/main/**/*.css" \
             "proprietary/src/main/resources/static/css/*.css" \
             --formatter json > stylelint-report.json || true
 
@@ -45,7 +45,7 @@ jobs:
           ERRORS=$(jq -c '[.[] | {file: .source, errors: [.warnings[] | select(.severity=="error") | {line, column, text}]}]' stylelint-report.json)
           # Auf 63 000 Zeichen kürzen (GitHub-Kommentar-Limit berücksichtigen)
           TRUNC=$(echo "$ERRORS" | head -c 63000)
-          echo "::set-output name=errors::$TRUNC"
+          echo "errors=$TRUNC" >> $GITHUB_OUTPUT
 
   # 2. Auto-Fix & PR
   autofix:
