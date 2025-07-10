@@ -20,6 +20,23 @@ import os
 import argparse
 import re
 
+from pathlib import Path
+
+
+def find_project_root(
+    start: Path = None,
+    markers: tuple = (".git", ".vscode", "docs", "README.md", "build.gradle"),
+) -> Path:
+    """
+    Geht die Eltern-Verzeichnisse von `start` hoch (default: __file__),
+    bis eins der marker files gefunden wird – und liefert dieses Verzeichnis.
+    """
+    start = start or Path(__file__).resolve()
+    for path in (start, *start.parents):
+        if any((path / m).exists() for m in markers):
+            return path
+    raise RuntimeError(f"Kein Projekt-Root gefunden (Markers: {markers})")
+
 
 def find_duplicate_keys(file_path):
     """
@@ -196,7 +213,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
 
     if len(file_list) == 1:
         file_arr = file_list[0].split()
-    base_dir = os.path.abspath(os.path.join(os.getcwd(), "src", "main", "resources"))
+    base_dir = os.path.abspath(os.path.join(find_project_root(), "src", "main", "resources"))
 
     for file_path in file_arr:
         absolute_path = os.path.abspath(file_path)
@@ -218,7 +235,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
                     os.path.join("", "src", "main", "resources", "messages_")
                 )
                 and not file_path.startswith(
-                    os.path.join(os.getcwd(), "src", "main", "resources", "messages_")
+                    os.path.join(find_project_root(), "src", "main", "resources", "messages_")
                 )
             )
             or not file_path.endswith(".properties")
@@ -374,7 +391,7 @@ if __name__ == "__main__":
         else:
             file_list = glob.glob(
                 os.path.join(
-                    os.getcwd(), "src", "main", "resources", "messages_*.properties"
+                    find_project_root(), "src", "main", "resources", "messages_*.properties"
                 )
             )
         update_missing_keys(args.reference_file, file_list)
