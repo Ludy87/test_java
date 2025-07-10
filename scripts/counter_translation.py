@@ -16,25 +16,8 @@ import glob
 import os
 import re
 
-from pathlib import Path
-
 import tomlkit
 import tomlkit.toml_file
-
-
-def find_project_root(
-    start: Path = None,
-    markers: tuple = (".git", ".vscode", "docs", "README.md", "build.gradle"),
-) -> Path:
-    """
-    Geht die Eltern-Verzeichnisse von `start` hoch (default: __file__),
-    bis eins der marker files gefunden wird – und liefert dieses Verzeichnis.
-    """
-    start = start or Path(__file__).resolve()
-    for path in (start, *start.parents):
-        if any((path / m).exists() for m in markers):
-            return path
-    raise RuntimeError(f"Kein Projekt-Root gefunden (Markers: {markers})")
 
 
 def convert_to_multiline(data: tomlkit.TOMLDocument) -> tomlkit.TOMLDocument:
@@ -96,9 +79,7 @@ def write_readme(progress_list: list[tuple[str, int]]) -> None:
         file.writelines(content)
 
 
-def compare_files(
-    default_file_path, file_paths, ignore_translation_file
-) -> list[tuple[str, int]]:
+def compare_files(default_file_path, file_paths, ignore_translation_file) -> list[tuple[str, int]]:
     """Compares the default properties file with other
     properties files in the directory.
 
@@ -111,9 +92,7 @@ def compare_files(
         language and progress percentage.
     """  # noqa: D205
     num_lines = sum(
-        1
-        for line in open(default_file_path, encoding="utf-8")
-        if line.strip() and not line.strip().startswith("#")
+        1 for line in open(default_file_path, encoding="utf-8") if line.strip() and not line.strip().startswith("#")
     )
 
     result_list = []
@@ -124,11 +103,7 @@ def compare_files(
         sort_ignore_translation = tomlkit.parse(f.read())
 
     for file_path in file_paths:
-        language = (
-            os.path.basename(file_path)
-            .split("messages_", 1)[1]
-            .split(".properties", 1)[0]
-        )
+        language = os.path.basename(file_path).split("messages_", 1)[1].split(".properties", 1)[0]
 
         fails = 0
         if "en_GB" in language or "en_US" in language:
@@ -139,13 +114,8 @@ def compare_files(
         if language not in sort_ignore_translation:
             sort_ignore_translation[language] = tomlkit.table()
 
-        if (
-            "ignore" not in sort_ignore_translation[language]
-            or len(sort_ignore_translation[language].get("ignore", [])) < 1
-        ):
-            sort_ignore_translation[language]["ignore"] = tomlkit.array(
-                ["language.direction"]
-            )
+        if "ignore" not in sort_ignore_translation[language] or len(sort_ignore_translation[language].get("ignore", [])) < 1:
+            sort_ignore_translation[language]["ignore"] = tomlkit.array(["language.direction"])
 
         # if "missing" not in sort_ignore_translation[language]:
         #     sort_ignore_translation[language]["missing"] = tomlkit.array()
@@ -163,9 +133,7 @@ def compare_files(
                 except StopIteration:
                     fails = num_lines
 
-            for line_num, (line_default, line_file) in enumerate(
-                zip(default_file, file), start=6
-            ):
+            for line_num, (line_default, line_file) in enumerate(zip(default_file, file), start=6):
                 try:
                     # Ignoring empty lines and lines start with #
                     if line_default.strip() == "" or line_default.startswith("#"):
@@ -174,12 +142,9 @@ def compare_files(
                     file_key, file_value = line_file.split("=", 1)
                     if (
                         default_value.strip() == file_value.strip()
-                        and default_key.strip()
-                        not in sort_ignore_translation[language]["ignore"]
+                        and default_key.strip() not in sort_ignore_translation[language]["ignore"]
                     ):
-                        print(
-                            f"{language}: Line {line_num} is missing the translation."
-                        )
+                        print(f"{language}: Line {line_num} is missing the translation.")
                         # if default_key.strip() not in sort_ignore_translation[language]["missing"]:
                         #     missing_array = tomlkit.array()
                         #     missing_array.append(default_key.strip())
@@ -192,13 +157,8 @@ def compare_files(
                     if default_value.strip() != file_value.strip():
                         # if default_key.strip() in sort_ignore_translation[language]["missing"]:
                         #     sort_ignore_translation[language]["missing"].remove(default_key.strip())
-                        if (
-                            default_key.strip()
-                            in sort_ignore_translation[language]["ignore"]
-                        ):
-                            sort_ignore_translation[language]["ignore"].remove(
-                                default_key.strip()
-                            )
+                        if default_key.strip() in sort_ignore_translation[language]["ignore"]:
+                            sort_ignore_translation[language]["ignore"].remove(default_key.strip())
                 except ValueError:
                     print(f"{line_default}|{line_file}")
                     exit(1)
@@ -223,15 +183,11 @@ def compare_files(
 
 
 if __name__ == "__main__":
-    projekt_root = find_project_root()
-    print(f"Projekt-Root: {projekt_root}")
-    directory = os.path.join(projekt_root, "src", "main", "resources")
+    directory = os.path.join(os.getcwd(), "src", "main", "resources")
     messages_file_paths = glob.glob(os.path.join(directory, "messages_*.properties"))
     reference_file = os.path.join(directory, "messages_en_GB.properties")
 
-    scripts_directory = os.path.join(projekt_root, "scripts")
+    scripts_directory = os.path.join(os.getcwd(), "scripts")
     translation_state_file = os.path.join(scripts_directory, "ignore_translation.toml")
 
-    write_readme(
-        compare_files(reference_file, messages_file_paths, translation_state_file)
-    )
+    write_readme(compare_files(reference_file, messages_file_paths, translation_state_file))
