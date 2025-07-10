@@ -384,6 +384,8 @@ if __name__ == "__main__":
     if args.branch:
         args.branch = re.sub(r"[^a-zA-Z0-9\\-]", "", args.branch)
 
+    print(f"finding project root: {find_project_root()}")
+
     file_list = args.files
     if file_list is None:
         if args.check_file:
