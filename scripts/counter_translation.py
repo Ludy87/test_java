@@ -16,8 +16,25 @@ import glob
 import os
 import re
 
+from pathlib import Path
+
 import tomlkit
 import tomlkit.toml_file
+
+
+def find_project_root(
+    start: Path = None,
+    markers: tuple = (".git", ".vscode", "docs", "README.md", "build.gradle"),
+) -> Path:
+    """
+    Geht die Eltern-Verzeichnisse von `start` hoch (default: __file__),
+    bis eins der marker files gefunden wird – und liefert dieses Verzeichnis.
+    """
+    start = start or Path(__file__).resolve()
+    for path in (start, *start.parents):
+        if any((path / m).exists() for m in markers):
+            return path
+    raise RuntimeError(f"Kein Projekt-Root gefunden (Markers: {markers})")
 
 
 def convert_to_multiline(data: tomlkit.TOMLDocument) -> tomlkit.TOMLDocument:
@@ -206,6 +223,8 @@ def compare_files(
 
 
 if __name__ == "__main__":
+    projekt_root = find_project_root()
+    print(f"Projekt-Root: {projekt_root}")
     directory = os.path.join(os.getcwd(), "src", "main", "resources")
     messages_file_paths = glob.glob(os.path.join(directory, "messages_*.properties"))
     reference_file = os.path.join(directory, "messages_en_GB.properties")
