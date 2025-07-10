@@ -11,6 +11,7 @@ adjusting the format.
 Usage:
     python check_language_properties.py --reference-file <path_to_reference_file> --branch <branch_name> [--actor <actor_name>] [--files <list_of_changed_files>]
 """
+
 # Sample for Windows:
 # python .github/scripts/check_language_properties.py --reference-file src\main\resources\messages_en_GB.properties --branch "" --files src\main\resources\messages_de_DE.properties src\main\resources\messages_uk_UA.properties
 
@@ -19,23 +20,6 @@ import glob
 import os
 import argparse
 import re
-
-from pathlib import Path
-
-
-def find_project_root(
-    start: Path = None,
-    markers: tuple = (".git", ".vscode", "docs", "README.md", "build.gradle"),
-) -> Path:
-    """
-    Geht die Eltern-Verzeichnisse von `start` hoch (default: __file__),
-    bis eins der marker files gefunden wird – und liefert dieses Verzeichnis.
-    """
-    start = start or Path(__file__).resolve()
-    for path in (start, *start.parents):
-        if any((path / m).exists() for m in markers):
-            return path
-    raise RuntimeError(f"Kein Projekt-Root gefunden (Markers: {markers})")
 
 
 def find_duplicate_keys(file_path):
@@ -86,9 +70,7 @@ def parse_properties_file(file_path):
 
             # Handle empty lines
             if not stripped_line:
-                properties_list.append(
-                    {"line_number": line_number, "type": "empty", "content": ""}
-                )
+                properties_list.append({"line_number": line_number, "type": "empty", "content": ""})
                 continue
 
             # Handle comments
@@ -213,7 +195,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
 
     if len(file_list) == 1:
         file_arr = file_list[0].split()
-    base_dir = os.path.abspath(os.path.join(find_project_root(), "src", "main", "resources"))
+    base_dir = os.path.abspath(os.path.join(os.getcwd(), "src", "main", "resources"))
 
     for file_path in file_arr:
         absolute_path = os.path.abspath(file_path)
@@ -222,21 +204,15 @@ def check_for_differences(reference_file, file_list, branch, actor):
             raise ValueError(f"Unsafe file found: {file_path}")
         # Verify file size before processing
         if os.path.getsize(os.path.join(branch, file_path)) > MAX_FILE_SIZE:
-            raise ValueError(
-                f"The file {file_path} is too large and could pose a security risk."
-            )
+            raise ValueError(f"The file {file_path} is too large and could pose a security risk.")
 
         basename_current_file = os.path.basename(os.path.join(branch, file_path))
         if (
             basename_current_file == basename_reference_file
             or (
                 # only local windows command
-                not file_path.startswith(
-                    os.path.join("", "src", "main", "resources", "messages_")
-                )
-                and not file_path.startswith(
-                    os.path.join(find_project_root(), "src", "main", "resources", "messages_")
-                )
+                not file_path.startswith(os.path.join("", "src", "main", "resources", "messages_"))
+                and not file_path.startswith(os.path.join(os.getcwd(), "src", "main", "resources", "messages_"))
             )
             or not file_path.endswith(".properties")
             or not basename_current_file.startswith("messages_")
@@ -296,9 +272,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
                         spaces_keys_list.append(key)
                 if spaces_keys_list:
                     spaces_keys_str = "`, `".join(spaces_keys_list)
-                    report.append(
-                        f"    - **_Keys containing unnecessary spaces_**: `{spaces_keys_str}`!"
-                    )
+                    report.append(f"    - **_Keys containing unnecessary spaces_**: `{spaces_keys_str}`!")
                 report.append(
                     f"    - **_Extra keys in `{basename_current_file}`_**: `{missing_keys_str}` that are not present in **_`{basename_reference_file}`_**."
                 )
@@ -336,9 +310,7 @@ def check_for_differences(reference_file, file_list, branch, actor):
     else:
         report.append("## ✅ Overall Check Status: **_Success_**")
         report.append("")
-        report.append(
-            f"Thanks @{actor} for your help in keeping the translations up to date."
-        )
+        report.append(f"Thanks @{actor} for your help in keeping the translations up to date.")
 
     if not only_reference_file:
         print("\n".join(report))
@@ -384,18 +356,12 @@ if __name__ == "__main__":
     if args.branch:
         args.branch = re.sub(r"[^a-zA-Z0-9\\-]", "", args.branch)
 
-    print(f"finding project root: {find_project_root()}")
-
     file_list = args.files
     if file_list is None:
         if args.check_file:
             file_list = [args.check_file]
         else:
-            file_list = glob.glob(
-                os.path.join(
-                    find_project_root(), "src", "main", "resources", "messages_*.properties"
-                )
-            )
+            file_list = glob.glob(os.path.join(os.getcwd(), "src", "main", "resources", "messages_*.properties"))
         update_missing_keys(args.reference_file, file_list)
     else:
         check_for_differences(args.reference_file, file_list, args.branch, args.actor)
