@@ -225,11 +225,11 @@ def compare_files(
 if __name__ == "__main__":
     projekt_root = find_project_root()
     print(f"Projekt-Root: {projekt_root}")
-    directory = os.path.join(os.getcwd(), "src", "main", "resources")
+    directory = os.path.join(projekt_root, "src", "main", "resources")
     messages_file_paths = glob.glob(os.path.join(directory, "messages_*.properties"))
     reference_file = os.path.join(directory, "messages_en_GB.properties")
 
-    scripts_directory = os.path.join(os.getcwd(), "scripts")
+    scripts_directory = os.path.join(projekt_root, "scripts")
     translation_state_file = os.path.join(scripts_directory, "ignore_translation.toml")
 
     write_readme(
