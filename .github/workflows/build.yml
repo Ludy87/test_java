@@ -223,7 +223,7 @@ jobs:
         uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
         id: files
         with:
-          filters: .files.yaml
+          filters: ".github/config/.files.yaml"
 
       - name: Set up JDK 17
         if: ${{ steps.files.outputs.app == 'true' }}
@@ -262,7 +262,7 @@ jobs:
         uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
         id: files
         with:
-          filters: .files.yaml
+          filters: ".github/config/.files.yaml"
 
       - name: Set up JDK 21
         if: ${{ steps.files.outputs.build == 'true' }}
