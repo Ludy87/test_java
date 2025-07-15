@@ -325,6 +325,7 @@ jobs:
   #         ./testing/test.sh "${{ github.event.pull_request.user.login == 'dependabot[bot]' }}"
 
   build-images:
+    needs: build
     runs-on: ubuntu-latest
 
     strategy:
