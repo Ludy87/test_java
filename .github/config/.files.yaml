@@ -8,7 +8,15 @@ app: &app
   - app/(common|core|proprietary)/src/main/java/**
   - app/(common|core|proprietary)/build.gradle
   - 'app/(common|core|proprietary)/src/main/resources/**/!(messages_*.properties)*'
-  # - app/common/src/main/java/**
-  # - app/proprietary/src/main/java/**
-  # - src/main/java/**
-  # - '!**/**/*.md'
+  - gradle/**
+  - libs/**
+  - testing/**
+  - build.gradle
+  - Dockerfile
+  - Dockerfile.fat
+  - Dockerfile.ultra-lite
+  - gradle.properties
+  - gradlew
+  - gradlew.bat
+  - launch4jConfig.xml
+  - settings.gradle
