@@ -10,4 +10,4 @@ app: &app
   # - app/common/src/main/java/**
   # - app/proprietary/src/main/java/**
   # - src/main/java/**
-  - '!**/**/*.md'
+  # - '!**/**/*.md'
