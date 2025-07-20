@@ -47,166 +47,166 @@ jobs:
       #     ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help
       #     ./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256,pgp --refresh-keys --export-keys --refresh-dependencies help
 
-      - name: Build with Gradle (without spring security)
-        id: build_without_security
-        run: |
-          ./gradlew clean build 2> >(tee gradle-error-${{ matrix.jdk-version }}-false.log >&2) || echo $? > gradle-exit-code-${{ matrix.jdk-version }}-false.txt
-        env:
-          DOCKER_ENABLE_SECURITY: false
+      # - name: Build with Gradle (without spring security)
+      #   id: build_without_security
+      #   run: |
+      #     ./gradlew clean build 2> >(tee gradle-error-${{ matrix.jdk-version }}-false.log >&2) || echo $? > gradle-exit-code-${{ matrix.jdk-version }}-false.txt
+      #   env:
+      #     DOCKER_ENABLE_SECURITY: false
 
-      - name: Check Gradle Build Exit Code (without spring security)
-        if: ${{ always() && steps.build_without_security.conclusion }}
-        id: build_without_security_exit_code
-        run: |
-          if [ -f gradle-exit-code-${{ matrix.jdk-version }}-false.txt ]; then
-            # error_output=$(cat gradle-error-${{ matrix.jdk-version }}-false.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+      # - name: Check Gradle Build Exit Code (without spring security)
+      #   if: ${{ always() && steps.build_without_security.conclusion }}
+      #   id: build_without_security_exit_code
+      #   run: |
+      #     if [ -f gradle-exit-code-${{ matrix.jdk-version }}-false.txt ]; then
+      #       # error_output=$(cat gradle-error-${{ matrix.jdk-version }}-false.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
 
-            echo "error_output_false<<EOF" >> $GITHUB_ENV
-            cat gradle-error-${{ matrix.jdk-version }}-false.log >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+      #       echo "error_output_false<<EOF" >> $GITHUB_ENV
+      #       cat gradle-error-${{ matrix.jdk-version }}-false.log >> $GITHUB_ENV
+      #       echo "EOF" >> $GITHUB_ENV
 
-            exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-false.txt)
-            exit ${exit_code:-1}
-          fi
+      #       exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-false.txt)
+      #       exit ${exit_code:-1}
+      #     fi
 
-      - name: Check Gradle Build failure (without spring security)
-        if: ${{ always() && steps.build_without_security_exit_code.conclusion == 'failure' }}
-        run: |
-          if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html'; then
-            echo "write_comment_without_security=true" >> $GITHUB_ENV
-          else
-            echo "write_comment_without_security=false" >> $GITHUB_ENV
-          fi
+      # - name: Check Gradle Build failure (without spring security)
+      #   if: ${{ always() && steps.build_without_security_exit_code.conclusion == 'failure' }}
+      #   run: |
+      #     if echo "${{ env.error_output_false }}" | grep -q 'dependency-verification-report.html'; then
+      #       echo "write_comment_without_security=true" >> $GITHUB_ENV
+      #     else
+      #       echo "write_comment_without_security=false" >> $GITHUB_ENV
+      #     fi
 
-      - name: Build with Gradle (with spring security)
-        id: build_with_security
-        run: |
-          ./gradlew clean build 2> >(tee gradle-error-${{ matrix.jdk-version }}-true.log >&2) || echo $? > gradle-exit-code-${{ matrix.jdk-version }}-true.txt
-        env:
-          DOCKER_ENABLE_SECURITY: true
+      # - name: Build with Gradle (with spring security)
+      #   id: build_with_security
+      #   run: |
+      #     ./gradlew clean build 2> >(tee gradle-error-${{ matrix.jdk-version }}-true.log >&2) || echo $? > gradle-exit-code-${{ matrix.jdk-version }}-true.txt
+      #   env:
+      #     DOCKER_ENABLE_SECURITY: true
 
-      - name: Check Gradle Build Exit Code (with spring security)
-        if: ${{ always() && steps.build_with_security.conclusion }}
-        id: build_with_security_exit_code
-        run: |
-          if [ -f gradle-exit-code-${{ matrix.jdk-version }}-true.txt ]; then
-            # error_output=$(cat gradle-error-${{ matrix.jdk-version }}-true.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
+      # - name: Check Gradle Build Exit Code (with spring security)
+      #   if: ${{ always() && steps.build_with_security.conclusion }}
+      #   id: build_with_security_exit_code
+      #   run: |
+      #     if [ -f gradle-exit-code-${{ matrix.jdk-version }}-true.txt ]; then
+      #       # error_output=$(cat gradle-error-${{ matrix.jdk-version }}-true.log 2>/dev/null | tr '\n' ' ' | tr -d '\r' || echo "No error output captured.")
 
-            echo "error_output_true<<EOF" >> $GITHUB_ENV
-            cat gradle-error-${{ matrix.jdk-version }}-true.log >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+      #       echo "error_output_true<<EOF" >> $GITHUB_ENV
+      #       cat gradle-error-${{ matrix.jdk-version }}-true.log >> $GITHUB_ENV
+      #       echo "EOF" >> $GITHUB_ENV
 
-            exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-true.txt)
-            exit ${exit_code:-1}
-          fi
+      #       exit_code=$(cat gradle-exit-code-${{ matrix.jdk-version }}-true.txt)
+      #       exit ${exit_code:-1}
+      #     fi
 
-      - name: Check Gradle Build failure (with spring security)
-        if: ${{ always() && steps.build_with_security_exit_code.conclusion == 'failure' }}
-        run: |
-          if echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
-            echo "write_comment_with_security=true" >> $GITHUB_ENV
-          else
-            echo "write_comment_with_security=false" >> $GITHUB_ENV
-          fi
+      # - name: Check Gradle Build failure (with spring security)
+      #   if: ${{ always() && steps.build_with_security_exit_code.conclusion == 'failure' }}
+      #   run: |
+      #     if echo "${{ env.error_output_true }}" | grep -q 'dependency-verification-report.html'; then
+      #       echo "write_comment_with_security=true" >> $GITHUB_ENV
+      #     else
+      #       echo "write_comment_with_security=false" >> $GITHUB_ENV
+      #     fi
 
-      - name: PR | Delete comment
-        if: ${{ always() && github.event_name == 'pull_request' && steps.build_with_security_exit_code.conclusion == 'success' && steps.build_without_security_exit_code.conclusion == 'success' }}
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        with:
-          script: |
-            const { GITHUB_REPOSITORY } = process.env;
-            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
-            const prNumber = context.issue.number;
+      # - name: PR | Delete comment
+      #   if: ${{ always() && github.event_name == 'pull_request' && steps.build_with_security_exit_code.conclusion == 'success' && steps.build_without_security_exit_code.conclusion == 'success' }}
+      #   uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+      #   with:
+      #     script: |
+      #       const { GITHUB_REPOSITORY } = process.env;
+      #       const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
+      #       const prNumber = context.issue.number;
 
-            // Find existing comment
-            const comments = await github.rest.issues.listComments({
-              owner: repoOwner,
-              repo: repoName,
-              issue_number: prNumber
-            });
+      #       // Find existing comment
+      #       const comments = await github.rest.issues.listComments({
+      #         owner: repoOwner,
+      #         repo: repoName,
+      #         issue_number: prNumber
+      #       });
 
-            const comment = comments.data.find(c => c.body.includes(`🚨 **Gradle Build Failed** 🚨`));
+      #       const comment = comments.data.find(c => c.body.includes(`🚨 **Gradle Build Failed** 🚨`));
 
-            // Only allow the action user to update comments
-            const expectedActor = "github-actions[bot]";
+      #       // Only allow the action user to update comments
+      #       const expectedActor = "github-actions[bot]";
 
-            if (comment && comment.user.login === expectedActor) {
-              // deleted existing comment
-              await github.rest.issues.deleteComment({
-                owner: repoOwner,
-                repo: repoName,
-                comment_id: comment.id
-              });
-              console.log("Deleted existing comment.");
-            }
+      #       if (comment && comment.user.login === expectedActor) {
+      #         // deleted existing comment
+      #         await github.rest.issues.deleteComment({
+      #           owner: repoOwner,
+      #           repo: repoName,
+      #           comment_id: comment.id
+      #         });
+      #         console.log("Deleted existing comment.");
+      #       }
 
-      - name: PR | Post comment
-        if: ${{ always() && github.event_name == 'pull_request' && ((steps.build_with_security_exit_code.conclusion == 'failure' && env.write_comment_with_security == 'true') || (steps.build_without_security_exit_code.conclusion == 'failure' && env.write_comment_without_security == 'true')) }}
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        with:
-          script: |
-            const { GITHUB_REPOSITORY, error_output_true, error_output_false, combined_error_logs } = process.env;
-            const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
-            const prNumber = context.issue.number;
+      # - name: PR | Post comment
+      #   if: ${{ always() && github.event_name == 'pull_request' && ((steps.build_with_security_exit_code.conclusion == 'failure' && env.write_comment_with_security == 'true') || (steps.build_without_security_exit_code.conclusion == 'failure' && env.write_comment_without_security == 'true')) }}
+      #   uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+      #   with:
+      #     script: |
+      #       const { GITHUB_REPOSITORY, error_output_true, error_output_false, combined_error_logs } = process.env;
+      #       const [repoOwner, repoName] = GITHUB_REPOSITORY.split('/');
+      #       const prNumber = context.issue.number;
 
-            // Find existing comment
-            const comments = await github.rest.issues.listComments({
-              owner: repoOwner,
-              repo: repoName,
-              issue_number: prNumber
-            });
+      #       // Find existing comment
+      #       const comments = await github.rest.issues.listComments({
+      #         owner: repoOwner,
+      #         repo: repoName,
+      #         issue_number: prNumber
+      #       });
 
-            const comment = comments.data.find(c => c.body.includes(`🚨 **Gradle Build Failed** 🚨`));
+      #       const comment = comments.data.find(c => c.body.includes(`🚨 **Gradle Build Failed** 🚨`));
 
-            // Only allow the action user to update comments
-            const expectedActor = "github-actions[bot]";
+      #       // Only allow the action user to update comments
+      #       const expectedActor = "github-actions[bot]";
 
-            // Build the comment content
-            let bodyComment = "🚨 **Gradle Build Failed** 🚨\n\n";
-            bodyComment += "To resolve the dependency verification issue, execute the following commands step by step to update the dependency metadata and push the changes to this pull request:\n\n";
-            bodyComment += "```bash\n";
-            bodyComment += "./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help\n\n";
-            bodyComment += "```\n\n";
-            bodyComment += "```bash\n";
-            bodyComment += "./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256,pgp --refresh-keys --export-keys --refresh-dependencies help\n";
-            bodyComment += "```\n\n";
-            bodyComment += "For further details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
+      #       // Build the comment content
+      #       let bodyComment = "🚨 **Gradle Build Failed** 🚨\n\n";
+      #       bodyComment += "To resolve the dependency verification issue, execute the following commands step by step to update the dependency metadata and push the changes to this pull request:\n\n";
+      #       bodyComment += "```bash\n";
+      #       bodyComment += "./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256 --refresh-dependencies help\n\n";
+      #       bodyComment += "```\n\n";
+      #       bodyComment += "```bash\n";
+      #       bodyComment += "./gradlew clean dependencies buildEnvironment spotlessApply --write-verification-metadata sha256,pgp --refresh-keys --export-keys --refresh-dependencies help\n";
+      #       bodyComment += "```\n\n";
+      #       bodyComment += "For further details, refer to the [Dependency Management Guide](https://github.com/Stirling-Tools/Stirling-PDF/blob/main/DeveloperGuide.md#managing-dependencies).\n";
 
 
-            if (!comment && (process.env.error_output_true || process.env.error_output_false)) {
-              // Create new comment if no existing comment is found
-              await github.rest.issues.createComment({
-                owner: repoOwner,
-                repo: repoName,
-                issue_number: prNumber,
-                body: bodyComment
-              });
-              console.log("Created new comment.");
-            } else if (comment && comment.user.login === expectedActor) {
-              // Update existing comment
-              await github.rest.issues.updateComment({
-                owner: repoOwner,
-                repo: repoName,
-                comment_id: comment.id,
-                body: bodyComment
-              });
-              console.log("Updated existing comment.");
-            } else {
-              console.log("Comment update attempt denied. Actor does not match.");
-            }
+      #       if (!comment && (process.env.error_output_true || process.env.error_output_false)) {
+      #         // Create new comment if no existing comment is found
+      #         await github.rest.issues.createComment({
+      #           owner: repoOwner,
+      #           repo: repoName,
+      #           issue_number: prNumber,
+      #           body: bodyComment
+      #         });
+      #         console.log("Created new comment.");
+      #       } else if (comment && comment.user.login === expectedActor) {
+      #         // Update existing comment
+      #         await github.rest.issues.updateComment({
+      #           owner: repoOwner,
+      #           repo: repoName,
+      #           comment_id: comment.id,
+      #           body: bodyComment
+      #         });
+      #         console.log("Updated existing comment.");
+      #       } else {
+      #         console.log("Comment update attempt denied. Actor does not match.");
+      #       }
 
-      - name: Upload Test Reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: test-reports-jdk-${{ matrix.jdk-version }}
-          path: |
-            gradle-error-${{ matrix.jdk-version }}-true.log
-            gradle-error-${{ matrix.jdk-version }}-false.log
-            build/reports/tests/
-            build/test-results/
-            build/reports/problems/
-          retention-days: 3
+      # - name: Upload Test Reports
+      #   if: always()
+      #   uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      #   with:
+      #     name: test-reports-jdk-${{ matrix.jdk-version }}
+      #     path: |
+      #       gradle-error-${{ matrix.jdk-version }}-true.log
+      #       gradle-error-${{ matrix.jdk-version }}-false.log
+      #       build/reports/tests/
+      #       build/test-results/
+      #       build/reports/problems/
+      #     retention-days: 3
 
   check-generateOpenApiDocs:
     if: github.event_name == 'pull_request' && github.event.action == 'opened' || github.event.action == 'synchronize'
@@ -247,43 +247,43 @@ jobs:
           name: openapi-docs
           path: ./SwaggerDoc.json
 
-  check-licence:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
-        with:
-          egress-policy: audit
+  # check-licence:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Harden Runner
+  #       uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+  #       with:
+  #         egress-policy: audit
 
-      - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+  #     - name: Checkout repository
+  #       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Filter for integration changes
-        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
-        id: files
-        with:
-          filters: ".github/config/.files.yaml"
+  #     - name: Filter for integration changes
+  #       uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+  #       id: files
+  #       with:
+  #         filters: ".github/config/.files.yaml"
 
-      - name: Set up JDK 21
-        if: ${{ steps.files.outputs.build == 'true' }}
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
-        with:
-          java-version: 21
-          distribution: "temurin"
+  #     - name: Set up JDK 21
+  #       if: ${{ steps.files.outputs.build == 'true' }}
+  #       uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+  #       with:
+  #         java-version: 21
+  #         distribution: "temurin"
 
-      - name: check the licenses for compatibility
-        if: ${{ steps.files.outputs.build == 'true' }}
-        run: ./gradlew clean checkLicense
+  #     - name: check the licenses for compatibility
+  #       if: ${{ steps.files.outputs.build == 'true' }}
+  #       run: ./gradlew clean checkLicense
 
-      - name: FAILED - check the licenses for compatibility
-        if: failure()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: dependencies-without-allowed-license.json
-          path: |
-            build/reports/dependency-license/dependencies-without-allowed-license.json
-          retention-days: 3
-          if-no-files-found: warn
+  #     - name: FAILED - check the licenses for compatibility
+  #       if: failure()
+  #       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+  #       with:
+  #         name: dependencies-without-allowed-license.json
+  #         path: |
+  #           build/reports/dependency-license/dependencies-without-allowed-license.json
+  #         retention-days: 3
+  #         if-no-files-found: warn
 
   # docker-compose-tests:
   #   # if: github.event_name == 'push' && github.ref == 'refs/heads/main' ||
