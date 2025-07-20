@@ -225,27 +225,27 @@ jobs:
         with:
           filters: ".github/config/.files.yaml"
 
-      - name: Set up JDK 17
-        if: ${{ steps.files.outputs.app == 'true' }}
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
-        with:
-          java-version: "17"
-          distribution: "temurin"
+      # - name: Set up JDK 17
+      #   if: ${{ steps.files.outputs.app == 'true' }}
+      #   uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+      #   with:
+      #     java-version: "17"
+      #     distribution: "temurin"
 
-      - name: Set up Gradle
-        if: ${{ steps.files.outputs.app == 'true' }}
-        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96 # v4.4.1
+      # - name: Set up Gradle
+      #   if: ${{ steps.files.outputs.app == 'true' }}
+      #   uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96 # v4.4.1
 
-      - name: Generate OpenAPI documentation
-        if: ${{ steps.files.outputs.app == 'true' }}
-        run: ./gradlew generateOpenApiDocs
+      # - name: Generate OpenAPI documentation
+      #   if: ${{ steps.files.outputs.app == 'true' }}
+      #   run: ./gradlew generateOpenApiDocs
 
-      - name: Upload OpenAPI Documentation
-        if: ${{ steps.files.outputs.app == 'true' }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: openapi-docs
-          path: ./SwaggerDoc.json
+      # - name: Upload OpenAPI Documentation
+      #   if: ${{ steps.files.outputs.app == 'true' }}
+      #   uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      #   with:
+      #     name: openapi-docs
+      #     path: ./SwaggerDoc.json
 
   # check-licence:
   #   runs-on: ubuntu-latest
