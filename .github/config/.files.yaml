@@ -10,3 +10,4 @@ app: &app
   - app/proprietary/src/main/java/**
   - "!src/main/resources/messages_*.properties"
   - src/main/java/**
+  - "!*.md"
