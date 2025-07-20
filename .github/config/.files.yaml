@@ -7,7 +7,7 @@ build: &build
 app: &app
   - app/(common|core|proprietary)/src/main/java/**
   - app/(common|core|proprietary)/build.gradle
-  - 'app/(common|core|proprietary)/src/main/resources/!(static)/**/!(messages_*.properties|*.md)*'
+  - 'app/(common|core|proprietary)/src/main/resources/**/!(messages_*.properties|*.md)*'
   - gradle/**
   - libs/**
   - testing/**
