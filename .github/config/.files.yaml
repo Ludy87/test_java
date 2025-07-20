@@ -9,5 +9,5 @@ app: &app
   # - app/common/src/main/java/**
   # - app/proprietary/src/main/java/**
   # - "!src/main/resources/messages**.properties"
-  # - src/main/java/**
+  - src/main/java/**
   # - "!*.md"
