@@ -13,7 +13,25 @@ permissions:
   contents: read
 
 jobs:
+  files-changed:
+    name: detect what files changed
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    # Map a step output to a job output
+    outputs:
+      build: ${{ steps.changes.outputs.build }}
+      app: ${{ steps.changes.outputs.app }}
+    steps:
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e  # v2
+
+      - name: Check for backend file changes
+        uses: getsentry/paths-filter@66f7f1844185eb7fb6738ea4ea59d74bb99199e5  # v2
+        id: changes
+        with:
+          filters: ".github/config/.files.yaml"
   build:
+    if: needs.files-changed.outputs.build == 'true'
+    needs: files-changed
     # runs-on: self-hosted-ubuntu-24-10
     runs-on: ubuntu-latest
 
