@@ -1,7 +1,7 @@
 build: &build
   - build.gradle
   - app/core/build.gradle
-  - app/common/build.gradle
+  # - app/common/build.gradle
   - app/proprietary/build.gradle
 
 app: &app
