@@ -5,7 +5,7 @@ build: &build
   - app/proprietary/build.gradle
 
 app: &app
-  # - app/core/src/main/java/**
+  - app/core/src/main/java/**
   - 'app/core/src/main/resources/**/!(messages)*'
   # - app/common/src/main/java/**
   # - app/proprietary/src/main/java/**
