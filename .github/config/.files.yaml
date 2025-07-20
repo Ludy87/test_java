@@ -6,8 +6,8 @@ build: &build
 
 app: &app
   - app/core/src/main/java/**
-  - app/common/src/main/java/**
-  - app/proprietary/src/main/java/**
-  - "!src/main/resources/messages**.properties"
-  - src/main/java/**
-  - "!*.md"
+  # - app/common/src/main/java/**
+  # - app/proprietary/src/main/java/**
+  # - "!src/main/resources/messages**.properties"
+  # - src/main/java/**
+  # - "!*.md"
