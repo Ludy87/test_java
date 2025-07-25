@@ -76,6 +76,11 @@ jobs:
           java-version: ${{ matrix.jdk-version }}
           distribution: "temurin"
 
+      - name: Clean Gradle User Home
+        run: |
+          rm -rf ~/.gradle/caches ~/.gradle/wrapper
+        if: always()
+
       - name: Cache Gradle
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
@@ -160,6 +165,11 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
+      - name: Clean Gradle User Home
+        run: |
+          rm -rf ~/.gradle/caches ~/.gradle/wrapper
+        if: always()
+
       - name: Cache Gradle
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
@@ -203,6 +213,11 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
+
+      - name: Clean Gradle User Home
+        run: |
+          rm -rf ~/.gradle/caches ~/.gradle/wrapper
+        if: always()
 
       - name: Cache Gradle
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
@@ -314,6 +329,11 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
+
+      - name: Clean Gradle User Home
+        run: |
+          rm -rf ~/.gradle/caches ~/.gradle/wrapper
+        if: always()
 
       - name: Cache Gradle
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
