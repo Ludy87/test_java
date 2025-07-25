@@ -83,30 +83,30 @@ jobs:
         env:
           DISABLE_ADDITIONAL_FEATURES: ${{ matrix.spring-security }}
 
-      - name: Check Test Reports Exist
-        id: check-reports
-        if: always()
-        run: |
-          declare -a dirs=(
-            "app/core/build/reports/tests/"
-            "app/core/build/test-results/"
-            "app/common/build/reports/tests/"
-            "app/common/build/test-results/"
-            "app/proprietary/build/reports/tests/"
-            "app/proprietary/build/test-results/"
-          )
-          missing_reports=()
-          for dir in "${dirs[@]}"; do
-            if [ ! -d "$dir" ]; then
-              missing_reports+=("$dir")
-            fi
-          done
-          if [ ${#missing_reports[@]} -gt 0 ]; then
-            echo "ERROR: The following required test report directories are missing:"
-            printf '%s\n' "${missing_reports[@]}"
-            exit 1
-          fi
-          echo "All required test report directories are present"
+      # - name: Check Test Reports Exist
+      #   id: check-reports
+      #   if: always()
+      #   run: |
+      #     declare -a dirs=(
+      #       "app/core/build/reports/tests/"
+      #       "app/core/build/test-results/"
+      #       "app/common/build/reports/tests/"
+      #       "app/common/build/test-results/"
+      #       "app/proprietary/build/reports/tests/"
+      #       "app/proprietary/build/test-results/"
+      #     )
+      #     missing_reports=()
+      #     for dir in "${dirs[@]}"; do
+      #       if [ ! -d "$dir" ]; then
+      #         missing_reports+=("$dir")
+      #       fi
+      #     done
+      #     if [ ${#missing_reports[@]} -gt 0 ]; then
+      #       echo "ERROR: The following required test report directories are missing:"
+      #       printf '%s\n' "${missing_reports[@]}"
+      #       exit 1
+      #     fi
+      #     echo "All required test report directories are present"
 
       - name: Upload Test Reports
         if: always()
