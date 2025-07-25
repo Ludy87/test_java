@@ -1,0 +1,10 @@
+name: Cleanup GitHub Actions Caches
+on:
+  workflow_dispatch:
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: toshimaru/delete-action-cache@main
