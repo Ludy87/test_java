@@ -60,14 +60,6 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
 
-      - name: Print debug info
-        run: |
-          echo "🔸 Cache protocol: ${{ steps.cache.outputs.cache-protocol }}"
-          echo "🔹 Runner OS:        ${{ runner.os }}"
-          echo "🔸 Job ID:           ${{ github.job }}"
-          echo "🔹 Matrix+Workflow-Hash: ${{ hash(toJSON(matrix), github.workflow) }}"
-          echo "🔸 Commit SHA:       ${{ github.sha }}"
-
       - name: Harden Runner
         uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
         with:
