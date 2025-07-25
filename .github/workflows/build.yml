@@ -26,6 +26,10 @@ jobs:
       project: ${{ steps.changes.outputs.project }}
       openapi: ${{ steps.changes.outputs.openapi }}
     steps:
+      - name: concurrency group
+        run: |
+          echo "Concurrency group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref_name }}"
+
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Check for file changes
