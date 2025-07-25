@@ -59,7 +59,15 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
-        
+
+      - name: Print debug info
+        run: |
+          echo "🔸 Cache protocol: ${{ steps.cache.outputs.cache-protocol }}"
+          echo "🔹 Runner OS:        ${{ runner.os }}"
+          echo "🔸 Job ID:           ${{ github.job }}"
+          echo "🔹 Matrix+Workflow-Hash: ${{ hash(toJSON(matrix), github.workflow) }}"
+          echo "🔸 Commit SHA:       ${{ github.sha }}"
+
       - name: Harden Runner
         uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
         with:
@@ -81,15 +89,10 @@ jobs:
           java-version: ${{ matrix.jdk-version }}
           distribution: "temurin"
 
-      - name: Cache Gradle
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96 # v4.4.1
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-jdk${{ matrix.jdk-version }}-spring${{ matrix.spring-security }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-jdk${{ matrix.jdk-version }}-spring${{ matrix.spring-security }}-
+          gradle-version: 8.14
 
       - name: Build with Gradle and spring security ${{ matrix.spring-security }}
         run: ./gradlew clean build
@@ -159,15 +162,10 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
-      - name: Cache Gradle
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96 # v4.4.1
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-check-generateOpenApiDocs-jdk17-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-check-generateOpenApiDocs-jdk17-
+          gradle-version: 8.14
 
       # - name: Generate OpenAPI documentation
       #   run: ./gradlew :stirling-pdf:generateOpenApiDocs
@@ -197,15 +195,10 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
-      - name: Cache Gradle
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96 # v4.4.1
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-check-licence-jdk17-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-check-licence-jdk17-
+          gradle-version: 8.14
 
       - name: check the licenses for compatibility
         run: ./gradlew clean checkLicense
@@ -302,15 +295,11 @@ jobs:
           java-version: "17"
           distribution: "temurin"
 
-      - name: Cache Gradle
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96 # v4.4.1
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-test-build-docker-images-jdk17-docker${{ matrix.docker-rev }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-test-build-docker-images-jdk17-docker${{ matrix.docker-rev }}-
+          gradle-version: 8.14
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Build application
         run: ./gradlew clean build
