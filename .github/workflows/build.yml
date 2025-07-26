@@ -335,3 +335,14 @@ jobs:
             build/reports/problems/
           retention-days: 3
           if-no-files-found: warn
+
+      - name: Job Summary
+        if: always()
+        run: |
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - JOB_START))
+          echo "## Job-Zusammenfassung" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Docker-Variante | Dauer (s) |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------------|-----------|" >> $GITHUB_STEP_SUMMARY
+          echo "| ${{ matrix.docker-rev }} | $DURATION |" >> $GITHUB_STEP_SUMMARY
