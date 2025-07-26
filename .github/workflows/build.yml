@@ -274,6 +274,10 @@ jobs:
       matrix:
         docker-rev: ["Dockerfile", "Dockerfile.ultra-lite", "Dockerfile.fat"]
     steps:
+      - name: Record job start time
+        id: timer
+        run: echo "JOB_START=$(date +%s)" >> $GITHUB_ENV
+        
       - name: Harden Runner
         uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
         with:
