@@ -277,7 +277,7 @@ jobs:
       - name: Record job start time
         id: timer
         run: echo "JOB_START=$(date +%s)" >> $GITHUB_ENV
-        
+
       - name: Harden Runner
         uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
         with:
@@ -306,8 +306,6 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3.6.0
-        with:
-          platforms: linux/amd64,linux/arm64/v8
 
       - name: Set up Docker Buildx
         id: buildx
@@ -320,8 +318,6 @@ jobs:
           context: .
           file: ./${{ matrix.docker-rev }}
           push: false
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64/v8
