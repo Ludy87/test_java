@@ -70,49 +70,39 @@
     <CustomAction Id="JpFindRelatedProducts" BinaryKey="JpCaDll" DllEntry="FindRelatedProductsEx" />
 
     <!-- Standard required root -->
-    <!-- ersetze die Einzeilige-Definition durch das hier: -->
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
-        <!-- INSTALLDIR-Id und Name kommen von jpackage automatisch aus var.JpAppName -->
         <Directory Id="INSTALLDIR" Name="$(var.JpAppName)">
-
-          <!-- BEGIN: Permanent-Komponente für Euren Ordner -->
-          <Component
-            Id="UserDataFolder"
-            Guid="2a43ed0c-b8c2-40cf-89e1-751129b87641"
-            Directory="INSTALLDIR"
-            Permanent="yes">
-            <!-- erzeugt INSTALLDIR\userData -->
-            <CreateFolder Directory="INSTALLDIR\userData"/>
-            <!-- löscht nur beim echten Uninstall -->
-            <RemoveFolder
-              Id="RemoveUserData"
-              Directory="INSTALLDIR\userData"
-              On="uninstall"/>
-            <!-- KeyPath, damit Windows Installer die Komponente tracked -->
-            <RegistryValue
-              Root="HKLM"
-              Key="Software\$(var.JpAppVendor)\$(var.JpAppName)"
-              Name="Installed"
-              Type="integer"
-              Value="1"
-              KeyPath="yes"/>
-          </Component>
-          <!-- END: Permanent-Komponente -->
-
-          <!-- Deine üblichen ComponentGroupRefs bleiben danach erhalten -->
-          <ComponentGroupRef Id="Shortcuts"/>
-          <ComponentGroupRef Id="Files"/>
-          <ComponentGroupRef Id="FileAssociations"/>
-
+          <!-- Leeres Directory nur zum Anlegen des userData-Ordners -->
+          <Directory Id="UserDataDir" Name="userData" />
         </Directory>
       </Directory>
     </Directory>
+
+    <!-- Definiere hier die Komponente für userData -->
+    <DirectoryRef Id="UserDataDir">
+      <Component
+        Id="UserDataFolder"
+        Guid="2a43ed0c-b8c2-40cf-89e1-751129b87641"
+        Permanent="yes">
+        <!-- KeyPath nötig: MSI trackt die Komponente über diesen Registry-Eintrag -->
+        <CreateFolder/>
+        <RemoveFolder Id="RemoveUserData" On="uninstall"/>
+        <RegistryValue
+          Root="HKLM"
+          Key="Software\$(var.JpAppVendor)\$(var.JpAppName)"
+          Name="Installed"
+          Type="integer"
+          Value="1"
+          KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
 
     <Feature Id="DefaultFeature" Title="!(loc.MainFeatureTitle)" Level="1">
       <ComponentGroupRef Id="Shortcuts"/>
       <ComponentGroupRef Id="Files"/>
       <ComponentGroupRef Id="FileAssociations"/>
+      <ComponentRef Id="UserDataFolder"/>
     </Feature>
 
     <CustomAction Id="JpSetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[INSTALLDIR]" />
