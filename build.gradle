@@ -132,6 +132,7 @@ jpackage {
     input = "build/libs"
     destination = "${projectDir}/build/jpackage"
     temp = "${projectDir}/build/jpackage-temp"
+    resourceDir = file("$projectDir/installer/windows")
     mainJar = "Stirling-PDF-${project.version}.jar"
     appName = "Stirling-PDF"
     appVersion = project.version
