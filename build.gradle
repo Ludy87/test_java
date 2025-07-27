@@ -131,7 +131,7 @@ def getMacVersion(String version) {
 jpackage {
     input = "build/libs"
     destination = "${projectDir}/build/jpackage"
-    temp = layout.buildDirectory.dir("jpackage-temp")
+    temp = "${projectDir}/build/jpackage-temp"
     mainJar = "Stirling-PDF-${project.version}.jar"
     appName = "Stirling-PDF"
     appVersion = project.version
