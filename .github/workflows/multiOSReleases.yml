@@ -130,8 +130,8 @@ jobs:
         include:
           - os: windows-latest
             platform: win-
-          - os: macos-latest
-            platform: mac-
+          # - os: macos-latest
+          #   platform: mac-
           # - os: ubuntu-latest
           #   platform: linux-
     runs-on: ${{ matrix.os }}
@@ -193,7 +193,7 @@ jobs:
       - name: Upload Installer Artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: installers
+          name: installers-jpackage
           # Pfad zum Verzeichnis, in dem jpackage alles hinschreibt
           path: build/jpackage/**
 
