@@ -479,6 +479,7 @@ jar {
 tasks.named("test") {
     useJUnitPlatform()
 }
+
 task printVersion {
     doLast {
         println project.version
