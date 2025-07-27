@@ -190,15 +190,6 @@ jobs:
           STIRLING_PDF_DESKTOP_UI: true
           BROWSER_OPEN: true
 
-      - name: Upload Installer Artifacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: installers-jpackage
-          # Pfad zum Verzeichnis, in dem jpackage alles hinschreibt
-          path: |
-            build/jpackage/**
-            build/jpackage*/**
-
       # Rename and collect artifacts based on OS
       - name: Prepare artifacts
         id: prepare
