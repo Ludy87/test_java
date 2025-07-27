@@ -70,14 +70,10 @@
     <CustomAction Id="JpFindRelatedProducts" BinaryKey="JpCaDll" DllEntry="FindRelatedProductsEx" />
 
     <!-- Standard required root -->
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLDIR" Name="$(var.JpAppName)">
-          <!-- Leeres Directory nur zum Anlegen des userData-Ordners -->
-          <Directory Id="UserDataDir" Name="userData" />
-        </Directory>
-      </Directory>
-    </Directory>
+    <DirectoryRef Id="INSTALLDIR">
+        <!-- „userData“-Ordner unter INSTALLDIR anlegen -->
+        <Directory Id="UserDataDir" Name="userData" />
+    </DirectoryRef>
 
     <!-- Definiere hier die Komponente für userData -->
     <DirectoryRef Id="UserDataDir">
