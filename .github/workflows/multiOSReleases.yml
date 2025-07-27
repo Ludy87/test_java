@@ -195,7 +195,9 @@ jobs:
         with:
           name: installers-jpackage
           # Pfad zum Verzeichnis, in dem jpackage alles hinschreibt
-          path: build/jpackage/**
+          path: |
+            build/jpackage/**
+            build/jpackage*/**
 
       # Rename and collect artifacts based on OS
       - name: Prepare artifacts
