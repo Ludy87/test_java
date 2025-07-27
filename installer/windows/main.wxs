@@ -79,7 +79,7 @@
           <!-- BEGIN: Permanent-Komponente für Euren Ordner -->
           <Component
             Id="UserDataFolder"
-            Guid="$(var.JpProductUpgradeCode)"
+            Guid="2a43ed0c-b8c2-40cf-89e1-751129b87641"
             Directory="INSTALLDIR"
             Permanent="yes">
             <!-- erzeugt INSTALLDIR\userData -->
