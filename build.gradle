@@ -391,7 +391,7 @@ dependencies {
     //general PDF
 
     // https://mvnrepository.com/artifact/com.opencsv/opencsv
-    implementation ("com.opencsv:opencsv:5.11.2") {
+    implementation ("com.opencsv:opencsv:5.12.0") {
         exclude group: "commons-logging", module: "commons-logging"
     }
 
