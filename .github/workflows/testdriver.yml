@@ -78,43 +78,43 @@ jobs:
           echo "${{ secrets.VPS_SSH_KEY }}" > ../private.key
           sudo chmod 600 ../private.key
 
-      - name: Deploy to VPS
-        run: |
-          cat > docker-compose.yml << EOF
-          version: '3.3'
-          services:
-            stirling-pdf:
-              container_name: stirling-pdf-test-${{ github.sha }}
-              image: ${{ secrets.DOCKER_HUB_USERNAME }}/test:test-${{ github.sha }}
-              ports:
-                - "1337:8080"
-              volumes:
-                - /stirling/test-${{ github.sha }}/data:/usr/share/tessdata:rw
-                - /stirling/test-${{ github.sha }}/config:/configs:rw
-                - /stirling/test-${{ github.sha }}/logs:/logs:rw
-              environment:
-                DISABLE_ADDITIONAL_FEATURES: "true"
-                SECURITY_ENABLELOGIN: "false"
-                SYSTEM_DEFAULTLOCALE: en-GB
-                UI_APPNAME: "Stirling-PDF Test"
-                UI_HOMEDESCRIPTION: "Test Deployment"
-                UI_APPNAMENAVBAR: "Test"
-                SYSTEM_MAXFILESIZE: "100"
-                METRICS_ENABLED: "true"
-                SYSTEM_GOOGLEVISIBILITY: "false"
-                SYSTEM_ENABLEANALYTICS: "false"
-              restart: on-failure:5
-          EOF
+      # - name: Deploy to VPS
+      #   run: |
+      #     cat > docker-compose.yml << EOF
+      #     version: '3.3'
+      #     services:
+      #       stirling-pdf:
+      #         container_name: stirling-pdf-test-${{ github.sha }}
+      #         image: ${{ secrets.DOCKER_HUB_USERNAME }}/test:test-${{ github.sha }}
+      #         ports:
+      #           - "1337:8080"
+      #         volumes:
+      #           - /stirling/test-${{ github.sha }}/data:/usr/share/tessdata:rw
+      #           - /stirling/test-${{ github.sha }}/config:/configs:rw
+      #           - /stirling/test-${{ github.sha }}/logs:/logs:rw
+      #         environment:
+      #           DISABLE_ADDITIONAL_FEATURES: "true"
+      #           SECURITY_ENABLELOGIN: "false"
+      #           SYSTEM_DEFAULTLOCALE: en-GB
+      #           UI_APPNAME: "Stirling-PDF Test"
+      #           UI_HOMEDESCRIPTION: "Test Deployment"
+      #           UI_APPNAMENAVBAR: "Test"
+      #           SYSTEM_MAXFILESIZE: "100"
+      #           METRICS_ENABLED: "true"
+      #           SYSTEM_GOOGLEVISIBILITY: "false"
+      #           SYSTEM_ENABLEANALYTICS: "false"
+      #         restart: on-failure:5
+      #     EOF
 
-          scp -i ../private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yml ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/tmp/docker-compose.yml
+      #     scp -i ../private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yml ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:/tmp/docker-compose.yml
 
-          ssh -i ../private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << EOF
-            mkdir -p /stirling/test-${{ github.sha }}/{data,config,logs}
-            mv /tmp/docker-compose.yml /stirling/test-${{ github.sha }}/docker-compose.yml
-            cd /stirling/test-${{ github.sha }}
-            docker-compose pull
-            docker-compose up -d
-          EOF
+      #     ssh -i ../private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << EOF
+      #       mkdir -p /stirling/test-${{ github.sha }}/{data,config,logs}
+      #       mv /tmp/docker-compose.yml /stirling/test-${{ github.sha }}/docker-compose.yml
+      #       cd /stirling/test-${{ github.sha }}
+      #       docker-compose pull
+      #       docker-compose up -d
+      #     EOF
 
   files-changed:
     if: always()
