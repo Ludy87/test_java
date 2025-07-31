@@ -31,3 +31,5 @@ project: &project
 
 frontend: &frontend
   - frontend/**
+  - .github/workflows/testdriver.yml
+  - testing/**
