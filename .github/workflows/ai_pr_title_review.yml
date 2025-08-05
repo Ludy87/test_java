@@ -107,7 +107,7 @@ jobs:
       - name: AI PR Title Analysis
         if: steps.check_diff.outputs.is_empty == 'true'
         id: ai-title-analysis
-        uses: actions/ai-inference@d645f067d89ee1d5d736a5990e327e504d1c5a4a # v1.1.0
+        uses: actions/ai-inference@0cbed4a10641c75090de5968e66d70eb4660f751 # v1.2.7
         with:
           system-prompt-file: ".github/config/system-prompt.txt"
           prompt: |
