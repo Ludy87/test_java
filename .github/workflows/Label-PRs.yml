@@ -34,6 +34,9 @@ jobs:
       - name: Show head-branch
         run: "echo \"Head branch is: ${{ github.event.pull_request.head.ref }}\""
 
+      - name: Show changed files
+        run: "echo \"Changed files are: ${{ github.event.pull_request.changed_files }}\""
+
       - uses: srvaroa/labeler@e7bef2249506ba9cbbd3ca5cee256abd9f930b04 # master
         with:
           config_path: .github/labeler-config-srvaroa.yml
