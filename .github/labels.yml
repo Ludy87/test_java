@@ -115,3 +115,4 @@
 - name: "pr-deployed"
   color: "00FF00"
   description: "Pull request has been deployed to a test environment"
+- name: "v3"
