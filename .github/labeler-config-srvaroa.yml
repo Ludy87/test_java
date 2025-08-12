@@ -54,7 +54,7 @@ labels:
     base-branch: 'V2'
 
   - label: 'v3'
-    base-branch: 'origin/V3'
+    base-branch: 'V3'
 
   - label: "Translation"
     files:
