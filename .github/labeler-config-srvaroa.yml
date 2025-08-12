@@ -70,6 +70,7 @@ labels:
       - 'src/main/java/stirling/software/SPDF/controller/web/.*'
       - 'stirling-pdf/src/main/java/stirling/software/SPDF/UI/.*'
       - 'src/main/java/stirling/software/SPDF/UI/.*'
+      - 'frontend/**'
 
   - label: "Java"
     files:
