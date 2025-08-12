@@ -50,8 +50,8 @@ labels:
   - label: 'API'
     title: '.*openapi.*'
 
-  - label: 'v2'
-    base-branch: 'V2'
+  - label: 'v3'
+    base-branch: 'V3'
 
   - label: "Translation"
     files:
@@ -70,7 +70,6 @@ labels:
       - 'src/main/java/stirling/software/SPDF/controller/web/.*'
       - 'stirling-pdf/src/main/java/stirling/software/SPDF/UI/.*'
       - 'src/main/java/stirling/software/SPDF/UI/.*'
-      - 'frontend/**'
 
   - label: "Java"
     files:
