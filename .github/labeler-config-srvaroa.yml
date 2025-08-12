@@ -50,6 +50,9 @@ labels:
   - label: 'API'
     title: '.*openapi.*'
 
+  - label: 'v2'
+    base-branch: 'V2'
+
   - label: "Translation"
     files:
       - 'stirling-pdf/src/main/resources/messages_[a-zA-Z_]{2}_[a-zA-Z_]{2,7}.properties'
