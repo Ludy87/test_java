@@ -56,6 +56,9 @@ labels:
   - label: 'v3'
     base-branch: 'V3'
 
+  - label: 'v4'
+    base-branch: 'V4'
+
   - label: "Translation"
     files:
       - 'stirling-pdf/src/main/resources/messages_[a-zA-Z_]{2}_[a-zA-Z_]{2,7}.properties'
