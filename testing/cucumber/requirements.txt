@@ -231,9 +231,9 @@ pycryptodome==3.21.0 \
     --hash=sha256:f7787e0d469bdae763b876174cf2e6c0f7be79808af26b1da96f1a64bcf47297 \
     --hash=sha256:ff99f952db3db2fbe98a0b355175f93ec334ba3d01bbde25ad3a5a33abc02b58
     # via -r requirements.in
-pypdf==5.1.0 \
-    --hash=sha256:3bd4f503f4ebc58bae40d81e81a9176c400cbbac2ba2d877367595fb524dfdfc \
-    --hash=sha256:425a129abb1614183fd1aca6982f650b47f8026867c0ce7c4b9f281c443d2740
+pypdf==6.0.0 \
+    --hash=sha256:282a99d2cc94a84a3a3159f0d9358c0af53f85b4d28d76ea38b96e9e5ac2a08d \
+    --hash=sha256:56ea60100ce9f11fc3eec4f359da15e9aec3821b036c1f06d2b660d35683abb8
     # via -r requirements.in
 reportlab==4.2.5 \
     --hash=sha256:5cf35b8fd609b68080ac7bbb0ae1e376104f7d5f7b2d3914c7adc63f2593941f \
