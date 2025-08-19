@@ -52,9 +52,9 @@ jobs:
           filters: ".github/config/.files.yaml"
 
       - name: Set summary for frontend-any
-        run: echo "frontend-any=${{ steps.changes.outputs.frontend-any }}"
+        run: echo "frontend-any=${{ steps.changes.outputs.frontend-any.any_changed }}"
       - name: Set summary for frontend-all
-        run: echo "frontend-all=${{ steps.changes.outputs.frontend-all }}"
+        run: echo "frontend-all=${{ steps.changes.outputs.frontend-all.all_changed }}"
   build:
     if: needs.files-changed.outputs.build == 'true'
     needs: files-changed
