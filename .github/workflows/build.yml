@@ -48,7 +48,7 @@ jobs:
         uses: Ludy87/paths-filter@ea856debfa5145a589705b3fce02252e2909433b # v3.1.1
         id: change
         with:
-          filters: ".github/config/.files.yaml"
+          filters: ".github/config/.test.yaml"
 
       - name: Set summary for frontend-any
         run: echo "frontend-any=${{ steps.change.outputs.any_changed }}"
