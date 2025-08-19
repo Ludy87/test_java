@@ -11,5 +11,5 @@ test4: &test4
   - test4.txt
 
 test5: &test5
-  - added: 'test5.txt'
-  - added: 'test6.txt'
+  - 'test5.txt'
+  - 'test6.txt'
