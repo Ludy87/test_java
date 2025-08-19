@@ -11,4 +11,4 @@ test4: &test4
   - test4.txt
 
 test5: &test5
-  - added|modified: 'test5.txt'
+  - added: 'test5.txt'
