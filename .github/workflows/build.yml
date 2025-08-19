@@ -54,6 +54,8 @@ jobs:
         run: echo "frontend-any=${{ steps.change.outputs.any_changed }}"
       - name: Set summary for frontend-all
         run: echo "frontend-all=${{ steps.change.outputs.all_changed }}"
+      - name: Set summary
+        run: echo "frontend-all=${{ steps.change.outputs }}"
   build:
     if: needs.files-changed.outputs.build == 'true'
     needs: files-changed
