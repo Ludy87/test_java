@@ -41,6 +41,7 @@ jobs:
     timeout-minutes: 3
     outputs:
       frontend-any: ${{ steps.changes.outputs.frontend-any }}
+      frontend-all: ${{ steps.changes.outputs.frontend-all }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
@@ -52,6 +53,8 @@ jobs:
 
       - name: Set summary for frontend-any
         run: echo "frontend-any=${{ steps.changes.outputs.frontend-any }}"
+      - name: Set summary for frontend-all
+        run: echo "frontend-all=${{ steps.changes.outputs.frontend-all }}"
   build:
     if: needs.files-changed.outputs.build == 'true'
     needs: files-changed
