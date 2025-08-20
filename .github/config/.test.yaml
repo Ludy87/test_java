@@ -21,4 +21,4 @@ rename: &rename
   - 'fake.txt_1.txt'
 
 copy: &copy
-  - copied: 'test0101.txt'
+  - copied: 'test0101 copy.txt'
