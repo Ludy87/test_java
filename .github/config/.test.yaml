@@ -13,3 +13,6 @@ test4: &test4
 test5: &test5
   - 'test5.txt'
   - 'test6.txt'
+
+rename: &rename
+  - renamed: 'test*.txt'
