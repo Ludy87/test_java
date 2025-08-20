@@ -42,6 +42,18 @@ jobs:
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
+      - name: Copy test file
+        shell: bash
+        run: |
+          mkdir -p c
+          cp test0101.txt c/test0101.txt
+
+      - name: add git
+        shell: bash
+        run: |
+          git config user.email "john@nowhere.local" && git config user.name "John Doe"
+          git add c/test0101.txt && git commit -a -m 'testing this action'
+
       - name: Check for file changes
         uses: Ludy87/paths-filter@add_oldFilename # master
         id: change
