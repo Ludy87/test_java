@@ -1,5 +1,5 @@
 # First stage: Build the application
-FROM gradle:8.9.0-jdk21-alpine AS build
+FROM gradle:9.0.0-jdk21-alpine AS build
 
 # Set the working directory
 WORKDIR /app
