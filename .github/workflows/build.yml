@@ -47,6 +47,7 @@ jobs:
         run: |
           mkdir -p c
           cp test0101.txt c/test0101.txt
+          git mv README.md README_RENAMED.md
 
       - name: add git
         shell: bash
