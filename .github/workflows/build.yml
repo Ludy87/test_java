@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           git config user.email "john@nowhere.local" && git config user.name "John Doe"
-          git add c/test0101.txt && git commit -a -m 'testing this action'
+          git add c/test0101.txt
           git diff --name-status --find-copies-harder -z -M HEAD
 
       - name: Check for file changes
