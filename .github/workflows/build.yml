@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Check for file changes
-        uses: Ludy87/paths-filter@710ee7a81c4994bbcc8581a22b1f002d439f926b # v3.1.2
+        uses: Ludy87/paths-filter@master
         id: change
         with:
           filters: ".github/config/.test.yaml"
