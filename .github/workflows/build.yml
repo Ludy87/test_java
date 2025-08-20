@@ -39,8 +39,6 @@ jobs:
     name: detect what files changed
     runs-on: ubuntu-latest
     timeout-minutes: 3
-    outputs:
-      frontend-any: ${{ steps.changes.outputs.frontend-any }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
@@ -56,6 +54,8 @@ jobs:
         run: echo "frontend-all=${{ steps.change.outputs.all_changed }}"
       - name: Set summary
         run: echo "frontend-all=${{ steps.change.outputs }}"
+      - name: Set summary for rename
+        run: echo "rename=${{ steps.change.outputs.rename }}"
   build:
     if: needs.files-changed.outputs.build == 'true'
     needs: files-changed
