@@ -47,7 +47,7 @@ jobs:
           cp test0101.txt c/test0101.txt
 
       - name: add git
-        run: git add c/test0101.txt
+        run: git add c/test0101.txt && git commit -a -m 'testing this action'
 
       - name: Check for file changes
         uses: Ludy87/paths-filter@add_oldFilename # master
