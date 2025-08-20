@@ -16,4 +16,5 @@ test5: &test5
 
 rename: &rename
   - renamed: 'test1.txt'
+  - renamed: 'test1_1.txt'
   - 'fake.txt'
