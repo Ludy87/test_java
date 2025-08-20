@@ -15,4 +15,4 @@ test5: &test5
   - 'test6.txt'
 
 rename: &rename
-  - renamed: 'test(*).txt'
+  - renamed: 'test1_1.txt'
