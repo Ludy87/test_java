@@ -57,7 +57,7 @@ jobs:
       #     git diff --name-status --find-copies-harder -z -M HEAD
 
       - name: Check for file changes
-        uses: Ludy87/paths-filter@add_oldFilename # master
+        uses: Ludy87/paths-filter@710ee7a81c4994bbcc8581a22b1f002d439f926b # v3.1.2
         id: change
         with:
           # base: HEAD
