@@ -36,18 +36,31 @@ jobs:
 
   files-changed-any:
     if: always()
-    name: detect what files changed
+    name: detect what files changed any
     runs-on: ubuntu-latest
     timeout-minutes: 3
-    outputs:
-      frontend-any: ${{ steps.changes.outputs.frontend-any }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      # - name: Copy test file
+      #   shell: bash
+      #   run: |
+      #     mkdir -p c
+      #     cp test0101.txt c/test0101.txt
+      #     git mv README.md README_RENAMED.md
+
+      # - name: add git
+      #   shell: bash
+      #   run: |
+      #     git config user.email "john@nowhere.local" && git config user.name "John Doe"
+      #     git add c/test0101.txt
+      #     git diff --name-status --find-copies-harder -z -M HEAD
 
       - name: Check for file changes
         uses: Ludy87/paths-filter@bd8a5f806b3e8cb8229ff4749e02e683ae4ef2df # v3.1.2
         id: change
         with:
+          # base: HEAD
           filters: ".github/config/.test.yaml"
 
       - name: Set summary for frontend-any
@@ -56,6 +69,8 @@ jobs:
         run: echo "frontend-all=${{ steps.change.outputs.all_changed }}"
       - name: Set summary
         run: echo "frontend-all=${{ steps.change.outputs }}"
+      - name: Set summary for rename
+        run: echo "rename=${{ steps.change.outputs.rename }}"
   build:
     if: needs.files-changed.outputs.build == 'true'
     needs: files-changed
