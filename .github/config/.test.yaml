@@ -19,3 +19,7 @@ rename: &rename
   - renamed: 'test1_1.txt'
   - 'fake.txt'
   - 'fake.txt_1.txt'
+
+copy: &copy
+  - 'test5.txt'
+  - 'test6.txt'
