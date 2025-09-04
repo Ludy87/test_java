@@ -35,7 +35,7 @@ jobs:
 
       - name: Get PR data
         id: get-pr-data
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
@@ -65,7 +65,7 @@ jobs:
 
       - name: Determine reference file test
         id: determine-file
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         with:
           script: |
             const fs = require("fs");
@@ -205,7 +205,7 @@ jobs:
 
       - name: Post comment on PR
         if: env.SCRIPT_OUTPUT != ''
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         with:
           script: |
             const { GITHUB_REPOSITORY, SCRIPT_OUTPUT } = process.env;
