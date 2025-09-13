@@ -22,23 +22,19 @@
   --hover-filter:brightness(0.9);
   --focus-ring-color:#0060df;
   --focus-ring-outline:2px solid var(--focus-ring-color);
-
   --textarea-border-color:#8f8f9d;
   --textarea-bg-color:white;
   --textarea-fg-color:var(--text-secondary-color);
-
   --radio-bg-color:#f0f0f4;
   --radio-checked-bg-color:#fbfbfe;
   --radio-border-color:#8f8f9d;
   --radio-checked-border-color:#0060df;
-
   --button-secondary-bg-color:#f0f0f4;
   --button-secondary-fg-color:var(--text-primary-color);
   --button-secondary-border-color:var(--button-secondary-bg-color);
   --button-secondary-hover-bg-color:var(--button-secondary-bg-color);
   --button-secondary-hover-fg-color:var(--button-secondary-fg-color);
   --button-secondary-hover-border-color:var(--button-secondary-hover-bg-color);
-
   --button-primary-bg-color:#0060df;
   --button-primary-fg-color:#fbfbfe;
   --button-primary-hover-bg-color:var(--button-primary-bg-color);
@@ -58,8 +54,7 @@
 }
 
 @media (prefers-color-scheme: dark){
-
-:where(html:not(.is-light)) .dialog{
+  :where(html:not(.is-light)) .dialog{
     --dialog-bg-color:#1c1b22;
     --dialog-border-color:#1c1b22;
     --dialog-shadow:0 2px 14px 0 #15141a;
@@ -67,42 +62,35 @@
     --text-secondary-color:#cfcfd8;
     --focus-ring-color:#0df;
     --hover-filter:brightness(1.4);
-
     --textarea-bg-color:#42414d;
-
     --radio-bg-color:#2b2a33;
     --radio-checked-bg-color:#15141a;
     --radio-checked-border-color:#0df;
-
     --button-secondary-bg-color:#2b2a33;
     --button-primary-bg-color:#0df;
     --button-primary-fg-color:#15141a;
-}
   }
+}
 
 :where(html.is-dark) .dialog{
-    --dialog-bg-color:#1c1b22;
-    --dialog-border-color:#1c1b22;
-    --dialog-shadow:0 2px 14px 0 #15141a;
-    --text-primary-color:#fbfbfe;
-    --text-secondary-color:#cfcfd8;
-    --focus-ring-color:#0df;
-    --hover-filter:brightness(1.4);
-
-    --textarea-bg-color:#42414d;
-
-    --radio-bg-color:#2b2a33;
-    --radio-checked-bg-color:#15141a;
-    --radio-checked-border-color:#0df;
-
-    --button-secondary-bg-color:#2b2a33;
-    --button-primary-bg-color:#0df;
-    --button-primary-fg-color:#15141a;
+  --dialog-bg-color:#1c1b22;
+  --dialog-border-color:#1c1b22;
+  --dialog-shadow:0 2px 14px 0 #15141a;
+  --text-primary-color:#fbfbfe;
+  --text-secondary-color:#cfcfd8;
+  --focus-ring-color:#0df;
+  --hover-filter:brightness(1.4);
+  --textarea-bg-color:#42414d;
+  --radio-bg-color:#2b2a33;
+  --radio-checked-bg-color:#15141a;
+  --radio-checked-border-color:#0df;
+  --button-secondary-bg-color:#2b2a33;
+  --button-primary-bg-color:#0df;
+  --button-primary-fg-color:#15141a;
 }
 
 @media screen and (forced-colors: active){
-
-.dialog{
+  .dialog{
     --dialog-bg-color:Canvas;
     --dialog-border-color:CanvasText;
     --dialog-shadow:none;
@@ -110,144 +98,140 @@
     --text-secondary-color:CanvasText;
     --hover-filter:none;
     --focus-ring-color:ButtonBorder;
-
     --textarea-border-color:ButtonBorder;
     --textarea-bg-color:Field;
     --textarea-fg-color:ButtonText;
-
     --radio-bg-color:ButtonFace;
     --radio-checked-bg-color:ButtonFace;
     --radio-border-color:ButtonText;
     --radio-checked-border-color:ButtonText;
-
     --button-secondary-bg-color:ButtonFace;
     --button-secondary-fg-color:ButtonText;
     --button-secondary-border-color:ButtonText;
     --button-secondary-hover-bg-color:AccentColor;
     --button-secondary-hover-fg-color:AccentColorText;
-
     --button-primary-bg-color:ButtonText;
     --button-primary-fg-color:ButtonFace;
     --button-primary-hover-bg-color:AccentColor;
     --button-primary-hover-fg-color:AccentColorText;
-}
   }
+}
 
 .dialog .mainContainer *:focus-visible{
-      outline:var(--focus-ring-outline);
-      outline-offset:2px;
-    }
+  outline:var(--focus-ring-outline);
+  outline-offset:2px;
+}
 
 .dialog .mainContainer .radio{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-start;
-      gap:4px;
-    }
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+}
 
 .dialog .mainContainer .radio > .radioButton{
-        display:flex;
-        gap:8px;
-        align-self:stretch;
-        align-items:center;
-      }
+  display:flex;
+  gap:8px;
+  align-self:stretch;
+  align-items:center;
+}
 
 .dialog .mainContainer .radio > .radioButton input{
-          -webkit-appearance:none;
-             -moz-appearance:none;
-                  appearance:none;
-          box-sizing:border-box;
-          width:16px;
-          height:16px;
-          border-radius:50%;
-          background-color:var(--radio-bg-color);
-          border:1px solid var(--radio-border-color);
-        }
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+  box-sizing:border-box;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background-color:var(--radio-bg-color);
+  border:1px solid var(--radio-border-color);
+}
 
 .dialog .mainContainer .radio > .radioButton input:hover{
-            filter:var(--hover-filter);
-          }
+  filter:var(--hover-filter);
+}
 
 .dialog .mainContainer .radio > .radioButton input:checked{
-            background-color:var(--radio-checked-bg-color);
-            border:4px solid var(--radio-checked-border-color);
-          }
+  background-color:var(--radio-checked-bg-color);
+  border:4px solid var(--radio-checked-border-color);
+}
 
 .dialog .mainContainer .radio > .radioLabel{
-        display:flex;
-        padding-inline-start:24px;
-        align-items:flex-start;
-        gap:10px;
-        align-self:stretch;
-      }
+  display:flex;
+  padding-inline-start:24px;
+  align-items:flex-start;
+  gap:10px;
+  align-self:stretch;
+}
 
 .dialog .mainContainer .radio > .radioLabel > span{
-          flex:1 0 0;
-          font-size:11px;
-          color:var(--text-secondary-color);
-        }
+  flex:1 0 0;
+  font-size:11px;
+  color:var(--text-secondary-color);
+}
 
 .dialog .mainContainer button{
-      border-radius:4px;
-      border:1px solid;
-      font:menu;
-      font-weight:600;
-      padding:4px 16px;
-      width:auto;
-      height:32px;
-    }
+  border-radius:4px;
+  border:1px solid;
+  font:menu;
+  font-weight:600;
+  padding:4px 16px;
+  width:auto;
+  height:32px;
+}
 
 .dialog .mainContainer button:hover{
-        cursor:pointer;
-        filter:var(--hover-filter);
-      }
+  cursor:pointer;
+  filter:var(--hover-filter);
+}
 
 .dialog .mainContainer button.secondaryButton{
-        color:var(--button-secondary-fg-color);
-        background-color:var(--button-secondary-bg-color);
-        border-color:var(--button-secondary-border-color);
-      }
+  color:var(--button-secondary-fg-color);
+  background-color:var(--button-secondary-bg-color);
+  border-color:var(--button-secondary-border-color);
+}
 
 .dialog .mainContainer button.secondaryButton:hover{
-          color:var(--button-secondary-hover-fg-color);
-          background-color:var(--button-secondary-hover-bg-color);
-          border-color:var(--button-secondary-hover-border-color);
-        }
+  color:var(--button-secondary-hover-fg-color);
+  background-color:var(--button-secondary-hover-bg-color);
+  border-color:var(--button-secondary-hover-border-color);
+}
 
 .dialog .mainContainer button.primaryButton{
-        color:var(--button-primary-hover-fg-color);
-        background-color:var(--button-primary-hover-bg-color);
-        border-color:var(--button-primary-hover-border-color);
-        opacity:1;
-      }
+  color:var(--button-primary-hover-fg-color);
+  background-color:var(--button-primary-hover-bg-color);
+  border-color:var(--button-primary-hover-border-color);
+  opacity:1;
+}
 
 .dialog .mainContainer button.primaryButton:hover{
-          color:var(--button-primary-hover-fg-color);
-          background-color:var(--button-primary-hover-bg-color);
-          border-color:var(--button-primary-hover-border-color);
-        }
+  color:var(--button-primary-hover-fg-color);
+  background-color:var(--button-primary-hover-bg-color);
+  border-color:var(--button-primary-hover-border-color);
+}
 
 .dialog .mainContainer textarea{
-      font:inherit;
-      padding:8px;
-      resize:none;
-      margin:0;
-      box-sizing:border-box;
-      border-radius:4px;
-      border:1px solid var(--textarea-border-color);
-      background:var(--textarea-bg-color);
-      color:var(--textarea-fg-color);
-    }
+  font:inherit;
+  padding:8px;
+  resize:none;
+  margin:0;
+  box-sizing:border-box;
+  border-radius:4px;
+  border:1px solid var(--textarea-border-color);
+  background:var(--textarea-bg-color);
+  color:var(--textarea-fg-color);
+}
 
 .dialog .mainContainer textarea:focus{
-        outline-offset:0;
-        border-color:transparent;
-      }
+  outline-offset:0;
+  border-color:transparent;
+}
 
 .dialog .mainContainer textarea:disabled{
-        pointer-events:none;
-        opacity:0.4;
-      }
+  pointer-events:none;
+  opacity:0.4;
+}
 
 .textLayer{
   position:absolute;
@@ -257,8 +241,8 @@
   opacity:1;
   line-height:1;
   -webkit-text-size-adjust:none;
-     -moz-text-size-adjust:none;
-          text-size-adjust:none;
+  -moz-text-size-adjust:none;
+  text-size-adjust:none;
   forced-color-adjust:none;
   transform-origin:0 0;
   caret-color:CanvasText;
@@ -266,107 +250,106 @@
 }
 
 .textLayer.highlighting{
-    touch-action:none;
-  }
+  touch-action:none;
+}
 
 .textLayer :is(span, br){
-    color:transparent;
-    position:absolute;
-    white-space:pre;
-    cursor:text;
-    transform-origin:0% 0%;
-  }
+  color:transparent;
+  position:absolute;
+  white-space:pre;
+  cursor:text;
+  transform-origin:0% 0%;
+}
 
 .textLayer > :not(.markedContent),
-  .textLayer .markedContent span:not(.markedContent){
-    z-index:1;
-  }
+.textLayer .markedContent span:not(.markedContent){
+  z-index:1;
+}
 
 .textLayer span.markedContent{
-    top:0;
-    height:0;
-  }
+  top:0;
+  height:0;
+}
 
 .textLayer .highlight{
-    --highlight-bg-color:rgb(180 0 170 / 0.25);
-    --highlight-selected-bg-color:rgb(0 100 0 / 0.25);
-    --highlight-backdrop-filter:none;
-    --highlight-selected-backdrop-filter:none;
+  --highlight-bg-color:rgb(180 0 170 / 0.25);
+  --highlight-selected-bg-color:rgb(0 100 0 / 0.25);
+  --highlight-backdrop-filter:none;
+  --highlight-selected-backdrop-filter:none;
 
-    margin:-1px;
-    padding:1px;
-    background-color:var(--highlight-bg-color);
-    -webkit-backdrop-filter:var(--highlight-backdrop-filter);
-            backdrop-filter:var(--highlight-backdrop-filter);
-    border-radius:4px;
-  }
+  margin:-1px;
+  padding:1px;
+  background-color:var(--highlight-bg-color);
+  -webkit-backdrop-filter:var(--highlight-backdrop-filter);
+  backdrop-filter:var(--highlight-backdrop-filter);
+  border-radius:4px;
+}
 
 @media screen and (forced-colors: active){
-
-.textLayer .highlight{
-      --highlight-bg-color:transparent;
-      --highlight-selected-bg-color:transparent;
-      --highlight-backdrop-filter:var(--hcm-highlight-filter);
-      --highlight-selected-backdrop-filter:var(
-        --hcm-highlight-selected-filter
-      );
+  .textLayer .highlight{
+    --highlight-bg-color:transparent;
+    --highlight-selected-bg-color:transparent;
+    --highlight-backdrop-filter:var(--hcm-highlight-filter);
+    --highlight-selected-backdrop-filter:var(
+      --hcm-highlight-selected-filter
+    );
   }
-    }
+}
 
 .textLayer .highlight.appended{
-      position:initial;
-    }
+  position:initial;
+}
 
 .textLayer .highlight.begin{
-      border-radius:4px 0 0 4px;
-    }
+  border-radius:4px 0 0 4px;
+}
 
 .textLayer .highlight.end{
-      border-radius:0 4px 4px 0;
-    }
+  border-radius:0 4px 4px 0;
+}
 
 .textLayer .highlight.middle{
-      border-radius:0;
-    }
+  border-radius:0;
+}
 
 .textLayer .highlight.selected{
-      background-color:var(--highlight-selected-bg-color);
-      -webkit-backdrop-filter:var(--highlight-selected-backdrop-filter);
-              backdrop-filter:var(--highlight-selected-backdrop-filter);
-    }
+  background-color:var(--highlight-selected-bg-color);
+  -webkit-backdrop-filter:var(--highlight-selected-backdrop-filter);
+  backdrop-filter:var(--highlight-selected-backdrop-filter);
+}
 
 .textLayer ::-moz-selection{
-    background:rgba(0 0 255 / 0.25);
-    background:color-mix(in srgb, AccentColor, transparent 75%);
-  }
+  background:rgba(0 0 255 / 0.25);
+  background:color-mix(in srgb, AccentColor, transparent 75%);
+}
 
 .textLayer ::selection{
-    background:rgba(0 0 255 / 0.25);
-    background:color-mix(in srgb, AccentColor, transparent 75%);
-  }
+  background:rgba(0 0 255 / 0.25);
+  background:color-mix(in srgb, AccentColor, transparent 75%);
+}
 
 .textLayer br::-moz-selection{
-    background:transparent;
-  }
+  background:transparent;
+}
 
 .textLayer br::selection{
-    background:transparent;
-  }
+  background:transparent;
+}
 
 .textLayer .endOfContent{
-    display:block;
-    position:absolute;
-    inset:100% 0 0;
-    z-index:0;
-    cursor:default;
-    -webkit-user-select:none;
-       -moz-user-select:none;
-            user-select:none;
-  }
+  display:block;
+  position:absolute;
+  inset:100% 0 0;
+  z-index:0;
+  cursor:default;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  user-select:none;
+}
 
 .textLayer .endOfContent.active{
-      top:0;
-    }
+  top:0;
+}
 
 .annotationLayer{
   --annotation-unfocused-field-background:url("data:image/svg+xml;charset=UTF-8,<svg width='1px' height='1px' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' style='fill:rgba(0, 54, 255, 0.13);'/></svg>");
@@ -385,351 +368,350 @@
 }
 
 @media screen and (forced-colors: active){
-
-.annotationLayer{
+  .annotationLayer{
     --input-focus-border-color:CanvasText;
     --input-unfocused-border-color:ActiveText;
     --input-disabled-border-color:GrayText;
     --input-hover-border-color:Highlight;
     --link-outline:1.5px solid LinkText;
+  }
+
+  .annotationLayer .textWidgetAnnotation :is(input, textarea):required, .annotationLayer .choiceWidgetAnnotation select:required, .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input:required{
+    outline:1.5px solid selectedItem;
+  }
+
+  .annotationLayer .linkAnnotation{
+    outline:var(--link-outline);
+  }
+
+  .annotationLayer .linkAnnotation:hover{
+    -webkit-backdrop-filter:var(--hcm-highlight-filter);
+    backdrop-filter:var(--hcm-highlight-filter);
+  }
+
+  .annotationLayer .linkAnnotation > a:hover{
+    opacity:0 !important;
+    background:none !important;
+    box-shadow:none;
+  }
+
+  .annotationLayer .popupAnnotation .popup{
+    outline:calc(1.5px * var(--scale-factor)) solid CanvasText !important;
+    background-color:ButtonFace !important;
+    color:ButtonText !important;
+  }
+
+  .annotationLayer .highlightArea:hover::after{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    -webkit-backdrop-filter:var(--hcm-highlight-filter);
+    backdrop-filter:var(--hcm-highlight-filter);
+    content:"";
+    pointer-events:none;
+  }
+
+  .annotationLayer .popupAnnotation.focused .popup{
+    outline:calc(3px * var(--scale-factor)) solid Highlight !important;
+  }
 }
 
-    .annotationLayer .textWidgetAnnotation :is(input, textarea):required, .annotationLayer .choiceWidgetAnnotation select:required, .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input:required{
-      outline:1.5px solid selectedItem;
-    }
-
-    .annotationLayer .linkAnnotation{
-      outline:var(--link-outline);
-    }
-
-      .annotationLayer .linkAnnotation:hover{
-        -webkit-backdrop-filter:var(--hcm-highlight-filter);
-                backdrop-filter:var(--hcm-highlight-filter);
-      }
-
-      .annotationLayer .linkAnnotation > a:hover{
-        opacity:0 !important;
-        background:none !important;
-        box-shadow:none;
-      }
-
-    .annotationLayer .popupAnnotation .popup{
-      outline:calc(1.5px * var(--scale-factor)) solid CanvasText !important;
-      background-color:ButtonFace !important;
-      color:ButtonText !important;
-    }
-
-    .annotationLayer .highlightArea:hover::after{
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      -webkit-backdrop-filter:var(--hcm-highlight-filter);
-              backdrop-filter:var(--hcm-highlight-filter);
-      content:"";
-      pointer-events:none;
-    }
-
-    .annotationLayer .popupAnnotation.focused .popup{
-      outline:calc(3px * var(--scale-factor)) solid Highlight !important;
-    }
-  }
-
 .annotationLayer[data-main-rotation="90"] .norotate{
-    transform:rotate(270deg) translateX(-100%);
-  }
+  transform:rotate(270deg) translateX(-100%);
+}
 
 .annotationLayer[data-main-rotation="180"] .norotate{
-    transform:rotate(180deg) translate(-100%, -100%);
-  }
+  transform:rotate(180deg) translate(-100%, -100%);
+}
 
 .annotationLayer[data-main-rotation="270"] .norotate{
-    transform:rotate(90deg) translateY(-100%);
-  }
+  transform:rotate(90deg) translateY(-100%);
+}
 
 .annotationLayer.disabled section,
-    .annotationLayer.disabled .popup{
-      pointer-events:none;
-    }
+.annotationLayer.disabled .popup{
+  pointer-events:none;
+}
 
 .annotationLayer .annotationContent{
-    position:absolute;
-    width:100%;
-    height:100%;
-    pointer-events:none;
-  }
+  position:absolute;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
 
 .annotationLayer .annotationContent.freetext{
-      background:transparent;
-      border:none;
-      inset:0;
-      overflow:visible;
-      white-space:nowrap;
-      font:10px sans-serif;
-      line-height:1.35;
-      -webkit-user-select:none;
-         -moz-user-select:none;
-              user-select:none;
-    }
+  background:transparent;
+  border:none;
+  inset:0;
+  overflow:visible;
+  white-space:nowrap;
+  font:10px sans-serif;
+  line-height:1.35;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  user-select:none;
+}
 
 .annotationLayer section{
-    position:absolute;
-    text-align:initial;
-    pointer-events:auto;
-    box-sizing:border-box;
-    transform-origin:0 0;
-  }
+  position:absolute;
+  text-align:initial;
+  pointer-events:auto;
+  box-sizing:border-box;
+  transform-origin:0 0;
+}
 
 .annotationLayer section:has(div.annotationContent) canvas.annotationContent{
-        display:none;
-      }
+  display:none;
+}
 
 .annotationLayer :is(.linkAnnotation, .buttonWidgetAnnotation.pushButton) > a{
-    position:absolute;
-    font-size:1em;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-  }
+  position:absolute;
+  font-size:1em;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+}
 
 .annotationLayer :is(.linkAnnotation, .buttonWidgetAnnotation.pushButton):not(.hasBorder)
-    > a:hover{
-    opacity:0.2;
-    background-color:rgb(255 255 0);
-    box-shadow:0 2px 10px rgb(255 255 0);
-  }
+> a:hover{
+  opacity:0.2;
+  background-color:rgb(255 255 0);
+  box-shadow:0 2px 10px rgb(255 255 0);
+}
 
 .annotationLayer .linkAnnotation.hasBorder:hover{
-    background-color:rgb(255 255 0 / 0.2);
-  }
+  background-color:rgb(255 255 0 / 0.2);
+}
 
 .annotationLayer .hasBorder{
-    background-size:100% 100%;
-  }
+  background-size:100% 100%;
+}
 
 .annotationLayer .textAnnotation img{
-    position:absolute;
-    cursor:pointer;
-    width:100%;
-    height:100%;
-    top:0;
-    left:0;
-  }
+  position:absolute;
+  cursor:pointer;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+}
 
 .annotationLayer .textWidgetAnnotation :is(input, textarea), .annotationLayer .choiceWidgetAnnotation select, .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input{
-    background-image:var(--annotation-unfocused-field-background);
-    border:2px solid var(--input-unfocused-border-color);
-    box-sizing:border-box;
-    font:calc(9px * var(--scale-factor)) sans-serif;
-    height:100%;
-    margin:0;
-    vertical-align:top;
-    width:100%;
-  }
+  background-image:var(--annotation-unfocused-field-background);
+  border:2px solid var(--input-unfocused-border-color);
+  box-sizing:border-box;
+  font:calc(9px * var(--scale-factor)) sans-serif;
+  height:100%;
+  margin:0;
+  vertical-align:top;
+  width:100%;
+}
 
 .annotationLayer .textWidgetAnnotation :is(input, textarea):required, .annotationLayer .choiceWidgetAnnotation select:required, .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input:required{
-    outline:1.5px solid red;
-  }
+  outline:1.5px solid red;
+}
 
 .annotationLayer .choiceWidgetAnnotation select option{
-    padding:0;
-  }
+  padding:0;
+}
 
 .annotationLayer .buttonWidgetAnnotation.radioButton input{
-    border-radius:50%;
-  }
+  border-radius:50%;
+}
 
 .annotationLayer .textWidgetAnnotation textarea{
-    resize:none;
-  }
+  resize:none;
+}
 
 .annotationLayer .textWidgetAnnotation [disabled]:is(input, textarea), .annotationLayer .choiceWidgetAnnotation select[disabled], .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input[disabled]{
-    background:none;
-    border:2px solid var(--input-disabled-border-color);
-    cursor:not-allowed;
-  }
+  background:none;
+  border:2px solid var(--input-disabled-border-color);
+  cursor:not-allowed;
+}
 
 .annotationLayer .textWidgetAnnotation :is(input, textarea):hover, .annotationLayer .choiceWidgetAnnotation select:hover, .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input:hover{
-    border:2px solid var(--input-hover-border-color);
-  }
+  border:2px solid var(--input-hover-border-color);
+}
 
 .annotationLayer .textWidgetAnnotation :is(input, textarea):hover, .annotationLayer .choiceWidgetAnnotation select:hover, .annotationLayer .buttonWidgetAnnotation.checkBox input:hover{
-    border-radius:2px;
-  }
+  border-radius:2px;
+}
 
 .annotationLayer .textWidgetAnnotation :is(input, textarea):focus, .annotationLayer .choiceWidgetAnnotation select:focus{
-    background:none;
-    border:2px solid var(--input-focus-border-color);
-    border-radius:2px;
-    outline:var(--input-focus-outline);
-  }
+  background:none;
+  border:2px solid var(--input-focus-border-color);
+  border-radius:2px;
+  outline:var(--input-focus-outline);
+}
 
 .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) :focus{
-    background-image:none;
-    background-color:transparent;
-  }
+  background-image:none;
+  background-color:transparent;
+}
 
 .annotationLayer .buttonWidgetAnnotation.checkBox :focus{
-    border:2px solid var(--input-focus-border-color);
-    border-radius:2px;
-    outline:var(--input-focus-outline);
-  }
+  border:2px solid var(--input-focus-border-color);
+  border-radius:2px;
+  outline:var(--input-focus-outline);
+}
 
 .annotationLayer .buttonWidgetAnnotation.radioButton :focus{
-    border:2px solid var(--input-focus-border-color);
-    outline:var(--input-focus-outline);
-  }
+  border:2px solid var(--input-focus-border-color);
+  outline:var(--input-focus-outline);
+}
 
 .annotationLayer .buttonWidgetAnnotation.checkBox input:checked::before,
-  .annotationLayer .buttonWidgetAnnotation.checkBox input:checked::after,
-  .annotationLayer .buttonWidgetAnnotation.radioButton input:checked::before{
-    background-color:CanvasText;
-    content:"";
-    display:block;
-    position:absolute;
-  }
+.annotationLayer .buttonWidgetAnnotation.checkBox input:checked::after,
+.annotationLayer .buttonWidgetAnnotation.radioButton input:checked::before{
+  background-color:CanvasText;
+  content:"";
+  display:block;
+  position:absolute;
+}
 
 .annotationLayer .buttonWidgetAnnotation.checkBox input:checked::before,
-  .annotationLayer .buttonWidgetAnnotation.checkBox input:checked::after{
-    height:80%;
-    left:45%;
-    width:1px;
-  }
+.annotationLayer .buttonWidgetAnnotation.checkBox input:checked::after{
+  height:80%;
+  left:45%;
+  width:1px;
+}
 
 .annotationLayer .buttonWidgetAnnotation.checkBox input:checked::before{
-    transform:rotate(45deg);
-  }
+  transform:rotate(45deg);
+}
 
 .annotationLayer .buttonWidgetAnnotation.checkBox input:checked::after{
-    transform:rotate(-45deg);
-  }
+  transform:rotate(-45deg);
+}
 
 .annotationLayer .buttonWidgetAnnotation.radioButton input:checked::before{
-    border-radius:50%;
-    height:50%;
-    left:25%;
-    top:25%;
-    width:50%;
-  }
+  border-radius:50%;
+  height:50%;
+  left:25%;
+  top:25%;
+  width:50%;
+}
 
 .annotationLayer .textWidgetAnnotation input.comb{
-    font-family:monospace;
-    padding-left:2px;
-    padding-right:0;
-  }
+  font-family:monospace;
+  padding-left:2px;
+  padding-right:0;
+}
 
 .annotationLayer .textWidgetAnnotation input.comb:focus{
-    width:103%;
-  }
+  width:103%;
+}
 
 .annotationLayer .buttonWidgetAnnotation:is(.checkBox, .radioButton) input{
-    -webkit-appearance:none;
-       -moz-appearance:none;
-            appearance:none;
-  }
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+}
 
 .annotationLayer .fileAttachmentAnnotation .popupTriggerArea{
-    height:100%;
-    width:100%;
-  }
+  height:100%;
+  width:100%;
+}
 
 .annotationLayer .popupAnnotation{
-    position:absolute;
-    font-size:calc(9px * var(--scale-factor));
-    pointer-events:none;
-    width:-moz-max-content;
-    width:max-content;
-    max-width:45%;
-    height:auto;
-  }
+  position:absolute;
+  font-size:calc(9px * var(--scale-factor));
+  pointer-events:none;
+  width:-moz-max-content;
+  width:max-content;
+  max-width:45%;
+  height:auto;
+}
 
 .annotationLayer .popup{
-    background-color:rgb(255 255 153);
-    box-shadow:0 calc(2px * var(--scale-factor)) calc(5px * var(--scale-factor)) rgb(136 136 136);
-    border-radius:calc(2px * var(--scale-factor));
-    outline:1.5px solid rgb(255 255 74);
-    padding:calc(6px * var(--scale-factor));
-    cursor:pointer;
-    font:message-box;
-    white-space:normal;
-    word-wrap:break-word;
-    pointer-events:auto;
-  }
+  background-color:rgb(255 255 153);
+  box-shadow:0 calc(2px * var(--scale-factor)) calc(5px * var(--scale-factor)) rgb(136 136 136);
+  border-radius:calc(2px * var(--scale-factor));
+  outline:1.5px solid rgb(255 255 74);
+  padding:calc(6px * var(--scale-factor));
+  cursor:pointer;
+  font:message-box;
+  white-space:normal;
+  word-wrap:break-word;
+  pointer-events:auto;
+}
 
 .annotationLayer .popupAnnotation.focused .popup{
-    outline-width:3px;
-  }
+  outline-width:3px;
+}
 
 .annotationLayer .popup *{
-    font-size:calc(9px * var(--scale-factor));
-  }
+  font-size:calc(9px * var(--scale-factor));
+}
 
 .annotationLayer .popup > .header{
-    display:inline-block;
-  }
+  display:inline-block;
+}
 
 .annotationLayer .popup > .header h1{
-    display:inline;
-  }
+  display:inline;
+}
 
 .annotationLayer .popup > .header .popupDate{
-    display:inline-block;
-    margin-left:calc(5px * var(--scale-factor));
-    width:-moz-fit-content;
-    width:fit-content;
-  }
+  display:inline-block;
+  margin-left:calc(5px * var(--scale-factor));
+  width:-moz-fit-content;
+  width:fit-content;
+}
 
 .annotationLayer .popupContent{
-    border-top:1px solid rgb(51 51 51);
-    margin-top:calc(2px * var(--scale-factor));
-    padding-top:calc(2px * var(--scale-factor));
-  }
+  border-top:1px solid rgb(51 51 51);
+  margin-top:calc(2px * var(--scale-factor));
+  padding-top:calc(2px * var(--scale-factor));
+}
 
 .annotationLayer .richText > *{
-    white-space:pre-wrap;
-    font-size:calc(9px * var(--scale-factor));
-  }
+  white-space:pre-wrap;
+  font-size:calc(9px * var(--scale-factor));
+}
 
 .annotationLayer .popupTriggerArea{
-    cursor:pointer;
-  }
+  cursor:pointer;
+}
 
 .annotationLayer section svg{
-    position:absolute;
-    width:100%;
-    height:100%;
-    top:0;
-    left:0;
-  }
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+}
 
 .annotationLayer .annotationTextContent{
-    position:absolute;
-    width:100%;
-    height:100%;
-    opacity:0;
-    color:transparent;
-    -webkit-user-select:none;
-       -moz-user-select:none;
-            user-select:none;
-    pointer-events:none;
-  }
+  position:absolute;
+  width:100%;
+  height:100%;
+  opacity:0;
+  color:transparent;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  user-select:none;
+  pointer-events:none;
+}
 
 .annotationLayer .annotationTextContent span{
-      width:100%;
-      display:inline-block;
-    }
+  width:100%;
+  display:inline-block;
+}
 
 .annotationLayer svg.quadrilateralsContainer{
-    contain:strict;
-    width:0;
-    height:0;
-    position:absolute;
-    top:0;
-    left:0;
-    z-index:-1;
-  }
+  contain:strict;
+  width:0;
+  height:0;
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:-1;
+}
 
 :root{
   --xfa-unfocused-field-background:url("data:image/svg+xml;charset=UTF-8,<svg width='1px' height='1px' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' style='fill:rgba(0, 54, 255, 0.13);'/></svg>");
@@ -740,6 +722,7 @@
   :root{
     --xfa-focus-outline:2px solid CanvasText;
   }
+
   .xfaLayer *:required{
     outline:1.5px solid selectedItem;
   }
@@ -963,9 +946,9 @@
 
 .xfaImage{
   -o-object-position:left top;
-     object-position:left top;
+  object-position:left top;
   -o-object-fit:contain;
-     object-fit:contain;
+  object-fit:contain;
   width:100%;
   height:100%;
 }
@@ -1042,90 +1025,89 @@
 
   .xfaSelect{
     -webkit-appearance:none;
-       -moz-appearance:none;
-            appearance:none;
+    -moz-appearance:none;
+    appearance:none;
     text-indent:1px;
     text-overflow:"";
   }
 }
 
 .canvasWrapper svg{
-    transform:none;
-  }
+  transform:none;
+}
 
 .canvasWrapper svg[data-main-rotation="90"] mask,
-      .canvasWrapper svg[data-main-rotation="90"] use:not(.clip, .mask){
-        transform:matrix(0, 1, -1, 0, 1, 0);
-      }
+.canvasWrapper svg[data-main-rotation="90"] use:not(.clip, .mask){
+  transform:matrix(0, 1, -1, 0, 1, 0);
+}
 
 .canvasWrapper svg[data-main-rotation="180"] mask,
-      .canvasWrapper svg[data-main-rotation="180"] use:not(.clip, .mask){
-        transform:matrix(-1, 0, 0, -1, 1, 1);
-      }
+.canvasWrapper svg[data-main-rotation="180"] use:not(.clip, .mask){
+  transform:matrix(-1, 0, 0, -1, 1, 1);
+}
 
 .canvasWrapper svg[data-main-rotation="270"] mask,
-      .canvasWrapper svg[data-main-rotation="270"] use:not(.clip, .mask){
-        transform:matrix(0, -1, 1, 0, 0, 1);
-      }
+.canvasWrapper svg[data-main-rotation="270"] use:not(.clip, .mask){
+  transform:matrix(0, -1, 1, 0, 0, 1);
+}
 
 .canvasWrapper svg.highlight{
-      --blend-mode:multiply;
+  --blend-mode:multiply;
 
-      position:absolute;
-      mix-blend-mode:var(--blend-mode);
-    }
+  position:absolute;
+  mix-blend-mode:var(--blend-mode);
+}
 
 @media screen and (forced-colors: active){
-
-.canvasWrapper svg.highlight{
-        --blend-mode:difference;
-    }
-      }
+  .canvasWrapper svg.highlight{
+    --blend-mode:difference;
+  }
+}
 
 .canvasWrapper svg.highlight:not(.free){
-        fill-rule:evenodd;
-      }
+  fill-rule:evenodd;
+}
 
 .canvasWrapper svg.highlightOutline{
-      position:absolute;
-      mix-blend-mode:normal;
-      fill-rule:evenodd;
-      fill:none;
-    }
+  position:absolute;
+  mix-blend-mode:normal;
+  fill-rule:evenodd;
+  fill:none;
+}
 
 .canvasWrapper svg.highlightOutline.hovered:not(.free):not(.selected){
-          stroke:var(--hover-outline-color);
-          stroke-width:var(--outline-width);
-        }
+  stroke:var(--hover-outline-color);
+  stroke-width:var(--outline-width);
+}
 
 .canvasWrapper svg.highlightOutline.selected:not(.free) .mainOutline{
-            stroke:var(--outline-around-color);
-            stroke-width:calc(
-              var(--outline-width) + 2 * var(--outline-around-width)
-            );
-          }
+  stroke:var(--outline-around-color);
+  stroke-width:calc(
+    var(--outline-width) + 2 * var(--outline-around-width)
+  );
+}
 
 .canvasWrapper svg.highlightOutline.selected:not(.free) .secondaryOutline{
-            stroke:var(--outline-color);
-            stroke-width:var(--outline-width);
-          }
+  stroke:var(--outline-color);
+  stroke-width:var(--outline-width);
+}
 
 .canvasWrapper svg.highlightOutline.free.hovered:not(.selected){
-          stroke:var(--hover-outline-color);
-          stroke-width:calc(2 * var(--outline-width));
-        }
+  stroke:var(--hover-outline-color);
+  stroke-width:calc(2 * var(--outline-width));
+}
 
 .canvasWrapper svg.highlightOutline.free.selected .mainOutline{
-            stroke:var(--outline-around-color);
-            stroke-width:calc(
-              2 * (var(--outline-width) + var(--outline-around-width))
-            );
-          }
+  stroke:var(--outline-around-color);
+  stroke-width:calc(
+    2 * (var(--outline-width) + var(--outline-around-width))
+  );
+}
 
 .canvasWrapper svg.highlightOutline.free.selected .secondaryOutline{
-            stroke:var(--outline-color);
-            stroke-width:calc(2 * var(--outline-width));
-          }
+  stroke:var(--outline-color);
+  stroke-width:calc(2 * var(--outline-width));
+}
 
 .toggle-button{
   --button-background-color:#f0f0f4;
@@ -1140,7 +1122,6 @@
   --size-item-small:16px;
   --size-item-large:32px;
   --color-canvas:white;
-
   --toggle-background-color:var(--button-background-color);
   --toggle-background-color-hover:var(--button-background-color-hover);
   --toggle-background-color-active:var(--button-background-color-active);
@@ -1161,7 +1142,7 @@
   --toggle-dot-margin:1px;
   --toggle-dot-height:calc(
     var(--toggle-height) - 2 * var(--toggle-dot-margin) - 2 *
-      var(--toggle-border-width)
+    var(--toggle-border-width)
   );
   --toggle-dot-width:var(--toggle-dot-height);
   --toggle-dot-transform-x:calc(
@@ -1169,10 +1150,8 @@
   );
 
   -webkit-appearance:none;
-
-     -moz-appearance:none;
-
-          appearance:none;
+  -moz-appearance:none;
+  appearance:none;
   padding:0;
   margin:0;
   border:var(--toggle-border-width) solid var(--toggle-border-color);
@@ -1185,8 +1164,7 @@
 }
 
 @media (prefers-color-scheme: dark){
-
-:where(html:not(.is-light)) .toggle-button{
+  :where(html:not(.is-light)) .toggle-button{
     --button-background-color:color-mix(in srgb, currentColor 7%, transparent);
     --button-background-color-hover:color-mix(
       in srgb,
@@ -1203,31 +1181,30 @@
     --color-accent-primary-active:#aaf2ff;
     --border-interactive-color:#bfbfc9;
     --color-canvas:#1c1b22;
-}
   }
+}
 
 :where(html.is-dark) .toggle-button{
-    --button-background-color:color-mix(in srgb, currentColor 7%, transparent);
-    --button-background-color-hover:color-mix(
-      in srgb,
-      currentColor 14%,
-      transparent
-    );
-    --button-background-color-active:color-mix(
-      in srgb,
-      currentColor 21%,
-      transparent
-    );
-    --color-accent-primary:#0df;
-    --color-accent-primary-hover:#80ebff;
-    --color-accent-primary-active:#aaf2ff;
-    --border-interactive-color:#bfbfc9;
-    --color-canvas:#1c1b22;
+  --button-background-color:color-mix(in srgb, currentColor 7%, transparent);
+  --button-background-color-hover:color-mix(
+    in srgb,
+    currentColor 14%,
+    transparent
+  );
+  --button-background-color-active:color-mix(
+    in srgb,
+    currentColor 21%,
+    transparent
+  );
+  --color-accent-primary:#0df;
+  --color-accent-primary-hover:#80ebff;
+  --color-accent-primary-active:#aaf2ff;
+  --border-interactive-color:#bfbfc9;
+  --color-canvas:#1c1b22;
 }
 
 @media (forced-colors: active){
-
-.toggle-button{
+  .toggle-button{
     --color-accent-primary:ButtonText;
     --color-accent-primary-hover:SelectedItem;
     --color-accent-primary-active:SelectedItem;
@@ -1237,103 +1214,102 @@
     --border-interactive-color-active:SelectedItem;
     --border-interactive-color-disabled:GrayText;
     --color-canvas:ButtonText;
-}
   }
+}
 
 .toggle-button:focus-visible{
-    outline:var(--focus-outline);
-    outline-offset:var(--focus-outline-offset);
-  }
+  outline:var(--focus-outline);
+  outline-offset:var(--focus-outline-offset);
+}
 
 .toggle-button:enabled:hover{
-    background:var(--toggle-background-color-hover);
-    border-color:var(--toggle-border-color);
-  }
+  background:var(--toggle-background-color-hover);
+  border-color:var(--toggle-border-color);
+}
 
 .toggle-button:enabled:active{
-    background:var(--toggle-background-color-active);
-    border-color:var(--toggle-border-color);
-  }
+  background:var(--toggle-background-color-active);
+  border-color:var(--toggle-border-color);
+}
 
 .toggle-button[aria-pressed="true"]{
-    background:var(--toggle-background-color-pressed);
-    border-color:transparent;
-  }
+  background:var(--toggle-background-color-pressed);
+  border-color:transparent;
+}
 
 .toggle-button[aria-pressed="true"]:enabled:hover{
-    background:var(--toggle-background-color-pressed-hover);
-    border-color:transparent;
-  }
+  background:var(--toggle-background-color-pressed-hover);
+  border-color:transparent;
+}
 
 .toggle-button[aria-pressed="true"]:enabled:active{
-    background:var(--toggle-background-color-pressed-active);
-    border-color:transparent;
-  }
+  background:var(--toggle-background-color-pressed-active);
+  border-color:transparent;
+}
 
 .toggle-button::before{
-    display:block;
-    content:"";
-    background-color:var(--toggle-dot-background-color);
-    height:var(--toggle-dot-height);
-    width:var(--toggle-dot-width);
-    margin:var(--toggle-dot-margin);
-    border-radius:var(--toggle-border-radius);
-    translate:0;
-  }
+  display:block;
+  content:"";
+  background-color:var(--toggle-dot-background-color);
+  height:var(--toggle-dot-height);
+  width:var(--toggle-dot-width);
+  margin:var(--toggle-dot-margin);
+  border-radius:var(--toggle-border-radius);
+  translate:0;
+}
 
 .toggle-button[aria-pressed="true"]::before{
-    translate:var(--toggle-dot-transform-x);
-    background-color:var(--toggle-dot-background-color-on-pressed);
-  }
+  translate:var(--toggle-dot-transform-x);
+  background-color:var(--toggle-dot-background-color-on-pressed);
+}
 
 .toggle-button[aria-pressed="true"]:enabled:hover::before,
-  .toggle-button[aria-pressed="true"]:enabled:active::before{
-    background-color:var(--toggle-dot-background-color-on-pressed);
-  }
+.toggle-button[aria-pressed="true"]:enabled:active::before{
+  background-color:var(--toggle-dot-background-color-on-pressed);
+}
 
 [dir="rtl"] .toggle-button[aria-pressed="true"]::before{
-    translate:calc(-1 * var(--toggle-dot-transform-x));
-  }
+  translate:calc(-1 * var(--toggle-dot-transform-x));
+}
 
 @media (prefers-reduced-motion: no-preference){
-    .toggle-button::before{
-      transition:translate 100ms;
-    }
+  .toggle-button::before{
+    transition:translate 100ms;
   }
+}
 
 @media (prefers-contrast){
-    .toggle-button:enabled:hover{
-      border-color:var(--toggle-border-color-hover);
-    }
-
-    .toggle-button:enabled:active{
-      border-color:var(--toggle-border-color-active);
-    }
-
-    .toggle-button[aria-pressed="true"]:enabled{
-      border-color:var(--toggle-border-color);
-      position:relative;
-    }
-
-    .toggle-button[aria-pressed="true"]:enabled:hover,
-    .toggle-button[aria-pressed="true"]:enabled:hover:active{
-      border-color:var(--toggle-border-color-hover);
-    }
-
-    .toggle-button[aria-pressed="true"]:enabled:active{
-      background-color:var(--toggle-dot-background-color-active);
-      border-color:var(--toggle-dot-background-color-hover);
-    }
-
-    .toggle-button:hover::before,
-    .toggle-button:active::before{
-      background-color:var(--toggle-dot-background-color-hover);
-    }
+  .toggle-button:enabled:hover{
+    border-color:var(--toggle-border-color-hover);
   }
 
-@media (forced-colors){
+  .toggle-button:enabled:active{
+    border-color:var(--toggle-border-color-active);
+  }
 
-.toggle-button{
+  .toggle-button[aria-pressed="true"]:enabled{
+    border-color:var(--toggle-border-color);
+    position:relative;
+  }
+
+  .toggle-button[aria-pressed="true"]:enabled:hover,
+  .toggle-button[aria-pressed="true"]:enabled:hover:active{
+    border-color:var(--toggle-border-color-hover);
+  }
+
+  .toggle-button[aria-pressed="true"]:enabled:active{
+    background-color:var(--toggle-dot-background-color-active);
+    border-color:var(--toggle-dot-background-color-hover);
+  }
+
+  .toggle-button:hover::before,
+  .toggle-button:active::before{
+    background-color:var(--toggle-dot-background-color-hover);
+  }
+}
+
+@media (forced-colors){
+  .toggle-button{
     --toggle-dot-background-color:var(--color-accent-primary);
     --toggle-dot-background-color-hover:var(--color-accent-primary-hover);
     --toggle-dot-background-color-active:var(--color-accent-primary-active);
@@ -1342,23 +1318,23 @@
     --toggle-border-color-hover:var(--border-interactive-color-hover);
     --toggle-border-color-active:var(--border-interactive-color-active);
     --toggle-border-color-disabled:var(--border-interactive-color-disabled);
-}
-
-    .toggle-button[aria-pressed="true"]:enabled::after{
-      border:1px solid var(--button-background-color);
-      content:"";
-      position:absolute;
-      height:var(--toggle-height);
-      width:var(--toggle-width);
-      display:block;
-      border-radius:var(--toggle-border-radius);
-      inset:-2px;
-    }
-
-    .toggle-button[aria-pressed="true"]:enabled:active::after{
-      border-color:var(--toggle-border-color-active);
-    }
   }
+
+  .toggle-button[aria-pressed="true"]:enabled::after{
+    border:1px solid var(--button-background-color);
+    content:"";
+    position:absolute;
+    height:var(--toggle-height);
+    width:var(--toggle-width);
+    display:block;
+    border-radius:var(--toggle-border-radius);
+    inset:-2px;
+  }
+
+  .toggle-button[aria-pressed="true"]:enabled:active::after{
+    border-color:var(--toggle-border-color-active);
+  }
+}
 
 :root{
   --outline-width:2px;
@@ -1378,13 +1354,14 @@
   --resizer-size:6px;
   --resizer-shift:calc(
     0px - (var(--outline-width) + var(--resizer-size)) / 2 -
-      var(--outline-around-width)
+    var(--outline-around-width)
   );
   --editorFreeText-editing-cursor:text;
-  --editorInk-editing-cursor:url(../images/cursor-editorInk.svg) 0 16, pointer;
-  --editorHighlight-editing-cursor:url(../images/cursor-editorTextHighlight.svg) 24 24, text;
-  --editorFreeHighlight-editing-cursor:url(../images/cursor-editorFreeHighlight.svg) 1 18, pointer;
+  --editorInk-editing-cursor:url("../images/cursor-editorInk.svg") 0 16, pointer;
+  --editorHighlight-editing-cursor:url("../images/cursor-editorTextHighlight.svg") 24 24, text;
+  --editorFreeHighlight-editing-cursor:url("../images/cursor-editorFreeHighlight.svg") 1 18, pointer;
 }
+
 .visuallyHidden{
   position:absolute;
   top:0;
@@ -1404,16 +1381,16 @@
 }
 
 .textLayer.highlighting:not(.free) span{
-    cursor:var(--editorHighlight-editing-cursor);
-  }
+  cursor:var(--editorHighlight-editing-cursor);
+}
 
 .textLayer.highlighting.free span{
-    cursor:var(--editorFreeHighlight-editing-cursor);
-  }
+  cursor:var(--editorFreeHighlight-editing-cursor);
+}
 
 @media (min-resolution: 1.1dppx){
   :root{
-    --editorFreeText-editing-cursor:url(../images/cursor-editorFreeText.svg) 0 16, text;
+    --editorFreeText-editing-cursor:url("../images/cursor-editorFreeText.svg") 0 16, text;
   }
 }
 
@@ -1481,346 +1458,338 @@
 }
 
 .annotationEditorLayer .draggable.selectedEditor:is(.freeTextEditor, .inkEditor, .stampEditor){
-    cursor:move;
-  }
+  cursor:move;
+}
 
 .annotationEditorLayer .moving:is(.freeTextEditor, .inkEditor, .stampEditor){
-    touch-action:none;
-  }
+  touch-action:none;
+}
 
 .annotationEditorLayer .selectedEditor:is(.freeTextEditor, .inkEditor, .stampEditor){
-    border:var(--focus-outline);
-    outline:var(--focus-outline-around);
-  }
+  border:var(--focus-outline);
+  outline:var(--focus-outline-around);
+}
 
 .annotationEditorLayer .selectedEditor:is(.freeTextEditor, .inkEditor, .stampEditor)::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border:var(--focus-outline-around);
-      pointer-events:none;
-    }
+  content:"";
+  position:absolute;
+  inset:0;
+  border:var(--focus-outline-around);
+  pointer-events:none;
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor):hover:not(.selectedEditor){
-    border:var(--hover-outline);
-    outline:var(--hover-outline-around);
-  }
+  border:var(--hover-outline);
+  outline:var(--hover-outline-around);
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor):hover:not(.selectedEditor)::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border:var(--focus-outline-around);
-    }
+  content:"";
+  position:absolute;
+  inset:0;
+  border:var(--focus-outline-around);
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
-    --editor-toolbar-delete-image:url(../images/editor-toolbar-delete.svg);
-    --editor-toolbar-bg-color:#f0f0f4;
-    --editor-toolbar-highlight-image:url(../images/toolbarButton-editorHighlight.svg);
-    --editor-toolbar-fg-color:#2e2e56;
-    --editor-toolbar-border-color:#8f8f9d;
-    --editor-toolbar-hover-border-color:var(--editor-toolbar-border-color);
-    --editor-toolbar-hover-bg-color:#e0e0e6;
-    --editor-toolbar-hover-fg-color:var(--editor-toolbar-fg-color);
-    --editor-toolbar-hover-outline:none;
-    --editor-toolbar-focus-outline-color:#0060df;
-    --editor-toolbar-shadow:0 2px 6px 0 rgb(58 57 68 / 0.2);
-    --editor-toolbar-vert-offset:6px;
-    --editor-toolbar-height:28px;
-    --editor-toolbar-padding:2px;
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
+  --editor-toolbar-delete-image:url("../images/editor-toolbar-delete.svg");
+  --editor-toolbar-bg-color:#f0f0f4;
+  --editor-toolbar-highlight-image:url("../images/toolbarButton-editorHighlight.svg");
+  --editor-toolbar-fg-color:#2e2e56;
+  --editor-toolbar-border-color:#8f8f9d;
+  --editor-toolbar-hover-border-color:var(--editor-toolbar-border-color);
+  --editor-toolbar-hover-bg-color:#e0e0e6;
+  --editor-toolbar-hover-fg-color:var(--editor-toolbar-fg-color);
+  --editor-toolbar-hover-outline:none;
+  --editor-toolbar-focus-outline-color:#0060df;
+  --editor-toolbar-shadow:0 2px 6px 0 rgb(58 57 68 / 0.2);
+  --editor-toolbar-vert-offset:6px;
+  --editor-toolbar-height:28px;
+  --editor-toolbar-padding:2px;
 
-    display:flex;
-    width:-moz-fit-content;
-    width:fit-content;
-    height:var(--editor-toolbar-height);
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    cursor:default;
-    pointer-events:auto;
-    box-sizing:content-box;
-    padding:var(--editor-toolbar-padding);
-
-    position:absolute;
-    inset-inline-end:0;
-    inset-block-start:calc(100% + var(--editor-toolbar-vert-offset));
-
-    border-radius:6px;
-    background-color:var(--editor-toolbar-bg-color);
-    border:1px solid var(--editor-toolbar-border-color);
-    box-shadow:var(--editor-toolbar-shadow);
-  }
+  display:flex;
+  width:-moz-fit-content;
+  width:fit-content;
+  height:var(--editor-toolbar-height);
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  cursor:default;
+  pointer-events:auto;
+  box-sizing:content-box;
+  padding:var(--editor-toolbar-padding);
+  position:absolute;
+  inset-inline-end:0;
+  inset-block-start:calc(100% + var(--editor-toolbar-vert-offset));
+  border-radius:6px;
+  background-color:var(--editor-toolbar-bg-color);
+  border:1px solid var(--editor-toolbar-border-color);
+  box-shadow:var(--editor-toolbar-shadow);
+}
 
 @media (prefers-color-scheme: dark){
-
-:where(html:not(.is-light)) :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
-      --editor-toolbar-bg-color:#2b2a33;
-      --editor-toolbar-fg-color:#fbfbfe;
-      --editor-toolbar-hover-bg-color:#52525e;
-      --editor-toolbar-focus-outline-color:#0df;
+  :where(html:not(.is-light)) :is(.annotationEditorLayer
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
+    --editor-toolbar-bg-color:#2b2a33;
+    --editor-toolbar-fg-color:#fbfbfe;
+    --editor-toolbar-hover-bg-color:#52525e;
+    --editor-toolbar-focus-outline-color:#0df;
   }
-    }
+}
 
 :where(html.is-dark) :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
-      --editor-toolbar-bg-color:#2b2a33;
-      --editor-toolbar-fg-color:#fbfbfe;
-      --editor-toolbar-hover-bg-color:#52525e;
-      --editor-toolbar-focus-outline-color:#0df;
-  }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
+  --editor-toolbar-bg-color:#2b2a33;
+  --editor-toolbar-fg-color:#fbfbfe;
+  --editor-toolbar-hover-bg-color:#52525e;
+  --editor-toolbar-focus-outline-color:#0df;
+}
 
 @media screen and (forced-colors: active){
-
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
-      --editor-toolbar-bg-color:ButtonFace;
-      --editor-toolbar-fg-color:ButtonText;
-      --editor-toolbar-border-color:ButtonText;
-      --editor-toolbar-hover-border-color:AccentColor;
-      --editor-toolbar-hover-bg-color:ButtonFace;
-      --editor-toolbar-hover-fg-color:AccentColor;
-      --editor-toolbar-hover-outline:2px solid var(--editor-toolbar-hover-border-color);
-      --editor-toolbar-focus-outline-color:ButtonBorder;
-      --editor-toolbar-shadow:none;
+  :is(.annotationEditorLayer
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
+    --editor-toolbar-bg-color:ButtonFace;
+    --editor-toolbar-fg-color:ButtonText;
+    --editor-toolbar-border-color:ButtonText;
+    --editor-toolbar-hover-border-color:AccentColor;
+    --editor-toolbar-hover-bg-color:ButtonFace;
+    --editor-toolbar-hover-fg-color:AccentColor;
+    --editor-toolbar-hover-outline:2px solid var(--editor-toolbar-hover-border-color);
+    --editor-toolbar-focus-outline-color:ButtonBorder;
+    --editor-toolbar-shadow:none;
   }
-    }
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar.hidden{
-      display:none;
-    }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar.hidden{
+  display:none;
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar:has(:focus-visible){
-      border-color:transparent;
-    }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar:has(:focus-visible){
+  border-color:transparent;
+}
 
 [dir="ltr"] :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
-      transform-origin:100% 0;
-    }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
+  transform-origin:100% 0;
+}
 
 [dir="rtl"] :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
-      transform-origin:0 0;
-    }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar{
+  transform-origin:0 0;
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:0;
-      height:100%;
-    }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:0;
+  height:100%;
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .divider{
-        width:1px;
-        height:calc(
-          2 * var(--editor-toolbar-padding) + var(--editor-toolbar-height)
-        );
-        background-color:var(--editor-toolbar-border-color);
-        display:inline-block;
-        margin-inline:2px;
-      }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .divider{
+  width:1px;
+  height:calc(
+    2 * var(--editor-toolbar-padding) + var(--editor-toolbar-height)
+  );
+  background-color:var(--editor-toolbar-border-color);
+  display:inline-block;
+  margin-inline:2px;
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .highlightButton{
-        width:var(--editor-toolbar-height);
-      }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .highlightButton{
+  width:var(--editor-toolbar-height);
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .highlightButton::before{
-          content:"";
-          -webkit-mask-image:var(--editor-toolbar-highlight-image);
-                  mask-image:var(--editor-toolbar-highlight-image);
-          -webkit-mask-repeat:no-repeat;
-                  mask-repeat:no-repeat;
-          -webkit-mask-position:center;
-                  mask-position:center;
-          display:inline-block;
-          background-color:var(--editor-toolbar-fg-color);
-          width:100%;
-          height:100%;
-        }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .highlightButton::before{
+  content:"";
+  -webkit-mask-image:var(--editor-toolbar-highlight-image);
+  mask-image:var(--editor-toolbar-highlight-image);
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  mask-position:center;
+  display:inline-block;
+  background-color:var(--editor-toolbar-fg-color);
+  width:100%;
+  height:100%;
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .highlightButton:hover::before{
-          background-color:var(--editor-toolbar-hover-fg-color);
-        }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .highlightButton:hover::before{
+  background-color:var(--editor-toolbar-hover-fg-color);
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .delete{
-        width:var(--editor-toolbar-height);
-      }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .delete{
+  width:var(--editor-toolbar-height);
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .delete::before{
-          content:"";
-          -webkit-mask-image:var(--editor-toolbar-delete-image);
-                  mask-image:var(--editor-toolbar-delete-image);
-          -webkit-mask-repeat:no-repeat;
-                  mask-repeat:no-repeat;
-          -webkit-mask-position:center;
-                  mask-position:center;
-          display:inline-block;
-          background-color:var(--editor-toolbar-fg-color);
-          width:100%;
-          height:100%;
-        }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .delete::before{
+  content:"";
+  -webkit-mask-image:var(--editor-toolbar-delete-image);
+  mask-image:var(--editor-toolbar-delete-image);
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  mask-position:center;
+  display:inline-block;
+  background-color:var(--editor-toolbar-fg-color);
+  width:100%;
+  height:100%;
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .delete:hover::before{
-          background-color:var(--editor-toolbar-hover-fg-color);
-        }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .delete:hover::before{
+  background-color:var(--editor-toolbar-hover-fg-color);
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > *{
-        height:var(--editor-toolbar-height);
-      }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > *{
+  height:var(--editor-toolbar-height);
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider){
-        border:none;
-        background-color:transparent;
-        cursor:pointer;
-      }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider){
+  border:none;
+  background-color:transparent;
+  cursor:pointer;
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider):hover{
-          border-radius:2px;
-          background-color:var(--editor-toolbar-hover-bg-color);
-          color:var(--editor-toolbar-hover-fg-color);
-          outline:var(--editor-toolbar-hover-outline);
-          outline-offset:1px;
-        }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider):hover{
+  border-radius:2px;
+  background-color:var(--editor-toolbar-hover-bg-color);
+  color:var(--editor-toolbar-hover-fg-color);
+  outline:var(--editor-toolbar-hover-outline);
+  outline-offset:1px;
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider):hover:active{
-            outline:none;
-          }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider):hover:active{
+  outline:none;
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider):focus-visible{
-          border-radius:2px;
-          outline:2px solid var(--editor-toolbar-focus-outline-color);
-        }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons > :not(.divider):focus-visible{
+  border-radius:2px;
+  outline:2px solid var(--editor-toolbar-focus-outline-color);
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText{
-        --alt-text-add-image:url(../images/altText_add.svg);
-        --alt-text-done-image:url(../images/altText_done.svg);
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText{
+  --alt-text-add-image:url("../images/altText_add.svg");
+  --alt-text-done-image:url("../images/altText_done.svg");
 
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        width:-moz-max-content;
-        width:max-content;
-        padding-inline:8px;
-        pointer-events:all;
-        font:menu;
-        font-weight:590;
-        font-size:12px;
-        color:var(--editor-toolbar-fg-color);
-      }
-
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText:disabled{
-          pointer-events:none;
-        }
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:-moz-max-content;
+  width:max-content;
+  padding-inline:8px;
+  pointer-events:all;
+  font:menu;
+  font-weight:590;
+  font-size:12px;
+  color:var(--editor-toolbar-fg-color);
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText::before{
-          content:"";
-          -webkit-mask-image:var(--alt-text-add-image);
-                  mask-image:var(--alt-text-add-image);
-          -webkit-mask-repeat:no-repeat;
-                  mask-repeat:no-repeat;
-          -webkit-mask-position:center;
-                  mask-position:center;
-          display:inline-block;
-          width:12px;
-          height:13px;
-          background-color:var(--editor-toolbar-fg-color);
-          margin-inline-end:4px;
-        }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText:disabled{
+  pointer-events:none;
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText:hover::before{
-          background-color:var(--editor-toolbar-hover-fg-color);
-        }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText::before{
+  content:"";
+  -webkit-mask-image:var(--alt-text-add-image);
+  mask-image:var(--alt-text-add-image);
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  mask-position:center;
+  display:inline-block;
+  width:12px;
+  height:13px;
+  background-color:var(--editor-toolbar-fg-color);
+  margin-inline-end:4px;
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText.done::before{
-          -webkit-mask-image:var(--alt-text-done-image);
-                  mask-image:var(--alt-text-done-image);
-        }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText:hover::before{
+  background-color:var(--editor-toolbar-hover-fg-color);
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip{
-          display:none;
-        }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText.done::before{
+  -webkit-mask-image:var(--alt-text-done-image);
+  mask-image:var(--alt-text-done-image);
+}
 
 :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
-            --alt-text-tooltip-bg:#f0f0f4;
-            --alt-text-tooltip-fg:#15141a;
-            --alt-text-tooltip-border:#8f8f9d;
-            --alt-text-tooltip-shadow:0px 2px 6px 0px rgb(58 57 68 / 0.2);
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip{
+  display:none;
+}
 
-            display:inline-flex;
-            flex-direction:column;
-            align-items:center;
-            justify-content:center;
-            position:absolute;
-            top:calc(100% + 2px);
-            inset-inline-start:0;
-            padding-block:2px 3px;
-            padding-inline:3px;
-            max-width:300px;
-            width:-moz-max-content;
-            width:max-content;
-            height:auto;
-            font-size:12px;
+:is(.annotationEditorLayer
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
+  --alt-text-tooltip-bg:#f0f0f4;
+  --alt-text-tooltip-fg:#15141a;
+  --alt-text-tooltip-border:#8f8f9d;
+  --alt-text-tooltip-shadow:0px 2px 6px 0px rgb(58 57 68 / 0.2);
 
-            border:0.5px solid var(--alt-text-tooltip-border);
-            background:var(--alt-text-tooltip-bg);
-            box-shadow:var(--alt-text-tooltip-shadow);
-            color:var(--alt-text-tooltip-fg);
-
-            pointer-events:none;
-          }
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:absolute;
+  top:calc(100% + 2px);
+  inset-inline-start:0;
+  padding-block:2px 3px;
+  padding-inline:3px;
+  max-width:300px;
+  width:-moz-max-content;
+  width:max-content;
+  height:auto;
+  font-size:12px;
+  border:0.5px solid var(--alt-text-tooltip-border);
+  background:var(--alt-text-tooltip-bg);
+  box-shadow:var(--alt-text-tooltip-shadow);
+  color:var(--alt-text-tooltip-fg);
+  pointer-events:none;
+}
 
 @media (prefers-color-scheme: dark){
-
-:where(html:not(.is-light)) :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
-              --alt-text-tooltip-bg:#1c1b22;
-              --alt-text-tooltip-fg:#fbfbfe;
-              --alt-text-tooltip-shadow:0px 2px 6px 0px #15141a;
-          }
-            }
+  :where(html:not(.is-light)) :is(.annotationEditorLayer
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
+    --alt-text-tooltip-bg:#1c1b22;
+    --alt-text-tooltip-fg:#fbfbfe;
+    --alt-text-tooltip-shadow:0px 2px 6px 0px #15141a;
+  }
+}
 
 :where(html.is-dark) :is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
-              --alt-text-tooltip-bg:#1c1b22;
-              --alt-text-tooltip-fg:#fbfbfe;
-              --alt-text-tooltip-shadow:0px 2px 6px 0px #15141a;
-          }
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
+  --alt-text-tooltip-bg:#1c1b22;
+  --alt-text-tooltip-fg:#fbfbfe;
+  --alt-text-tooltip-shadow:0px 2px 6px 0px #15141a;
+}
 
 @media screen and (forced-colors: active){
-
-:is(.annotationEditorLayer
-  :is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
-              --alt-text-tooltip-bg:Canvas;
-              --alt-text-tooltip-fg:CanvasText;
-              --alt-text-tooltip-border:CanvasText;
-              --alt-text-tooltip-shadow:none;
-          }
-            }
+  :is(.annotationEditorLayer
+:is(.freeTextEditor, .inkEditor, .stampEditor, .highlightEditor),.textLayer) .editToolbar .buttons .altText .tooltip.show{
+    --alt-text-tooltip-bg:Canvas;
+    --alt-text-tooltip-fg:CanvasText;
+    --alt-text-tooltip-border:CanvasText;
+    --alt-text-tooltip-shadow:none;
+  }
+}
 
 .annotationEditorLayer .freeTextEditor{
   padding:calc(var(--freetext-padding) * var(--scale-factor));
@@ -1838,8 +1807,8 @@
   font:10px sans-serif;
   line-height:var(--freetext-line-height);
   -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
+  -moz-user-select:none;
+  user-select:none;
 }
 
 .annotationEditorLayer .freeTextEditor .overlay{
@@ -1851,7 +1820,7 @@
   height:100%;
 }
 
-.annotationEditorLayer freeTextEditor .overlay.enabled{
+.annotationEditorLayer freetexteditor .overlay.enabled{
   display:block;
 }
 
@@ -1863,8 +1832,8 @@
 .annotationEditorLayer .freeTextEditor .internal:focus{
   outline:none;
   -webkit-user-select:auto;
-     -moz-user-select:auto;
-          user-select:auto;
+  -moz-user-select:auto;
+  user-select:auto;
 }
 
 .annotationEditorLayer .inkEditor{
@@ -1890,359 +1859,359 @@
 }
 
 .annotationEditorLayer .stampEditor canvas{
-    position:absolute;
-    width:100%;
-    height:100%;
-    margin:0;
-  }
+  position:absolute;
+  width:100%;
+  height:100%;
+  margin:0;
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers{
-      position:absolute;
-      inset:0;
-    }
+  position:absolute;
+  inset:0;
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers.hidden{
-        display:none;
-      }
+  display:none;
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer{
-        width:var(--resizer-size);
-        height:var(--resizer-size);
-        background:content-box var(--resizer-bg-color);
-        border:var(--focus-outline-around);
-        border-radius:2px;
-        position:absolute;
-      }
+  width:var(--resizer-size);
+  height:var(--resizer-size);
+  background:content-box var(--resizer-bg-color);
+  border:var(--focus-outline-around);
+  border-radius:2px;
+  position:absolute;
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.topLeft{
-          top:var(--resizer-shift);
-          left:var(--resizer-shift);
-        }
+  top:var(--resizer-shift);
+  left:var(--resizer-shift);
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.topMiddle{
-          top:var(--resizer-shift);
-          left:calc(50% + var(--resizer-shift));
-        }
+  top:var(--resizer-shift);
+  left:calc(50% + var(--resizer-shift));
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.topRight{
-          top:var(--resizer-shift);
-          right:var(--resizer-shift);
-        }
+  top:var(--resizer-shift);
+  right:var(--resizer-shift);
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.middleRight{
-          top:calc(50% + var(--resizer-shift));
-          right:var(--resizer-shift);
-        }
+  top:calc(50% + var(--resizer-shift));
+  right:var(--resizer-shift);
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.bottomRight{
-          bottom:var(--resizer-shift);
-          right:var(--resizer-shift);
-        }
+  bottom:var(--resizer-shift);
+  right:var(--resizer-shift);
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.bottomMiddle{
-          bottom:var(--resizer-shift);
-          left:calc(50% + var(--resizer-shift));
-        }
+  bottom:var(--resizer-shift);
+  left:calc(50% + var(--resizer-shift));
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.bottomLeft{
-          bottom:var(--resizer-shift);
-          left:var(--resizer-shift);
-        }
+  bottom:var(--resizer-shift);
+  left:var(--resizer-shift);
+}
 
 .annotationEditorLayer :is(.freeTextEditor, .inkEditor, .stampEditor) > .resizers > .resizer.middleLeft{
-          top:calc(50% + var(--resizer-shift));
-          left:var(--resizer-shift);
-        }
+  top:calc(50% + var(--resizer-shift));
+  left:var(--resizer-shift);
+}
 
 .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomRight{
-        cursor:nwse-resize;
-      }
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topLeft,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topLeft,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topLeft,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topLeft,
+.annotationEditorLayer[data-main-rotation="0"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomRight,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomRight,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomRight,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomRight{
+  cursor:nwse-resize;
+}
 
 .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomMiddle{
-        cursor:ns-resize;
-      }
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topMiddle,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topMiddle,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topMiddle,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topMiddle,
+.annotationEditorLayer[data-main-rotation="0"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomMiddle,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomMiddle,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomMiddle,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomMiddle{
+  cursor:ns-resize;
+}
 
 .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomLeft{
-        cursor:nesw-resize;
-      }
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topRight,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topRight,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topRight,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topRight,
+.annotationEditorLayer[data-main-rotation="0"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomLeft,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomLeft,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomLeft,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomLeft{
+  cursor:nesw-resize;
+}
 
 .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleLeft{
-        cursor:ew-resize;
-      }
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleRight,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleRight,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleRight,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleRight,
+.annotationEditorLayer[data-main-rotation="0"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleLeft,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleLeft,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleLeft,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleLeft{
+  cursor:ew-resize;
+}
 
 .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topLeft,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomRight{
-        cursor:nesw-resize;
-      }
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topLeft,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topLeft,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topLeft,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topLeft,
+.annotationEditorLayer[data-main-rotation="0"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomRight,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomRight,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomRight,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomRight{
+  cursor:nesw-resize;
+}
 
 .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topMiddle,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomMiddle,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomMiddle{
-        cursor:ew-resize;
-      }
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topMiddle,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topMiddle,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topMiddle,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topMiddle,
+.annotationEditorLayer[data-main-rotation="0"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomMiddle,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomMiddle,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomMiddle,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomMiddle{
+  cursor:ew-resize;
+}
 
 .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topRight,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomLeft{
-        cursor:nwse-resize;
-      }
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.topRight,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.topRight,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.topRight,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.topRight,
+.annotationEditorLayer[data-main-rotation="0"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.bottomLeft,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.bottomLeft,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.bottomLeft,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.bottomLeft{
+  cursor:nwse-resize;
+}
 
 .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleRight,
-      .annotationEditorLayer[data-main-rotation="0"]
-    :is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="90"]
-    :is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="180"]
-    :is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleLeft,
-      .annotationEditorLayer[data-main-rotation="270"]
-    :is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleLeft{
-        cursor:ns-resize;
-      }
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleRight,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleRight,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleRight,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleRight,
+.annotationEditorLayer[data-main-rotation="0"]
+:is([data-editor-rotation="90"], [data-editor-rotation="270"]) > .resizers > .resizer.middleLeft,
+.annotationEditorLayer[data-main-rotation="90"]
+:is([data-editor-rotation="0"], [data-editor-rotation="180"]) > .resizers > .resizer.middleLeft,
+.annotationEditorLayer[data-main-rotation="180"]
+:is([data-editor-rotation="270"], [data-editor-rotation="90"]) > .resizers > .resizer.middleLeft,
+.annotationEditorLayer[data-main-rotation="270"]
+:is([data-editor-rotation="180"], [data-editor-rotation="0"]) > .resizers > .resizer.middleLeft{
+  cursor:ns-resize;
+}
 
 .annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="90"],
-      [data-main-rotation="90"] [data-editor-rotation="0"],
-      [data-main-rotation="180"] [data-editor-rotation="270"],
-      [data-main-rotation="270"] [data-editor-rotation="180"]
-    ) .editToolbar{
-      rotate:270deg;
-    }
+:is(
+  [data-main-rotation="0"] [data-editor-rotation="90"],
+  [data-main-rotation="90"] [data-editor-rotation="0"],
+  [data-main-rotation="180"] [data-editor-rotation="270"],
+  [data-main-rotation="270"] [data-editor-rotation="180"]
+) .editToolbar{
+  rotate:270deg;
+}
 
 [dir="ltr"] .annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="90"],
-      [data-main-rotation="90"] [data-editor-rotation="0"],
-      [data-main-rotation="180"] [data-editor-rotation="270"],
-      [data-main-rotation="270"] [data-editor-rotation="180"]
-    ) .editToolbar{
-        inset-inline-end:calc(0px - var(--editor-toolbar-vert-offset));
-        inset-block-start:0;
-      }
+:is(
+  [data-main-rotation="0"] [data-editor-rotation="90"],
+  [data-main-rotation="90"] [data-editor-rotation="0"],
+  [data-main-rotation="180"] [data-editor-rotation="270"],
+  [data-main-rotation="270"] [data-editor-rotation="180"]
+) .editToolbar{
+  inset-inline-end:calc(0px - var(--editor-toolbar-vert-offset));
+  inset-block-start:0;
+}
 
 [dir="rtl"] .annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="90"],
-      [data-main-rotation="90"] [data-editor-rotation="0"],
-      [data-main-rotation="180"] [data-editor-rotation="270"],
-      [data-main-rotation="270"] [data-editor-rotation="180"]
-    ) .editToolbar{
-        inset-inline-end:calc(100% + var(--editor-toolbar-vert-offset));
-        inset-block-start:0;
-      }
+:is(
+  [data-main-rotation="0"] [data-editor-rotation="90"],
+  [data-main-rotation="90"] [data-editor-rotation="0"],
+  [data-main-rotation="180"] [data-editor-rotation="270"],
+  [data-main-rotation="270"] [data-editor-rotation="180"]
+) .editToolbar{
+  inset-inline-end:calc(100% + var(--editor-toolbar-vert-offset));
+  inset-block-start:0;
+}
 
 .annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="180"],
-      [data-main-rotation="90"] [data-editor-rotation="90"],
-      [data-main-rotation="180"] [data-editor-rotation="0"],
-      [data-main-rotation="270"] [data-editor-rotation="270"]
-    ) .editToolbar{
-      rotate:180deg;
-      inset-inline-end:100%;
-      inset-block-start:calc(0pc - var(--editor-toolbar-vert-offset));
-    }
+:is(
+  [data-main-rotation="0"] [data-editor-rotation="180"],
+  [data-main-rotation="90"] [data-editor-rotation="90"],
+  [data-main-rotation="180"] [data-editor-rotation="0"],
+  [data-main-rotation="270"] [data-editor-rotation="270"]
+) .editToolbar{
+  rotate:180deg;
+  inset-inline-end:100%;
+  inset-block-start:calc(0pc - var(--editor-toolbar-vert-offset));
+}
 
 .annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="270"],
-      [data-main-rotation="90"] [data-editor-rotation="180"],
-      [data-main-rotation="180"] [data-editor-rotation="90"],
-      [data-main-rotation="270"] [data-editor-rotation="0"]
-    ) .editToolbar{
-      rotate:90deg;
-    }
+:is(
+  [data-main-rotation="0"] [data-editor-rotation="270"],
+  [data-main-rotation="90"] [data-editor-rotation="180"],
+  [data-main-rotation="180"] [data-editor-rotation="90"],
+  [data-main-rotation="270"] [data-editor-rotation="0"]
+) .editToolbar{
+  rotate:90deg;
+}
 
 [dir="ltr"] .annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="270"],
-      [data-main-rotation="90"] [data-editor-rotation="180"],
-      [data-main-rotation="180"] [data-editor-rotation="90"],
-      [data-main-rotation="270"] [data-editor-rotation="0"]
-    ) .editToolbar{
-        inset-inline-end:calc(100% + var(--editor-toolbar-vert-offset));
-        inset-block-start:100%;
-      }
+:is(
+  [data-main-rotation="0"] [data-editor-rotation="270"],
+  [data-main-rotation="90"] [data-editor-rotation="180"],
+  [data-main-rotation="180"] [data-editor-rotation="90"],
+  [data-main-rotation="270"] [data-editor-rotation="0"]
+) .editToolbar{
+  inset-inline-end:calc(100% + var(--editor-toolbar-vert-offset));
+  inset-block-start:100%;
+}
 
 [dir="rtl"] .annotationEditorLayer
-    :is(
-      [data-main-rotation="0"] [data-editor-rotation="270"],
-      [data-main-rotation="90"] [data-editor-rotation="180"],
-      [data-main-rotation="180"] [data-editor-rotation="90"],
-      [data-main-rotation="270"] [data-editor-rotation="0"]
-    ) .editToolbar{
-        inset-inline-start:calc(0px - var(--editor-toolbar-vert-offset));
-        inset-block-start:0;
-      }
+:is(
+  [data-main-rotation="0"] [data-editor-rotation="270"],
+  [data-main-rotation="90"] [data-editor-rotation="180"],
+  [data-main-rotation="180"] [data-editor-rotation="90"],
+  [data-main-rotation="270"] [data-editor-rotation="0"]
+) .editToolbar{
+  inset-inline-start:calc(0px - var(--editor-toolbar-vert-offset));
+  inset-block-start:0;
+}
 
 .dialog.altText::backdrop{
-    -webkit-mask:url(#alttext-manager-mask);
-            mask:url(#alttext-manager-mask);
-  }
+  -webkit-mask:url("#alttext-manager-mask");
+  mask:url("#alttext-manager-mask");
+}
 
 .dialog.altText.positioned{
-    margin:0;
-  }
+  margin:0;
+}
 
 .dialog.altText #altTextContainer{
-    width:300px;
-    height:-moz-fit-content;
-    height:fit-content;
-    display:inline-flex;
-    flex-direction:column;
-    align-items:flex-start;
-    gap:16px;
-  }
+  width:300px;
+  height:-moz-fit-content;
+  height:fit-content;
+  display:inline-flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:16px;
+}
 
 .dialog.altText #altTextContainer #overallDescription{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-start;
-      gap:4px;
-      align-self:stretch;
-    }
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+  align-self:stretch;
+}
 
 .dialog.altText #altTextContainer #overallDescription span{
-        align-self:stretch;
-      }
+  align-self:stretch;
+}
 
 .dialog.altText #altTextContainer #overallDescription .title{
-        font-size:13px;
-        font-style:normal;
-        font-weight:590;
-      }
+  font-size:13px;
+  font-style:normal;
+  font-weight:590;
+}
 
 .dialog.altText #altTextContainer #addDescription{
-      display:flex;
-      flex-direction:column;
-      align-items:stretch;
-      gap:8px;
-    }
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:8px;
+}
 
 .dialog.altText #altTextContainer #addDescription .descriptionArea{
-        flex:1;
-        padding-inline:24px 10px;
-      }
+  flex:1;
+  padding-inline:24px 10px;
+}
 
 .dialog.altText #altTextContainer #addDescription .descriptionArea textarea{
-          width:100%;
-          min-height:75px;
-        }
+  width:100%;
+  min-height:75px;
+}
 
 .dialog.altText #altTextContainer #buttons{
-      display:flex;
-      justify-content:flex-end;
-      align-items:flex-start;
-      gap:8px;
-      align-self:stretch;
-    }
+  display:flex;
+  justify-content:flex-end;
+  align-items:flex-start;
+  gap:8px;
+  align-self:stretch;
+}
 
 .colorPicker{
   --hover-outline-color:#0250bb;
@@ -2251,177 +2220,175 @@
 }
 
 @media (prefers-color-scheme: dark){
-
-:where(html:not(.is-light)) .colorPicker{
+  :where(html:not(.is-light)) .colorPicker{
     --hover-outline-color:#80ebff;
     --selected-outline-color:#aaf2ff;
     --swatch-border-color:#52525e;
-}
   }
+}
 
 :where(html.is-dark) .colorPicker{
-    --hover-outline-color:#80ebff;
-    --selected-outline-color:#aaf2ff;
-    --swatch-border-color:#52525e;
+  --hover-outline-color:#80ebff;
+  --selected-outline-color:#aaf2ff;
+  --swatch-border-color:#52525e;
 }
 
 @media screen and (forced-colors: active){
-
-.colorPicker{
+  .colorPicker{
     --hover-outline-color:Highlight;
     --selected-outline-color:var(--hover-outline-color);
     --swatch-border-color:ButtonText;
-}
   }
+}
 
 .colorPicker .swatch{
-    width:16px;
-    height:16px;
-    border:1px solid var(--swatch-border-color);
-    border-radius:100%;
-    outline-offset:2px;
-    box-sizing:border-box;
-    forced-color-adjust:none;
-  }
+  width:16px;
+  height:16px;
+  border:1px solid var(--swatch-border-color);
+  border-radius:100%;
+  outline-offset:2px;
+  box-sizing:border-box;
+  forced-color-adjust:none;
+}
 
 .colorPicker button:is(:hover, .selected) > .swatch{
-    border:none;
-  }
+  border:none;
+}
 
 .annotationEditorLayer[data-main-rotation="0"] .highlightEditor:not(.free) > .editToolbar{
-      rotate:0deg;
-    }
+  rotate:0deg;
+}
 
 .annotationEditorLayer[data-main-rotation="90"] .highlightEditor:not(.free) > .editToolbar{
-      rotate:270deg;
-    }
+  rotate:270deg;
+}
 
 .annotationEditorLayer[data-main-rotation="180"] .highlightEditor:not(.free) > .editToolbar{
-      rotate:180deg;
-    }
+  rotate:180deg;
+}
 
 .annotationEditorLayer[data-main-rotation="270"] .highlightEditor:not(.free) > .editToolbar{
-      rotate:90deg;
-    }
+  rotate:90deg;
+}
 
 .annotationEditorLayer .highlightEditor{
-    position:absolute;
-    background:transparent;
-    z-index:1;
-    cursor:auto;
-    max-width:100%;
-    max-height:100%;
-    border:none;
-    outline:none;
-    pointer-events:none;
-    transform-origin:0 0;
-  }
+  position:absolute;
+  background:transparent;
+  z-index:1;
+  cursor:auto;
+  max-width:100%;
+  max-height:100%;
+  border:none;
+  outline:none;
+  pointer-events:none;
+  transform-origin:0 0;
+}
 
 .annotationEditorLayer .highlightEditor:not(.free){
-      transform:none;
-    }
+  transform:none;
+}
 
 .annotationEditorLayer .highlightEditor .internal{
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      pointer-events:auto;
-    }
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:auto;
+}
 
 .annotationEditorLayer .highlightEditor.disabled .internal{
-      pointer-events:none;
-    }
+  pointer-events:none;
+}
 
 .annotationEditorLayer .highlightEditor.selectedEditor .internal{
-        cursor:pointer;
-      }
+  cursor:pointer;
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar{
-      --editor-toolbar-colorpicker-arrow-image:url(../images/toolbarButton-menuArrow.svg);
+  --editor-toolbar-colorpicker-arrow-image:url("../images/toolbarButton-menuArrow.svg");
 
-      transform-origin:center !important;
-    }
+  transform-origin:center !important;
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker{
-          position:relative;
-          width:auto;
-          display:flex;
-          justify-content:center;
-          align-items:center;
-          gap:4px;
-          padding:4px;
-        }
+  position:relative;
+  width:auto;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+  padding:4px;
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker::after{
-            content:"";
-            -webkit-mask-image:var(--editor-toolbar-colorpicker-arrow-image);
-                    mask-image:var(--editor-toolbar-colorpicker-arrow-image);
-            -webkit-mask-repeat:no-repeat;
-                    mask-repeat:no-repeat;
-            -webkit-mask-position:center;
-                    mask-position:center;
-            display:inline-block;
-            background-color:var(--editor-toolbar-fg-color);
-            width:12px;
-            height:12px;
-          }
+  content:"";
+  -webkit-mask-image:var(--editor-toolbar-colorpicker-arrow-image);
+  mask-image:var(--editor-toolbar-colorpicker-arrow-image);
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  mask-position:center;
+  display:inline-block;
+  background-color:var(--editor-toolbar-fg-color);
+  width:12px;
+  height:12px;
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker:hover::after{
-            background-color:var(--editor-toolbar-hover-fg-color);
-          }
+  background-color:var(--editor-toolbar-hover-fg-color);
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker:has(.dropdown:not(.hidden)){
-            background-color:var(--editor-toolbar-hover-bg-color);
-          }
+  background-color:var(--editor-toolbar-hover-bg-color);
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker:has(.dropdown:not(.hidden))::after{
-              scale:-1;
-            }
+  scale:-1;
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown{
-            position:absolute;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            flex-direction:column;
-            gap:11px;
-            padding-block:8px;
-            border-radius:6px;
-            background-color:var(--editor-toolbar-bg-color);
-            border:1px solid var(--editor-toolbar-border-color);
-            box-shadow:var(--editor-toolbar-shadow);
-            inset-block-start:calc(100% + 4px);
-            width:calc(100% + 2 * var(--editor-toolbar-padding));
-          }
+  position:absolute;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  gap:11px;
+  padding-block:8px;
+  border-radius:6px;
+  background-color:var(--editor-toolbar-bg-color);
+  border:1px solid var(--editor-toolbar-border-color);
+  box-shadow:var(--editor-toolbar-shadow);
+  inset-block-start:calc(100% + 4px);
+  width:calc(100% + 2 * var(--editor-toolbar-padding));
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown button{
-              width:100%;
-              height:auto;
-              border:none;
-              cursor:pointer;
-              display:flex;
-              justify-content:center;
-              align-items:center;
-              background:none;
-            }
+  width:100%;
+  height:auto;
+  border:none;
+  cursor:pointer;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:none;
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown button:is(:active, :focus-visible){
-                outline:none;
-              }
+  outline:none;
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown button > .swatch{
-                outline-offset:2px;
-              }
+  outline-offset:2px;
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown button[aria-selected="true"] > .swatch{
-                outline:2px solid var(--selected-outline-color);
-              }
+  outline:2px solid var(--selected-outline-color);
+}
 
 .annotationEditorLayer .highlightEditor .editToolbar .buttons .colorPicker .dropdown button:is(:hover, :active, :focus-visible) > .swatch{
-                outline:2px solid var(--hover-outline-color);
-              }
+  outline:2px solid var(--hover-outline-color);
+}
 
 .editorParamsToolbar:has(#highlightParamsToolbarContainer){
   padding:unset;
@@ -2438,159 +2405,155 @@
 }
 
 #highlightParamsToolbarContainer .editorParamsLabel{
-    width:-moz-fit-content;
-    width:fit-content;
-    inset-inline-start:0;
-  }
+  width:-moz-fit-content;
+  width:fit-content;
+  inset-inline-start:0;
+}
 
 #highlightParamsToolbarContainer .colorPicker{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-  }
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
 
 #highlightParamsToolbarContainer .colorPicker .dropdown{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-direction:row;
-      height:auto;
-    }
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-direction:row;
+  height:auto;
+}
 
 #highlightParamsToolbarContainer .colorPicker .dropdown button{
-        width:auto;
-        height:auto;
-        border:none;
-        cursor:pointer;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        background:none;
-        flex:0 0 auto;
-      }
+  width:auto;
+  height:auto;
+  border:none;
+  cursor:pointer;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:none;
+  flex:0 0 auto;
+}
 
 #highlightParamsToolbarContainer .colorPicker .dropdown button .swatch{
-          width:24px;
-          height:24px;
-        }
+  width:24px;
+  height:24px;
+}
 
 #highlightParamsToolbarContainer .colorPicker .dropdown button:is(:active, :focus-visible){
-          outline:none;
-        }
+  outline:none;
+}
 
 #highlightParamsToolbarContainer .colorPicker .dropdown button[aria-selected="true"] > .swatch{
-          outline:2px solid var(--selected-outline-color);
-        }
+  outline:2px solid var(--selected-outline-color);
+}
 
 #highlightParamsToolbarContainer .colorPicker .dropdown button:is(:hover, :active, :focus-visible) > .swatch{
-          outline:2px solid var(--hover-outline-color);
-        }
+  outline:2px solid var(--hover-outline-color);
+}
 
 #highlightParamsToolbarContainer #editorHighlightThickness{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:4px;
-    align-self:stretch;
-  }
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  align-self:stretch;
+}
 
 #highlightParamsToolbarContainer #editorHighlightThickness .editorParamsLabel{
-      width:100%;
-      height:auto;
-      align-self:stretch;
-    }
+  width:100%;
+  height:auto;
+  align-self:stretch;
+}
 
 #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      align-self:stretch;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  align-self:stretch;
 
-      --example-color:#bfbfc9;
-    }
+  --example-color:#bfbfc9;
+}
 
 @media (prefers-color-scheme: dark){
-
-:where(html:not(.is-light)) #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker{
-        --example-color:#80808e;
-    }
-      }
+  :where(html:not(.is-light)) #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker{
+    --example-color:#80808e;
+  }
+}
 
 :where(html.is-dark) #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker{
-        --example-color:#80808e;
-    }
+  --example-color:#80808e;
+}
 
 @media screen and (forced-colors: active){
-
-#highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker{
-        --example-color:CanvasText;
-    }
-      }
+  #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker{
+    --example-color:CanvasText;
+  }
+}
 
 :is(#highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker > .editorParamsSlider[disabled]){
-        opacity:0.4;
-      }
+  opacity:0.4;
+}
 
 #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker::before,
-      #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker::after{
-        content:"";
-        width:8px;
-        aspect-ratio:1;
-        display:block;
-        border-radius:100%;
-        background-color:var(--example-color);
-      }
+#highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker::after{
+  content:"";
+  width:8px;
+  aspect-ratio:1;
+  display:block;
+  border-radius:100%;
+  background-color:var(--example-color);
+}
 
 #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker::after{
-        width:24px;
-      }
+  width:24px;
+}
 
 #highlightParamsToolbarContainer #editorHighlightThickness .thicknessPicker .editorParamsSlider{
-        width:unset;
-        height:14px;
-      }
+  width:unset;
+  height:14px;
+}
 
 #highlightParamsToolbarContainer #editorHighlightVisibility{
-    display:flex;
-    flex-direction:column;
-    align-items:flex-start;
-    gap:8px;
-    align-self:stretch;
-  }
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:8px;
+  align-self:stretch;
+}
 
 #highlightParamsToolbarContainer #editorHighlightVisibility .divider{
-      --divider-color:#d7d7db;
+  --divider-color:#d7d7db;
 
-      margin-block:4px;
-      width:100%;
-      height:1px;
-      background-color:var(--divider-color);
-    }
+  margin-block:4px;
+  width:100%;
+  height:1px;
+  background-color:var(--divider-color);
+}
 
 @media (prefers-color-scheme: dark){
-
-:where(html:not(.is-light)) #highlightParamsToolbarContainer #editorHighlightVisibility .divider{
-        --divider-color:#8f8f9d;
-    }
-      }
+  :where(html:not(.is-light)) #highlightParamsToolbarContainer #editorHighlightVisibility .divider{
+    --divider-color:#8f8f9d;
+  }
+}
 
 :where(html.is-dark) #highlightParamsToolbarContainer #editorHighlightVisibility .divider{
-        --divider-color:#8f8f9d;
-    }
+  --divider-color:#8f8f9d;
+}
 
 @media screen and (forced-colors: active){
-
-#highlightParamsToolbarContainer #editorHighlightVisibility .divider{
-        --divider-color:CanvasText;
-    }
-      }
+  #highlightParamsToolbarContainer #editorHighlightVisibility .divider{
+    --divider-color:CanvasText;
+  }
+}
 
 #highlightParamsToolbarContainer #editorHighlightVisibility .toggler{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      align-self:stretch;
-    }
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  align-self:stretch;
+}
 
 :root{
   --viewer-container-height:0;
@@ -2613,9 +2576,11 @@
 [data-main-rotation="90"]{
   transform:rotate(90deg) translateY(-100%);
 }
+
 [data-main-rotation="180"]{
   transform:rotate(180deg) translate(-100%, -100%);
 }
+
 [data-main-rotation="270"]{
   transform:rotate(270deg) translateX(-100%);
 }
@@ -2640,35 +2605,34 @@
 }
 
 @media screen and (forced-colors: active){
-
-.pdfViewer{
+  .pdfViewer{
     --hcm-highlight-filter:invert(100%);
-}
   }
+}
 
 .pdfViewer .canvasWrapper{
-    overflow:hidden;
-    width:100%;
-    height:100%;
-  }
+  overflow:hidden;
+  width:100%;
+  height:100%;
+}
 
 .pdfViewer .canvasWrapper canvas{
-      margin:0;
-      display:block;
-    }
+  margin:0;
+  display:block;
+}
 
 .pdfViewer .canvasWrapper canvas[hidden]{
-        display:none;
-      }
+  display:none;
+}
 
 .pdfViewer .canvasWrapper canvas[zooming]{
-        width:100%;
-        height:100%;
-      }
+  width:100%;
+  height:100%;
+}
 
 .pdfViewer .canvasWrapper canvas .structTree{
-        contain:strict;
-      }
+  contain:strict;
+}
 
 .pdfViewer .page{
   direction:ltr;
@@ -2690,8 +2654,8 @@
 
 .pdfViewer.noUserSelect{
   -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
+  -moz-user-select:none;
+  user-select:none;
 }
 
 .pdfViewer.removePageBorders .page{
@@ -2772,15 +2736,12 @@
   --dir-factor:1;
   --inline-start:left;
   --inline-end:right;
-
   --sidebar-width:200px;
   --sidebar-transition-duration:200ms;
   --sidebar-transition-timing-function:ease;
-
   --toolbar-icon-opacity:0.7;
   --doorhanger-icon-opacity:0.9;
   --editor-toolbar-base-offset:105px;
-
   --main-color:rgb(12 12 13);
   --body-bg-color:rgb(212 212 215);
   --progressBar-color:rgb(10 132 255);
@@ -2790,7 +2751,6 @@
   --scrollbar-bg-color:auto;
   --toolbar-icon-bg-color:rgb(0 0 0);
   --toolbar-icon-hover-bg-color:rgb(0 0 0);
-
   --sidebar-narrow-bg-color:rgb(212 212 215 / 0.9);
   --sidebar-toolbar-bg-color:rgb(245 246 247);
   --toolbar-bg-color:rgb(249 249 250);
@@ -2825,50 +2785,49 @@
   --dialog-button-border:none;
   --dialog-button-bg-color:rgb(12 12 13 / 0.1);
   --dialog-button-hover-bg-color:rgb(12 12 13 / 0.3);
-
-  --loading-icon:url(../images/loading.svg);
-  --treeitem-expanded-icon:url(../images/treeitem-expanded.svg);
-  --treeitem-collapsed-icon:url(../images/treeitem-collapsed.svg);
-  --toolbarButton-editorFreeText-icon:url(../images/toolbarButton-editorFreeText.svg);
-  --toolbarButton-editorHighlight-icon:url(../images/toolbarButton-editorHighlight.svg);
-  --toolbarButton-editorInk-icon:url(../images/toolbarButton-editorInk.svg);
-  --toolbarButton-editorStamp-icon:url(../images/toolbarButton-editorStamp.svg);
-  --toolbarButton-menuArrow-icon:url(../images/toolbarButton-menuArrow.svg);
-  --toolbarButton-sidebarToggle-icon:url(../images/toolbarButton-sidebarToggle.svg);
-  --toolbarButton-secondaryToolbarToggle-icon:url(../images/toolbarButton-secondaryToolbarToggle.svg);
-  --toolbarButton-pageUp-icon:url(../images/toolbarButton-pageUp.svg);
-  --toolbarButton-pageDown-icon:url(../images/toolbarButton-pageDown.svg);
-  --toolbarButton-zoomOut-icon:url(../images/toolbarButton-zoomOut.svg);
-  --toolbarButton-zoomIn-icon:url(../images/toolbarButton-zoomIn.svg);
-  --toolbarButton-presentationMode-icon:url(../images/toolbarButton-presentationMode.svg);
-  --toolbarButton-print-icon:url(../images/toolbarButton-print.svg);
-  --toolbarButton-openFile-icon:url(../images/toolbarButton-openFile.svg);
-  --toolbarButton-download-icon:url(../images/toolbarButton-download.svg);
-  --toolbarButton-bookmark-icon:url(../images/toolbarButton-bookmark.svg);
-  --toolbarButton-viewThumbnail-icon:url(../images/toolbarButton-viewThumbnail.svg);
-  --toolbarButton-viewOutline-icon:url(../images/toolbarButton-viewOutline.svg);
-  --toolbarButton-viewAttachments-icon:url(../images/toolbarButton-viewAttachments.svg);
-  --toolbarButton-viewLayers-icon:url(../images/toolbarButton-viewLayers.svg);
-  --toolbarButton-currentOutlineItem-icon:url(../images/toolbarButton-currentOutlineItem.svg);
-  --toolbarButton-search-icon:url(../images/toolbarButton-search.svg);
-  --toolbarButton-backToHome-icon:url(../images/toolbarButton-home.svg);
-  --findbarButton-previous-icon:url(../images/findbarButton-previous.svg);
-  --findbarButton-next-icon:url(../images/findbarButton-next.svg);
-  --secondaryToolbarButton-firstPage-icon:url(../images/secondaryToolbarButton-firstPage.svg);
-  --secondaryToolbarButton-lastPage-icon:url(../images/secondaryToolbarButton-lastPage.svg);
-  --secondaryToolbarButton-rotateCcw-icon:url(../images/secondaryToolbarButton-rotateCcw.svg);
-  --secondaryToolbarButton-rotateCw-icon:url(../images/secondaryToolbarButton-rotateCw.svg);
-  --secondaryToolbarButton-selectTool-icon:url(../images/secondaryToolbarButton-selectTool.svg);
-  --secondaryToolbarButton-handTool-icon:url(../images/secondaryToolbarButton-handTool.svg);
-  --secondaryToolbarButton-scrollPage-icon:url(../images/secondaryToolbarButton-scrollPage.svg);
-  --secondaryToolbarButton-scrollVertical-icon:url(../images/secondaryToolbarButton-scrollVertical.svg);
-  --secondaryToolbarButton-scrollHorizontal-icon:url(../images/secondaryToolbarButton-scrollHorizontal.svg);
-  --secondaryToolbarButton-scrollWrapped-icon:url(../images/secondaryToolbarButton-scrollWrapped.svg);
-  --secondaryToolbarButton-spreadNone-icon:url(../images/secondaryToolbarButton-spreadNone.svg);
-  --secondaryToolbarButton-spreadOdd-icon:url(../images/secondaryToolbarButton-spreadOdd.svg);
-  --secondaryToolbarButton-spreadEven-icon:url(../images/secondaryToolbarButton-spreadEven.svg);
-  --secondaryToolbarButton-documentProperties-icon:url(../images/secondaryToolbarButton-documentProperties.svg);
-  --editorParams-stampAddImage-icon:url(../images/toolbarButton-zoomIn.svg);
+  --loading-icon:url("../images/loading.svg");
+  --treeitem-expanded-icon:url("../images/treeitem-expanded.svg");
+  --treeitem-collapsed-icon:url("../images/treeitem-collapsed.svg");
+  --toolbarButton-editorFreeText-icon:url("../images/toolbarButton-editorFreeText.svg");
+  --toolbarButton-editorHighlight-icon:url("../images/toolbarButton-editorHighlight.svg");
+  --toolbarButton-editorInk-icon:url("../images/toolbarButton-editorInk.svg");
+  --toolbarButton-editorStamp-icon:url("../images/toolbarButton-editorStamp.svg");
+  --toolbarButton-menuArrow-icon:url("../images/toolbarButton-menuArrow.svg");
+  --toolbarButton-sidebarToggle-icon:url("../images/toolbarButton-sidebarToggle.svg");
+  --toolbarButton-secondaryToolbarToggle-icon:url("../images/toolbarButton-secondaryToolbarToggle.svg");
+  --toolbarButton-pageUp-icon:url("../images/toolbarButton-pageUp.svg");
+  --toolbarButton-pageDown-icon:url("../images/toolbarButton-pageDown.svg");
+  --toolbarButton-zoomOut-icon:url("../images/toolbarButton-zoomOut.svg");
+  --toolbarButton-zoomIn-icon:url("../images/toolbarButton-zoomIn.svg");
+  --toolbarButton-presentationMode-icon:url("../images/toolbarButton-presentationMode.svg");
+  --toolbarButton-print-icon:url("../images/toolbarButton-print.svg");
+  --toolbarButton-openFile-icon:url("../images/toolbarButton-openFile.svg");
+  --toolbarButton-download-icon:url("../images/toolbarButton-download.svg");
+  --toolbarButton-bookmark-icon:url("../images/toolbarButton-bookmark.svg");
+  --toolbarButton-viewThumbnail-icon:url("../images/toolbarButton-viewThumbnail.svg");
+  --toolbarButton-viewOutline-icon:url("../images/toolbarButton-viewOutline.svg");
+  --toolbarButton-viewAttachments-icon:url("../images/toolbarButton-viewAttachments.svg");
+  --toolbarButton-viewLayers-icon:url("../images/toolbarButton-viewLayers.svg");
+  --toolbarButton-currentOutlineItem-icon:url("../images/toolbarButton-currentOutlineItem.svg");
+  --toolbarButton-search-icon:url("../images/toolbarButton-search.svg");
+  --toolbarButton-backToHome-icon:url("../images/toolbarButton-home.svg");
+  --findbarButton-previous-icon:url("../images/findbarButton-previous.svg");
+  --findbarButton-next-icon:url("../images/findbarButton-next.svg");
+  --secondaryToolbarButton-firstPage-icon:url("../images/secondaryToolbarButton-firstPage.svg");
+  --secondaryToolbarButton-lastPage-icon:url("../images/secondaryToolbarButton-lastPage.svg");
+  --secondaryToolbarButton-rotateCcw-icon:url("../images/secondaryToolbarButton-rotateCcw.svg");
+  --secondaryToolbarButton-rotateCw-icon:url("../images/secondaryToolbarButton-rotateCw.svg");
+  --secondaryToolbarButton-selectTool-icon:url("../images/secondaryToolbarButton-selectTool.svg");
+  --secondaryToolbarButton-handTool-icon:url("../images/secondaryToolbarButton-handTool.svg");
+  --secondaryToolbarButton-scrollPage-icon:url("../images/secondaryToolbarButton-scrollPage.svg");
+  --secondaryToolbarButton-scrollVertical-icon:url("../images/secondaryToolbarButton-scrollVertical.svg");
+  --secondaryToolbarButton-scrollHorizontal-icon:url("../images/secondaryToolbarButton-scrollHorizontal.svg");
+  --secondaryToolbarButton-scrollWrapped-icon:url("../images/secondaryToolbarButton-scrollWrapped.svg");
+  --secondaryToolbarButton-spreadNone-icon:url("../images/secondaryToolbarButton-spreadNone.svg");
+  --secondaryToolbarButton-spreadOdd-icon:url("../images/secondaryToolbarButton-spreadOdd.svg");
+  --secondaryToolbarButton-spreadEven-icon:url("../images/secondaryToolbarButton-spreadEven.svg");
+  --secondaryToolbarButton-documentProperties-icon:url("../images/secondaryToolbarButton-documentProperties.svg");
+  --editorParams-stampAddImage-icon:url("../images/toolbarButton-zoomIn.svg");
 }
 
 [dir="rtl"]:root{
@@ -2888,7 +2847,6 @@
     --scrollbar-bg-color:rgb(35 35 39);
     --toolbar-icon-bg-color:rgb(255 255 255);
     --toolbar-icon-hover-bg-color:rgb(255 255 255);
-
     --sidebar-narrow-bg-color:rgb(42 42 46 / 0.9);
     --sidebar-toolbar-bg-color:rgb(50 50 52);
     --toolbar-bg-color:rgb(56 56 61);
@@ -2920,44 +2878,43 @@
 }
 
 :root:where(.is-dark){
-    --main-color:rgb(249 249 250);
-    --body-bg-color:rgb(42 42 46);
-    --progressBar-color:rgb(0 96 223);
-    --progressBar-bg-color:rgb(40 40 43);
-    --progressBar-blend-color:rgb(20 68 133);
-    --scrollbar-color:rgb(121 121 123);
-    --scrollbar-bg-color:rgb(35 35 39);
-    --toolbar-icon-bg-color:rgb(255 255 255);
-    --toolbar-icon-hover-bg-color:rgb(255 255 255);
-
-    --sidebar-narrow-bg-color:rgb(42 42 46 / 0.9);
-    --sidebar-toolbar-bg-color:rgb(50 50 52);
-    --toolbar-bg-color:rgb(56 56 61);
-    --toolbar-border-color:rgb(12 12 13);
-    --button-hover-color:rgb(102 102 103);
-    --toggled-btn-color:rgb(255 255 255);
-    --toggled-btn-bg-color:rgb(0 0 0 / 0.3);
-    --toggled-hover-active-btn-color:rgb(0 0 0 / 0.4);
-    --dropdown-btn-bg-color:rgb(74 74 79);
-    --separator-color:rgb(0 0 0 / 0.3);
-    --field-color:rgb(250 250 250);
-    --field-bg-color:rgb(64 64 68);
-    --field-border-color:rgb(115 115 115);
-    --treeitem-color:rgb(255 255 255 / 0.8);
-    --treeitem-bg-color:rgb(255 255 255 / 0.15);
-    --treeitem-hover-color:rgb(255 255 255 / 0.9);
-    --treeitem-selected-color:rgb(255 255 255 / 0.9);
-    --treeitem-selected-bg-color:rgb(255 255 255 / 0.25);
-    --thumbnail-hover-color:rgb(255 255 255 / 0.1);
-    --thumbnail-selected-color:rgb(255 255 255 / 0.2);
-    --doorhanger-bg-color:rgb(74 74 79);
-    --doorhanger-border-color:rgb(39 39 43);
-    --doorhanger-hover-color:rgb(249 249 250);
-    --doorhanger-hover-bg-color:rgb(93 94 98);
-    --doorhanger-separator-color:rgb(92 92 97);
-    --dialog-button-bg-color:rgb(92 92 97);
-    --dialog-button-hover-bg-color:rgb(115 115 115);
-  }
+  --main-color:rgb(249 249 250);
+  --body-bg-color:rgb(42 42 46);
+  --progressBar-color:rgb(0 96 223);
+  --progressBar-bg-color:rgb(40 40 43);
+  --progressBar-blend-color:rgb(20 68 133);
+  --scrollbar-color:rgb(121 121 123);
+  --scrollbar-bg-color:rgb(35 35 39);
+  --toolbar-icon-bg-color:rgb(255 255 255);
+  --toolbar-icon-hover-bg-color:rgb(255 255 255);
+  --sidebar-narrow-bg-color:rgb(42 42 46 / 0.9);
+  --sidebar-toolbar-bg-color:rgb(50 50 52);
+  --toolbar-bg-color:rgb(56 56 61);
+  --toolbar-border-color:rgb(12 12 13);
+  --button-hover-color:rgb(102 102 103);
+  --toggled-btn-color:rgb(255 255 255);
+  --toggled-btn-bg-color:rgb(0 0 0 / 0.3);
+  --toggled-hover-active-btn-color:rgb(0 0 0 / 0.4);
+  --dropdown-btn-bg-color:rgb(74 74 79);
+  --separator-color:rgb(0 0 0 / 0.3);
+  --field-color:rgb(250 250 250);
+  --field-bg-color:rgb(64 64 68);
+  --field-border-color:rgb(115 115 115);
+  --treeitem-color:rgb(255 255 255 / 0.8);
+  --treeitem-bg-color:rgb(255 255 255 / 0.15);
+  --treeitem-hover-color:rgb(255 255 255 / 0.9);
+  --treeitem-selected-color:rgb(255 255 255 / 0.9);
+  --treeitem-selected-bg-color:rgb(255 255 255 / 0.25);
+  --thumbnail-hover-color:rgb(255 255 255 / 0.1);
+  --thumbnail-selected-color:rgb(255 255 255 / 0.2);
+  --doorhanger-bg-color:rgb(74 74 79);
+  --doorhanger-border-color:rgb(39 39 43);
+  --doorhanger-hover-color:rgb(249 249 250);
+  --doorhanger-hover-bg-color:rgb(93 94 98);
+  --doorhanger-separator-color:rgb(92 92 97);
+  --dialog-button-bg-color:rgb(92 92 97);
+  --dialog-button-hover-bg-color:rgb(115 115 115);
+}
 
 @media screen and (forced-colors: active){
   :root{
@@ -3024,8 +2981,8 @@ body{
   overflow:hidden;
   cursor:none;
   -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
+  -moz-user-select:none;
+  user-select:none;
 }
 
 .pdfPresentationMode:fullscreen section:not([data-internal-link]){
@@ -3065,6 +3022,7 @@ body{
 #outerContainer:is(.sidebarMoving, .sidebarOpen) #sidebarContainer{
   visibility:visible;
 }
+
 #outerContainer.sidebarOpen #sidebarContainer{
   inset-inline-start:0;
 }
@@ -3090,6 +3048,7 @@ body{
   inset:32px 0 0;
   outline:none;
 }
+
 #viewerContainer:not(.pdfPresentationMode){
   transition-duration:var(--sidebar-transition-duration);
   transition-timing-function:var(--sidebar-transition-timing-function);
@@ -3109,7 +3068,7 @@ body{
 }
 
 :is(.toolbar, .editorParamsToolbar, .findbar, #sidebarContainer)
-  :is(input, button, select),
+:is(input, button, select),
 .secondaryToolbar :is(input, button, a, select){
   outline:none;
   font:message-box;
@@ -3186,6 +3145,7 @@ body{
   0%{
     transform:translateX(calc(-142px * var(--dir-factor)));
   }
+
   100%{
     transform:translateX(0);
   }
@@ -3216,7 +3176,7 @@ body{
 }
 
 #outerContainer.sidebarResizing
-  :is(#sidebarContainer, #viewerContainer, #loadingBar){
+:is(#sidebarContainer, #viewerContainer, #loadingBar){
   transition-duration:0s;
 }
 
@@ -3241,16 +3201,20 @@ body{
   min-width:300px;
   background-color:var(--toolbar-bg-color);
 }
+
 .findbar > div{
   height:32px;
 }
+
 .findbar > div#findbarInputContainer{
   margin-inline-end:4px;
 }
+
 .findbar.wrapContainers > div,
 .findbar.wrapContainers > div#findbarMessageContainer > *{
   clear:both;
 }
+
 .findbar.wrapContainers > div#findbarMessageContainer{
   height:auto;
 }
@@ -3261,8 +3225,8 @@ body{
 
 .findbar label{
   -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
+  -moz-user-select:none;
+  user-select:none;
 }
 
 .findbar label:hover,
@@ -3281,21 +3245,21 @@ body{
 }
 
 #findInput::-moz-placeholder{
-    font-style:normal;
-  }
+  font-style:normal;
+}
 
 #findInput::placeholder{
-    font-style:normal;
-  }
+  font-style:normal;
+}
 
 .loadingInput:has(> #findInput[data-status="pending"])::after{
-    display:block;
-    visibility:visible;
-  }
+  display:block;
+  visibility:visible;
+}
 
 #findInput[data-status="notFound"]{
-    background-color:rgb(255 102 102);
-  }
+  background-color:rgb(255 102 102);
+}
 
 .secondaryToolbar,
 .editorParamsToolbar{
@@ -3381,7 +3345,7 @@ body{
 
 #editorStampAddImage::before{
   -webkit-mask-image:var(--editorParams-stampAddImage-icon);
-          mask-image:var(--editorParams-stampAddImage-icon);
+  mask-image:var(--editorParams-stampAddImage-icon);
 }
 
 .doorHanger,
@@ -3390,6 +3354,7 @@ body{
   box-shadow:0 1px 5px var(--doorhanger-border-color), 0 0 0 1px var(--doorhanger-border-color);
   border:var(--doorhanger-border-color-whcm);
 }
+
 :is(.doorHanger, .doorHangerRight)::after,
 :is(.doorHanger, .doorHangerRight)::before{
   bottom:100%;
@@ -3401,24 +3366,29 @@ body{
   pointer-events:none;
   opacity:var(--doorhanger-triangle-opacity-whcm);
 }
+
 .doorHanger::after{
   inset-inline-start:10px;
   margin-inline-start:-8px;
   border-bottom-color:var(--toolbar-bg-color);
 }
+
 .doorHangerRight::after{
   inset-inline-end:10px;
   margin-inline-end:-8px;
   border-bottom-color:var(--doorhanger-bg-color);
 }
+
 :is(.doorHanger, .doorHangerRight)::before{
   border-bottom-color:var(--doorhanger-border-color);
   border-width:9px;
 }
+
 .doorHanger::before{
   inset-inline-start:10px;
   margin-inline-start:-9px;
 }
+
 .doorHangerRight::before{
   inset-inline-end:10px;
   margin-inline-end:-9px;
@@ -3450,6 +3420,7 @@ body{
 #toolbarSidebarLeft{
   float:var(--inline-start);
 }
+
 #toolbarViewerRight,
 #toolbarSidebarRight{
   float:var(--inline-end);
@@ -3468,9 +3439,11 @@ body{
 #toolbarViewerLeft{
   padding-inline-start:1px;
 }
+
 #toolbarViewerRight{
   padding-inline-end:1px;
 }
+
 #toolbarSidebarRight{
   padding-inline-end:2px;
 }
@@ -3479,6 +3452,7 @@ body{
   margin:2px;
   display:inline-block;
 }
+
 .splitToolbarButton > .toolbarButton{
   float:var(--inline-start);
 }
@@ -3516,10 +3490,12 @@ body{
 .dropdownToolbarButton:hover{
   background-color:var(--button-hover-color);
 }
+
 .splitToolbarButton > .toolbarButton{
   position:relative;
   margin:0;
 }
+
 #toolbarSidebar .splitToolbarButton > .toolbarButton{
   margin-inline-end:2px;
 }
@@ -3545,8 +3521,8 @@ body{
   font-size:12px;
   line-height:14px;
   -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
+  -moz-user-select:none;
+  user-select:none;
   cursor:default;
   box-sizing:border-box;
 }
@@ -3554,6 +3530,7 @@ body{
 .toolbarButton:is(:hover, :focus-visible){
   background-color:var(--button-hover-color);
 }
+
 .secondaryToolbarButton:is(:hover, :focus-visible){
   background-color:var(--doorhanger-hover-bg-color);
   color:var(--doorhanger-hover-color);
@@ -3588,18 +3565,19 @@ body{
   background-color:var(--dropdown-btn-bg-color);
   border:var(--dropdown-btn-border);
 }
+
 .dropdownToolbarButton::after{
   top:6px;
   inset-inline-end:6px;
   pointer-events:none;
   -webkit-mask-image:var(--toolbarButton-menuArrow-icon);
-          mask-image:var(--toolbarButton-menuArrow-icon);
+  mask-image:var(--toolbarButton-menuArrow-icon);
 }
 
 .dropdownToolbarButton > select{
   -webkit-appearance:none;
-     -moz-appearance:none;
-          appearance:none;
+  -moz-appearance:none;
+  appearance:none;
   width:inherit;
   min-width:inherit;
   height:28px;
@@ -3611,10 +3589,12 @@ body{
   border:none;
   background-color:var(--dropdown-btn-bg-color);
 }
+
 .dropdownToolbarButton > select:is(:hover, :focus-visible){
   background-color:var(--button-hover-color);
   color:var(--toggled-btn-color);
 }
+
 .dropdownToolbarButton > select > option{
   background:var(--doorhanger-bg-color);
   color:var(--main-color);
@@ -3632,11 +3612,10 @@ body{
   display:inline-block;
   width:16px;
   height:16px;
-
   content:"";
   background-color:var(--toolbar-icon-bg-color);
   -webkit-mask-size:cover;
-          mask-size:cover;
+  mask-size:cover;
 }
 
 .dropdownToolbarButton:is(:hover, :focus-visible, :active)::after{
@@ -3662,13 +3641,13 @@ body{
 
 #sidebarToggle::before{
   -webkit-mask-image:var(--toolbarButton-sidebarToggle-icon);
-          mask-image:var(--toolbarButton-sidebarToggle-icon);
+  mask-image:var(--toolbarButton-sidebarToggle-icon);
   transform:scaleX(var(--dir-factor));
 }
 
 #secondaryToolbarToggle::before{
   -webkit-mask-image:var(--toolbarButton-secondaryToolbarToggle-icon);
-          mask-image:var(--toolbarButton-secondaryToolbarToggle-icon);
+  mask-image:var(--toolbarButton-secondaryToolbarToggle-icon);
   transform:scaleX(var(--dir-factor));
 }
 
@@ -3680,78 +3659,79 @@ body{
 
 #findPrevious::before{
   -webkit-mask-image:var(--findbarButton-previous-icon);
-          mask-image:var(--findbarButton-previous-icon);
+  mask-image:var(--findbarButton-previous-icon);
 }
 
 #findNext::before{
   -webkit-mask-image:var(--findbarButton-next-icon);
-          mask-image:var(--findbarButton-next-icon);
+  mask-image:var(--findbarButton-next-icon);
 }
 
 #previous::before{
   -webkit-mask-image:var(--toolbarButton-pageUp-icon);
-          mask-image:var(--toolbarButton-pageUp-icon);
+  mask-image:var(--toolbarButton-pageUp-icon);
 }
 
 #next::before{
   -webkit-mask-image:var(--toolbarButton-pageDown-icon);
-          mask-image:var(--toolbarButton-pageDown-icon);
+  mask-image:var(--toolbarButton-pageDown-icon);
 }
 
 #zoomOut::before{
   -webkit-mask-image:var(--toolbarButton-zoomOut-icon);
-          mask-image:var(--toolbarButton-zoomOut-icon);
+  mask-image:var(--toolbarButton-zoomOut-icon);
 }
 
 #zoomIn::before{
   -webkit-mask-image:var(--toolbarButton-zoomIn-icon);
-          mask-image:var(--toolbarButton-zoomIn-icon);
+  mask-image:var(--toolbarButton-zoomIn-icon);
 }
 
 #presentationMode::before{
   -webkit-mask-image:var(--toolbarButton-presentationMode-icon);
-          mask-image:var(--toolbarButton-presentationMode-icon);
+  mask-image:var(--toolbarButton-presentationMode-icon);
 }
 
 #editorFreeText::before{
   -webkit-mask-image:var(--toolbarButton-editorFreeText-icon);
-          mask-image:var(--toolbarButton-editorFreeText-icon);
+  mask-image:var(--toolbarButton-editorFreeText-icon);
 }
 
 #editorHighlight::before{
   -webkit-mask-image:var(--toolbarButton-editorHighlight-icon);
-          mask-image:var(--toolbarButton-editorHighlight-icon);
+  mask-image:var(--toolbarButton-editorHighlight-icon);
 }
 
 #editorInk::before{
   -webkit-mask-image:var(--toolbarButton-editorInk-icon);
-          mask-image:var(--toolbarButton-editorInk-icon);
+  mask-image:var(--toolbarButton-editorInk-icon);
 }
 
 #editorStamp::before{
   -webkit-mask-image:var(--toolbarButton-editorStamp-icon);
-          mask-image:var(--toolbarButton-editorStamp-icon);
+  mask-image:var(--toolbarButton-editorStamp-icon);
 }
 
 :is(#print, #secondaryPrint)::before{
   -webkit-mask-image:var(--toolbarButton-print-icon);
-          mask-image:var(--toolbarButton-print-icon);
+  mask-image:var(--toolbarButton-print-icon);
 }
 
 #secondaryOpenFile::before, #openFile::before{
   -webkit-mask-image:var(--toolbarButton-openFile-icon);
-          mask-image:var(--toolbarButton-openFile-icon);
+  mask-image:var(--toolbarButton-openFile-icon);
 }
 
 :is(#download, #secondaryDownload)::before{
   -webkit-mask-image:var(--toolbarButton-download-icon);
-          mask-image:var(--toolbarButton-download-icon);
+  mask-image:var(--toolbarButton-download-icon);
 }
 
 a.secondaryToolbarButton{
   padding-top:5px;
   text-decoration:none;
 }
+
 a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
   opacity:0.5;
   pointer-events:none;
@@ -3759,39 +3739,39 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
 
 #viewBookmark::before{
   -webkit-mask-image:var(--toolbarButton-bookmark-icon);
-          mask-image:var(--toolbarButton-bookmark-icon);
+  mask-image:var(--toolbarButton-bookmark-icon);
 }
 
 #viewThumbnail::before{
   -webkit-mask-image:var(--toolbarButton-viewThumbnail-icon);
-          mask-image:var(--toolbarButton-viewThumbnail-icon);
+  mask-image:var(--toolbarButton-viewThumbnail-icon);
 }
 
 #viewOutline::before{
   -webkit-mask-image:var(--toolbarButton-viewOutline-icon);
-          mask-image:var(--toolbarButton-viewOutline-icon);
+  mask-image:var(--toolbarButton-viewOutline-icon);
   transform:scaleX(var(--dir-factor));
 }
 
 #viewAttachments::before{
   -webkit-mask-image:var(--toolbarButton-viewAttachments-icon);
-          mask-image:var(--toolbarButton-viewAttachments-icon);
+  mask-image:var(--toolbarButton-viewAttachments-icon);
 }
 
 #viewLayers::before{
   -webkit-mask-image:var(--toolbarButton-viewLayers-icon);
-          mask-image:var(--toolbarButton-viewLayers-icon);
+  mask-image:var(--toolbarButton-viewLayers-icon);
 }
 
 #currentOutlineItem::before{
   -webkit-mask-image:var(--toolbarButton-currentOutlineItem-icon);
-          mask-image:var(--toolbarButton-currentOutlineItem-icon);
+  mask-image:var(--toolbarButton-currentOutlineItem-icon);
   transform:scaleX(var(--dir-factor));
 }
 
 #viewFind::before{
   -webkit-mask-image:var(--toolbarButton-search-icon);
-          mask-image:var(--toolbarButton-search-icon);
+  mask-image:var(--toolbarButton-search-icon);
 }
 
 .pdfSidebarNotification::after{
@@ -3821,78 +3801,79 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
   box-sizing:border-box;
   display:inline-block;
 }
+
 .secondaryToolbarButton > span{
   padding-inline-end:4px;
 }
 
 #firstPage::before{
   -webkit-mask-image:var(--secondaryToolbarButton-firstPage-icon);
-          mask-image:var(--secondaryToolbarButton-firstPage-icon);
+  mask-image:var(--secondaryToolbarButton-firstPage-icon);
 }
 
 #lastPage::before{
   -webkit-mask-image:var(--secondaryToolbarButton-lastPage-icon);
-          mask-image:var(--secondaryToolbarButton-lastPage-icon);
+  mask-image:var(--secondaryToolbarButton-lastPage-icon);
 }
 
 #pageRotateCcw::before{
   -webkit-mask-image:var(--secondaryToolbarButton-rotateCcw-icon);
-          mask-image:var(--secondaryToolbarButton-rotateCcw-icon);
+  mask-image:var(--secondaryToolbarButton-rotateCcw-icon);
 }
 
 #pageRotateCw::before{
   -webkit-mask-image:var(--secondaryToolbarButton-rotateCw-icon);
-          mask-image:var(--secondaryToolbarButton-rotateCw-icon);
+  mask-image:var(--secondaryToolbarButton-rotateCw-icon);
 }
 
 #cursorSelectTool::before{
   -webkit-mask-image:var(--secondaryToolbarButton-selectTool-icon);
-          mask-image:var(--secondaryToolbarButton-selectTool-icon);
+  mask-image:var(--secondaryToolbarButton-selectTool-icon);
 }
 
 #cursorHandTool::before{
   -webkit-mask-image:var(--secondaryToolbarButton-handTool-icon);
-          mask-image:var(--secondaryToolbarButton-handTool-icon);
+  mask-image:var(--secondaryToolbarButton-handTool-icon);
 }
 
 #scrollPage::before{
   -webkit-mask-image:var(--secondaryToolbarButton-scrollPage-icon);
-          mask-image:var(--secondaryToolbarButton-scrollPage-icon);
+  mask-image:var(--secondaryToolbarButton-scrollPage-icon);
 }
 
 #scrollVertical::before{
   -webkit-mask-image:var(--secondaryToolbarButton-scrollVertical-icon);
-          mask-image:var(--secondaryToolbarButton-scrollVertical-icon);
+  mask-image:var(--secondaryToolbarButton-scrollVertical-icon);
 }
 
 #scrollHorizontal::before{
   -webkit-mask-image:var(--secondaryToolbarButton-scrollHorizontal-icon);
-          mask-image:var(--secondaryToolbarButton-scrollHorizontal-icon);
+  mask-image:var(--secondaryToolbarButton-scrollHorizontal-icon);
 }
 
 #scrollWrapped::before{
   -webkit-mask-image:var(--secondaryToolbarButton-scrollWrapped-icon);
-          mask-image:var(--secondaryToolbarButton-scrollWrapped-icon);
+  mask-image:var(--secondaryToolbarButton-scrollWrapped-icon);
 }
 
 #spreadNone::before{
   -webkit-mask-image:var(--secondaryToolbarButton-spreadNone-icon);
-          mask-image:var(--secondaryToolbarButton-spreadNone-icon);
+  mask-image:var(--secondaryToolbarButton-spreadNone-icon);
 }
 
 #spreadOdd::before{
   -webkit-mask-image:var(--secondaryToolbarButton-spreadOdd-icon);
-          mask-image:var(--secondaryToolbarButton-spreadOdd-icon);
+  mask-image:var(--secondaryToolbarButton-spreadOdd-icon);
 }
 
 #spreadEven::before{
   -webkit-mask-image:var(--secondaryToolbarButton-spreadEven-icon);
-          mask-image:var(--secondaryToolbarButton-spreadEven-icon);
+  mask-image:var(--secondaryToolbarButton-spreadEven-icon);
 }
 
 #documentProperties::before{
   -webkit-mask-image:var(--secondaryToolbarButton-documentProperties-icon);
-          mask-image:var(--secondaryToolbarButton-documentProperties-icon);
+  mask-image:var(--secondaryToolbarButton-documentProperties-icon);
 }
 
 .verticalToolbarSeparator{
@@ -3902,6 +3883,7 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
   height:22px;
   background-color:var(--separator-color);
 }
+
 .horizontalToolbarSeparator{
   display:block;
   margin:6px 0;
@@ -3941,40 +3923,38 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
 }
 
 #pageNumber::-webkit-inner-spin-button{
-    -webkit-appearance:none;
-  }
+  -webkit-appearance:none;
+}
 
 .loadingInput:has(> #pageNumber.loading)::after{
-    display:block;
-    visibility:visible;
-
-    transition-property:visibility;
-    transition-delay:var(--loading-icon-delay);
-  }
+  display:block;
+  visibility:visible;
+  transition-property:visibility;
+  transition-delay:var(--loading-icon-delay);
+}
 
 .loadingInput::after{
-    position:absolute;
-    visibility:hidden;
-    display:none;
-    top:calc(50% - 8px);
-    width:16px;
-    height:16px;
-
-    content:"";
-    background-color:var(--toolbar-icon-bg-color);
-    -webkit-mask-size:cover;
-            mask-size:cover;
-    -webkit-mask-image:var(--loading-icon);
-            mask-image:var(--loading-icon);
-  }
+  position:absolute;
+  visibility:hidden;
+  display:none;
+  top:calc(50% - 8px);
+  width:16px;
+  height:16px;
+  content:"";
+  background-color:var(--toolbar-icon-bg-color);
+  -webkit-mask-size:cover;
+  mask-size:cover;
+  -webkit-mask-image:var(--loading-icon);
+  mask-image:var(--loading-icon);
+}
 
 .loadingInput.start::after{
-    inset-inline-start:4px;
-  }
+  inset-inline-start:4px;
+}
 
 .loadingInput.end::after{
-    inset-inline-end:4px;
-  }
+  inset-inline-end:4px;
+}
 
 .toolbarField:focus{
   border-color:#0a84ff;
@@ -3990,8 +3970,8 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
   line-height:14px;
   text-align:left;
   -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
+  -moz-user-select:none;
+  user-select:none;
   cursor:default;
 }
 
@@ -4009,9 +3989,10 @@ a:is(.toolbarButton, .secondaryToolbarButton)[href="#"]{
   padding:4px 4px 0;
   overflow:auto;
   -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
+  -moz-user-select:none;
+  user-select:none;
 }
+
 #thumbnailView{
   width:calc(100% - 60px);
   padding:10px 30px 0;
@@ -4042,6 +4023,7 @@ a:focus > .thumbnail,
 .thumbnail:hover{
   border-color:var(--thumbnail-hover-color);
 }
+
 .thumbnail.selected{
   border-color:var(--thumbnail-selected-color) !important;
 }
@@ -4051,10 +4033,12 @@ a:focus > .thumbnail,
   height:var(--thumbnail-height);
   opacity:0.9;
 }
+
 a:focus > .thumbnail > .thumbnailImage,
 .thumbnail:hover > .thumbnailImage{
   opacity:0.95;
 }
+
 .thumbnail.selected > .thumbnailImage{
   opacity:1 !important;
 }
@@ -4083,8 +4067,8 @@ a:focus > .thumbnail > .thumbnailImage,
   font-size:13px;
   line-height:15px;
   -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
+  -moz-user-select:none;
+  user-select:none;
   white-space:normal;
   cursor:pointer;
 }
@@ -4092,9 +4076,11 @@ a:focus > .thumbnail > .thumbnailImage,
 #layersView .treeItem > a *{
   cursor:pointer;
 }
+
 #layersView .treeItem > a > label{
   padding-inline-start:4px;
 }
+
 #layersView .treeItem > a > label > input{
   float:var(--inline-start);
   margin-top:1px;
@@ -4107,16 +4093,19 @@ a:focus > .thumbnail > .thumbnailImage,
   width:0;
   color:rgb(255 255 255 / 0.5);
 }
+
 .treeItemToggler::before{
   inset-inline-end:4px;
   -webkit-mask-image:var(--treeitem-expanded-icon);
-          mask-image:var(--treeitem-expanded-icon);
+  mask-image:var(--treeitem-expanded-icon);
 }
+
 .treeItemToggler.treeItemsHidden::before{
   -webkit-mask-image:var(--treeitem-collapsed-icon);
-          mask-image:var(--treeitem-collapsed-icon);
+  mask-image:var(--treeitem-collapsed-icon);
   transform:scaleX(var(--dir-factor));
 }
+
 .treeItemToggler.treeItemsHidden ~ .treeItems{
   display:none;
 }
@@ -4141,8 +4130,8 @@ a:focus > .thumbnail > .thumbnailImage,
 }
 
 #sidebarContainer:has(#outlineView:not(.hidden)) #outlineOptionsContainer{
-    display:inherit;
-  }
+  display:inherit;
+}
 
 .dialogButton{
   width:auto;
@@ -4166,6 +4155,7 @@ dialog{
   border-radius:4px;
   box-shadow:0 1px 4px rgb(0 0 0 / 0.3);
 }
+
 dialog::backdrop{
   background-color:rgb(0 0 0 / 0.2);
 }
@@ -4202,6 +4192,7 @@ dialog :link{
 #passwordDialog{
   text-align:center;
 }
+
 #passwordDialog .toolbarField{
   width:200px;
 }
@@ -4209,18 +4200,22 @@ dialog :link{
 #documentPropertiesDialog{
   text-align:left;
 }
+
 #documentPropertiesDialog .row > *{
   min-width:100px;
   text-align:start;
 }
+
 #documentPropertiesDialog .row > span{
   width:125px;
   word-wrap:break-word;
 }
+
 #documentPropertiesDialog .row > p{
   max-width:225px;
   word-wrap:break-word;
 }
+
 #documentPropertiesDialog .buttonRow{
   margin-top:10px;
 }
@@ -4228,14 +4223,17 @@ dialog :link{
 .grab-to-pan-grab{
   cursor:grab !important;
 }
+
 .grab-to-pan-grab
-  *:not(input):not(textarea):not(button):not(select):not(:link){
+*:not(input):not(textarea):not(button):not(select):not(:link){
   cursor:inherit !important;
 }
+
 .grab-to-pan-grab:active,
 .grab-to-pan-grabbing{
   cursor:grabbing !important;
 }
+
 .grab-to-pan-grabbing{
   position:fixed;
   background:rgb(0 0 0 / 0);
@@ -4257,21 +4255,24 @@ dialog :link{
   body{
     background:rgb(0 0 0 / 0) none;
   }
+
   body[data-pdfjsprinting] #outerContainer{
     display:none;
   }
+
   body[data-pdfjsprinting] #printContainer{
     display:block;
   }
+
   #printContainer{
     height:100%;
   }
+
   #printContainer > .printedPage{
     page-break-after:always;
     page-break-inside:avoid;
     height:100%;
     width:100%;
-
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -4293,7 +4294,6 @@ dialog :link{
   #printContainer > .printedPage :is(canvas, img){
     max-width:100%;
     max-height:100%;
-
     direction:ltr;
     display:block;
   }
@@ -4317,6 +4317,7 @@ dialog :link{
   #sidebarContainer{
     background-color:var(--sidebar-narrow-bg-color);
   }
+
   #outerContainer.sidebarOpen #viewerContainer{
     inset-inline-start:0 !important;
   }
@@ -4326,9 +4327,11 @@ dialog :link{
   :root{
     --editor-toolbar-base-offset:40px;
   }
+
   #outerContainer .hiddenMediumView{
     display:none;
   }
+
   #outerContainer .visibleMediumView{
     display:inherit;
   }
@@ -4339,9 +4342,11 @@ dialog :link{
   .hiddenSmallView *{
     display:none;
   }
+
   .toolbarButtonSpacer{
     width:0;
   }
+
   .findbar{
     inset-inline-start:34px;
   }

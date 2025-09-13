@@ -6,7 +6,7 @@
 label {
   text-align: left;
   display: block;
-  padding: 0rem 0.25rem;
+  padding: 0 0.25rem;
   font-size: 1.25rem;
 }
 
@@ -27,7 +27,7 @@ label {
   z-index: 10;
   padding: 1.25rem;
   border-radius: 2rem;
-  margin: 0px 25px;
+  margin: 0 25px;
 }
 
 .mt-action-bar>* {
@@ -50,7 +50,7 @@ label {
   align-items: start;
   top: 10px;
   z-index: 10;
-  padding: 12px 0px 0px;
+  padding: 12px 0 0;
   width: 100%;
 }
 
@@ -76,11 +76,11 @@ label {
   overflow-y: auto;
   overflow-x: auto;
   min-height: 275px;
-  margin: 0 0 30px 0;
+  margin: 0 0 30px;
 }
 
 #pages-container {
-  gap: 0px;
+  gap: 0;
   display: flex;
   flex-wrap: wrap;
   margin-left: -15px;
@@ -188,6 +188,7 @@ label {
 }
 
 .page-container img {
+
   /* max-width: calc(100% - 15px); */
   max-height: calc(100% - 15px);
   max-width: 237px;
@@ -196,7 +197,7 @@ label {
   left: 50%;
   top: 50%;
   translate: -50% -50%;
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.384);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.384);
   border-radius: 4px;
   transition: rotate 0.3s;
 }
@@ -286,6 +287,7 @@ label {
 .checkbox-label {
   font-size: medium;
 }
+
 .btn {
   position: relative;
 }
