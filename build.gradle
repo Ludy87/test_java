@@ -346,7 +346,7 @@ dependencies {
 
         implementation 'com.unboundid.product.scim2:scim2-sdk-client:2.3.5'
         // Don't upgrade h2database
-        runtimeOnly "com.h2database:h2:2.3.232"
+        runtimeOnly "com.h2database:h2:2.4.240"
         runtimeOnly "org.postgresql:postgresql:42.7.4"
         constraints {
             implementation "org.opensaml:opensaml-core:$openSamlVersion"
