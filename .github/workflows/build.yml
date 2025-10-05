@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Check for file changes
-        uses: Ludy87/paths-filter@bd8a5f806b3e8cb8229ff4749e02e683ae4ef2df # v3.1.2
+        uses: Ludy87/paths-filter@97ff31964cb6f51fe6afb717c673d955309af224 # v3.1.2
         id: changes
         with:
           filters: ".github/config/.files.yaml"
@@ -57,7 +57,7 @@ jobs:
       #     git diff --name-status --find-copies-harder -z -M HEAD
 
       - name: Check for file changes
-        uses: Ludy87/paths-filter@bd8a5f806b3e8cb8229ff4749e02e683ae4ef2df # v3.1.2
+        uses: Ludy87/paths-filter@97ff31964cb6f51fe6afb717c673d955309af224 # v3.1.2
         id: change
         with:
           # base: HEAD
