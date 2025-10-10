@@ -81,6 +81,7 @@ jobs:
             const commandRegex = /(add|rm)::label::\{([^{}]+)\}/gi;
             let match;
             while ((match = commandRegex.exec(commentBody)) !== null) {
+              core.info(`Found label command: ${match}`);
               const action = match[1].toLowerCase();
               const labelName = match[2].trim();
               if (!labelName) {
