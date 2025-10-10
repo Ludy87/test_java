@@ -28,3 +28,13 @@ project: &project
   - gradlew.bat
   - launch4jConfig.xml
   - settings.gradle
+
+frontend: &frontend
+  - frontend/**
+  - .github/workflows/testdriver.yml
+  - testing/**
+
+frontend-any: &frontend-any
+  - test1.txt
+  - test2.txt
+  - test3.txt

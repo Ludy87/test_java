@@ -1,0 +1,25 @@
+test1: &test1
+  - test1.txt
+
+test2: &test2
+  - test2.txt
+
+test3: &test3
+  - test3.txt
+
+test4: &test4
+  - test4.txt
+
+test5: &test5
+  - 'test5.txt'
+  - 'test6.txt'
+
+rename: &rename
+  - renamed: 'test1.txt'
+  - renamed: 'test1_1.txt'
+  - renamed: 'README.md'
+  - 'fake.txt'
+  - 'fake.txt_1.txt'
+
+copy: &copy
+  - copied: 'test0101.txt'

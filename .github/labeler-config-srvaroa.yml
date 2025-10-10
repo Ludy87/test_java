@@ -1,5 +1,6 @@
 ---
 version: 1
+appendOnly: true
 labels:
 
   - label: "Bump"
@@ -49,6 +50,9 @@ labels:
 
   - label: 'API'
     title: '.*openapi.*'
+
+  - label: 'v3'
+    base-branch: 'V3'
 
   - label: "Translation"
     files:
