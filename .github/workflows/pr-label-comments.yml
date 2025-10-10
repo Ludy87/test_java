@@ -63,6 +63,8 @@ jobs:
               return;
             }
 
+            core.info(`Available labels: ${JSON.stringify(Array.from(labelNameMap.values()), null, 2)}`);
+
             // TODO not correctly
             const configuredLabels = Array.isArray(repoDevsConfig.label)
               ? repoDevsConfig.label
