@@ -47,7 +47,6 @@ jobs:
             const configPath = path.join(process.env.GITHUB_WORKSPACE, '.github', 'config', 'repo_devs.json');
             const repoDevsConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
             const label_changer = (repoDevsConfig.label_changer || []).map((login) => login.toLowerCase());
-            core.info(`Label changers: ${JSON.stringify(label_changer, null, 2)}`);
 
             const commenter = (comment?.user?.login || '').toLowerCase();
             if (!label_changer.includes(commenter)) {
@@ -76,12 +75,7 @@ jobs:
               return;
             }
 
-            core.info(`Available labels: ${JSON.stringify(Array.from(labelNameMap.values()), null, 2)}`);
-
-
             let allowedLabelNames = new Set(labelNameMap.values());
-
-            core.info(`Allowed labels for add commands: ${JSON.stringify(Array.from(allowedLabelNames), null, 2)}`);
 
             const labelsToAdd = new Set();
             const labelsToRemove = new Set();
