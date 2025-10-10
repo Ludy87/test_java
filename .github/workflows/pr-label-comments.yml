@@ -48,11 +48,12 @@ jobs:
             const labelNameMap = new Map();
             for (const match of labelsFile.matchAll(/-\s+name:\s*(?:"([^"]+)"|'([^']+)'|([^\n]+))/g)) {
               const labelName = (match[1] ?? match[2] ?? match[3] ?? '').trim();
-              core.info(`Found label in labels.yml: "${labelName}"`);
+
               if (!labelName) {
                 continue;
               }
               const normalized = labelName.toLowerCase();
+              core.info(`Found label: "${labelName}" (normalized: "${normalized}")`);
               if (!labelNameMap.has(normalized)) {
                 labelNameMap.set(normalized, labelName);
               }
