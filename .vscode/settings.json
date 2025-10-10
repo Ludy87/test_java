@@ -8,36 +8,45 @@
   "[java]": {
     "editor.tabSize": 4,
     "editor.detectIndentation": false,
-    "editor.rulers": [127]
+    "editor.rulers": [127],
+    "editor.defaultFormatter": "josevseb.google-java-format-for-vs-code"
   },
   "[python]": {
     "editor.tabSize": 2,
     "editor.detectIndentation": false,
-    "editor.rulers": [127]
+    "editor.rulers": [127],
+    "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "[gradle-build]": {
     "editor.tabSize": 4,
     "editor.detectIndentation": false,
-    "editor.rulers": [127]
+    "editor.rulers": [127],
+    "editor.defaultFormatter": "josevseb.google-java-format-for-vs-code"
   },
   "[gradle]": {
     "editor.tabSize": 4,
     "editor.detectIndentation": false,
-    "editor.rulers": [127]
+    "editor.rulers": [127],
+    "editor.defaultFormatter": "josevseb.google-java-format-for-vs-code"
   },
   "[html]": {
     "editor.tabSize": 2,
     "editor.rulers": [127],
     "files.trimFinalNewlines": false,
-    "files.insertFinalNewline": false
+    "files.insertFinalNewline": false,
+    "editor.defaultFormatter": "vscode.html-language-features"
   },
   "[javascript]": {
     "editor.tabSize": 2,
-    "editor.rulers": [127]
+    "editor.rulers": [127],
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[yaml]": {
     "files.trimFinalNewlines": false,
-    "files.insertFinalNewline": false
+    "files.insertFinalNewline": false,
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSaveMode": "file",
+    "editor.formatOnSave": true
   },
   "diffEditor.maxComputationTime": 0,
   "editor.wordSegmenterLocales": null,
@@ -49,5 +58,9 @@
   "editor.indentSize": "tabSize",
   "editor.stickyScroll.enabled": false,
   "editor.minimap.enabled": false,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "git.alwaysSignOff": true,
+  "git.enableCommitSigning": true,
+  "yaml.format.printWidth": 20000000,
+  "yaml.format.singleQuote": true
 }

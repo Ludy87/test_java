@@ -1,6 +1,11 @@
 {
+  "label_changer": [
+    "Frooodle",
+    "Ludy87",
+    "balazs-szucs"
+  ],
   "repo_devs": [
-    "frooodle",
+    "Frooodle",
     "sf298",
     "Ludy87",
     "LaserKaspar",
@@ -9,6 +14,6 @@
     "DarioGii",
     "ConnorYoh"
   ],
-  "repo_devs_comment": ["frooodle", "Ludy87"],
-  "repo_devs_reviewers": ["frooodle", "Ludy87"]
+  "repo_devs_comment": ["Frooodle", "Ludy87"],
+  "repo_devs_reviewers": ["Frooodle", "Ludy87"]
 }

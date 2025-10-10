@@ -1,0 +1,153 @@
+name: "Stylelint Check & Auto-Fix"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # 1. Lint-Check (JSON-Ausgabe)
+  lint:
+    name: Lint CSS (check)
+    runs-on: ubuntu-latest
+    outputs:
+      lint_errors: ${{ steps.report.outputs.errors }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "23"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Stylelint and collect errors
+        id: report
+        run: |
+          # JSON-Report erzeugen, aber Workflow nicht abbrechen lassen
+          npx stylelint \
+            "src/main/**/*.css" \
+            "proprietary/src/main/resources/static/css/*.css" \
+            --formatter json > stylelint-report.json || true
+
+          # Nur echte Errors extrahieren
+          ERRORS=$(jq -c '[.[] | {file: .source, errors: [.warnings[] | select(.severity=="error") | {line, column, text}]}]' stylelint-report.json)
+          # Auf 63 000 Zeichen kürzen (GitHub-Kommentar-Limit berücksichtigen)
+          TRUNC=$(echo "$ERRORS" | head -c 63000)
+          echo "errors=$TRUNC" >> $GITHUB_OUTPUT
+
+  # 2. Auto-Fix & PR
+  autofix:
+    permissions:
+      contents: write # for peter-evans/create-pull-request to create branch
+      pull-requests: write # for peter-evans/create-pull-request to create a PR
+    name: Auto-Fix CSS & Pull Request
+    needs: lint
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository (full history)
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Setup GitHub App Bot
+        if: github.actor != 'dependabot[bot]'
+        id: setup-bot
+        uses: ./.github/actions/setup-bot
+        continue-on-error: true
+        with:
+          # app-id: ${{ secrets.GH_APP_ID }}
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "23"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Stylelint Auto-Fix
+        run: npm run lint:css
+        continue-on-error: true # Continue even if there are unfixable errors
+
+      - name: Commit fixed files
+        run: |
+          git add src/main/**/*.css
+          git diff --quiet || git commit -m "chore: Apply stylelint auto-fixes"
+
+      - name: Open Pull Request for fixes
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
+        with:
+          token: ${{ steps.setup-bot.outputs.token }}
+          committer: ${{ steps.setup-bot.outputs.committer }}
+          author: ${{ steps.setup-bot.outputs.committer }}
+          signoff: true
+          branch: stylelint-auto-fix
+          title: "stylelint: Auto-Fix CSS"
+          body: |
+            Dieser PR führt Stylelint Auto-Fix durch und richtet deine CSS:
+            - Einrückungen gemäß `.stylelintrc.json`
+            - Legacy-Farbnotation mit Kommas
+            - Multiline-Comma-Regeln für Funktionen und Value-Lists
+          labels: automated, stylelint
+          draft: false
+          delete-branch: true
+          sign-commits: true
+          add-paths: |
+            src/main/**/*.css
+
+  # 3. Report unfixable errors as PR-Kommentar
+  report:
+    name: Comment Unfixable Errors
+    needs: lint
+    if: ${{ github.event_name == 'pull_request' && needs.lint.outputs.lint_errors != '[]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Setup GitHub App Bot
+        if: github.actor != 'dependabot[bot]'
+        id: setup-bot
+        uses: ./.github/actions/setup-bot
+        continue-on-error: true
+        with:
+          # app-id: ${{ secrets.GH_APP_ID }}
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
+      - name: Post Stylelint errors as comment
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          github-token: ${{ steps.setup-bot.outputs.token }}
+          script: |
+            const errors = process.env.LINT_ERRORS || '';
+            const prNumber = context.payload.pull_request.number;
+            const body = "**Stylelint hat nicht automatisch behebbare Fehler gefunden:**\n```json\n" + errors + "\n```";
+            await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: prNumber, body });
+        env:
+          LINT_ERRORS: ${{ needs.lint.outputs.lint_errors }}

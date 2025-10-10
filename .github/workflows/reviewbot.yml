@@ -4,11 +4,14 @@ on:
   issue_comment:
     types: [created]
 
+permissions:
+  contents: read
+  
 jobs:
   approve-pr:
     if: |
       github.event.issue.pull_request &&
-      contains(github.event.comment.body, 'reviewbot')
+      contains(github.event.comment.body, 'approvebot')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write # wichtig für das Abgeben eines Reviews
@@ -16,11 +19,11 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Setup GitHub App Bot
         if: github.actor != 'dependabot[bot]'
@@ -59,4 +62,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.setup-bot.outputs.token }}
         run: |
-          gh pr review ${{ github.event.issue.number }} --approve
+          gh pr review ${{ github.event.issue.number }} --approve -b "${{ steps.setup-bot.outputs.app-slug }} approved this PR in response to a comment from @${{ github.actor }}."
