@@ -78,7 +78,7 @@ jobs:
 
             const labelsToAdd = new Set();
             const labelsToRemove = new Set();
-            const commandRegex = /(add|rm)::label::\{([^{}]+)\}/gi;
+            const commandRegex = /add::label::"([^{}]*)"/gi;
             let match;
             while ((match = commandRegex.exec(commentBody)) !== null) {
               core.info(`Found label command: ${match}`);
