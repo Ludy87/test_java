@@ -44,10 +44,11 @@ jobs:
 
             const labelsConfigPath = path.join(process.env.GITHUB_WORKSPACE, '.github', 'labels.yml');
             const labelsFile = fs.readFileSync(labelsConfigPath, 'utf8');
-            core.info(`Labels file content:\n${labelsFile}`);
+
             const labelNameMap = new Map();
             for (const match of labelsFile.matchAll(/-\s+name:\s*(?:"([^"]+)"|'([^']+)'|([^\n]+))/g)) {
               const labelName = (match[1] ?? match[2] ?? match[3] ?? '').trim();
+              core.info(`Found label in labels.yml: "${labelName}"`);
               if (!labelName) {
                 continue;
               }
