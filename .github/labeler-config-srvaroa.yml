@@ -1,6 +1,5 @@
 ---
 version: 1
-appendOnly: true
 labels:
 
   - label: "Bump"
