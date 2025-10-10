@@ -38,14 +38,13 @@ jobs:
             }
 
             const configPath = path.join(process.env.GITHUB_WORKSPACE, '.github', 'config', 'repo_devs.json');
-            core.info(`Config path: ${configPath}`);
             const repoDevsConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-            core.info(`Repo devs config: ${JSON.stringify(repoDevsConfig, null, 2)}`);
             const label_changer = (repoDevsConfig.label_changer || []).map((login) => login.toLowerCase());
             core.info(`Label changers: ${JSON.stringify(label_changer, null, 2)}`);
 
             const labelsConfigPath = path.join(process.env.GITHUB_WORKSPACE, '.github', 'labels.yml');
             const labelsFile = fs.readFileSync(labelsConfigPath, 'utf8');
+            core.info(`Labels file content:\n${labelsFile}`);
             const labelNameMap = new Map();
             for (const match of labelsFile.matchAll(/-\s+name:\s*(?:"([^"]+)"|'([^']+)'|([^\n]+))/g)) {
               const labelName = (match[1] ?? match[2] ?? match[3] ?? '').trim();
