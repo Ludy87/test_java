@@ -38,8 +38,11 @@ jobs:
             }
 
             const configPath = path.join(process.env.GITHUB_WORKSPACE, '.github', 'config', 'repo_devs.json');
+            console.log('Config path:', configPath);
             const repoDevsConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            console.log('Repo devs config:', repoDevsConfig);
             const label_changer = (repoDevsConfig.label_changer || []).map((login) => login.toLowerCase());
+            console.log('Label changers:', label_changer);
 
             const labelsConfigPath = path.join(process.env.GITHUB_WORKSPACE, '.github', 'labels.yml');
             const labelsFile = fs.readFileSync(labelsConfigPath, 'utf8');
