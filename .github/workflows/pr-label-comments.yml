@@ -81,12 +81,13 @@ jobs:
             const commandRegex = /^(\w+)::(label)::"([^{}]*")$/gi;
             let match;
             while ((match = commandRegex.exec(commentBody)) !== null) {
-              core.info(`Found label command: ${match[0]} (action: ${match[1]}, label: ${match[2]})`);
+              core.info(`Found label command: ${match[0]} (action: ${match[1]}, label: ${match[2], match[3]})`);
               const action = match[1].toLowerCase();
               const labelName = match[2].trim();
               if (!labelName) {
                 continue;
               }
+              return;
               const normalized = labelName.toLowerCase();
               const resolvedLabelName = labelNameMap.get(normalized);
               if (action === 'add') {
