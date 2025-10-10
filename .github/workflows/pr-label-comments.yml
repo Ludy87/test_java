@@ -42,6 +42,12 @@ jobs:
             const label_changer = (repoDevsConfig.label_changer || []).map((login) => login.toLowerCase());
             core.info(`Label changers: ${JSON.stringify(label_changer, null, 2)}`);
 
+            const commenter = (comment?.user?.login || '').toLowerCase();
+            if (!label_changer.includes(commenter)) {
+              core.info(`User ${commenter} is not authorized to manage labels.`);
+              return;
+            }
+
             const labelsConfigPath = path.join(process.env.GITHUB_WORKSPACE, '.github', 'labels.yml');
             const labelsFile = fs.readFileSync(labelsConfigPath, 'utf8');
 
@@ -65,37 +71,10 @@ jobs:
 
             core.info(`Available labels: ${JSON.stringify(Array.from(labelNameMap.values()), null, 2)}`);
 
-            // TODO not correctly
-            const configuredLabels = Array.isArray(repoDevsConfig.label)
-              ? repoDevsConfig.label
-              : Array.isArray(repoDevsConfig.labels)
-                ? repoDevsConfig.labels
-                : [];
 
-            core.info(`Configured labels: ${JSON.stringify(configuredLabels, null, 2)}`);
+            let allowedLabelNames = new Set(labelNameMap.values());
 
-            let allowedLabelNames;
-            if (configuredLabels.length) {
-              allowedLabelNames = new Set();
-              for (const configuredLabel of configuredLabels) {
-                const normalized = (configuredLabel ?? '').toString().trim().toLowerCase();
-                if (!normalized) {
-                  continue;
-                }
-                const resolved = labelNameMap.get(normalized);
-                if (resolved) {
-                  allowedLabelNames.add(resolved);
-                } else {
-                  core.warning(`Configured label "${configuredLabel}" is not defined in .github/labels.yml and will be ignored.`);
-                }
-              }
-              if (!allowedLabelNames.size) {
-                core.warning('No valid configured labels found; defaulting to all labels from .github/labels.yml.');
-                allowedLabelNames = new Set(labelNameMap.values());
-              }
-            } else {
-              allowedLabelNames = new Set(labelNameMap.values());
-            }
+            core.info(`Allowed labels for add commands: ${JSON.stringify(Array.from(allowedLabelNames), null, 2)}`);
 
             const commenter = (comment?.user?.login || '').toLowerCase();
             if (!label_changer.includes(commenter)) {
