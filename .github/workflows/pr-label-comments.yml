@@ -53,7 +53,6 @@ jobs:
                 continue;
               }
               const normalized = labelName.toLowerCase();
-              core.info(`Found label: "${labelName}" (normalized: "${normalized}")`);
               if (!labelNameMap.has(normalized)) {
                 labelNameMap.set(normalized, labelName);
               }
@@ -70,6 +69,8 @@ jobs:
               : Array.isArray(repoDevsConfig.labels)
                 ? repoDevsConfig.labels
                 : [];
+
+            core.info(`Configured labels: ${JSON.stringify(configuredLabels, null, 2)}`);
 
             let allowedLabelNames;
             if (configuredLabels.length) {
