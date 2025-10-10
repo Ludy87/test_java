@@ -76,12 +76,6 @@ jobs:
 
             core.info(`Allowed labels for add commands: ${JSON.stringify(Array.from(allowedLabelNames), null, 2)}`);
 
-            const commenter = (comment?.user?.login || '').toLowerCase();
-            if (!label_changer.includes(commenter)) {
-              core.info(`User ${commenter} is not authorized to manage labels.`);
-              return;
-            }
-
             const labelsToAdd = new Set();
             const labelsToRemove = new Set();
             const commandRegex = /(add|rm)::label::\{([^{}]+)\}/gi;
