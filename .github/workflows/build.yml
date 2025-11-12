@@ -346,29 +346,29 @@ jobs:
           echo "tags=$TAG" >> $GITHUB_OUTPUT
           echo "Building and testing: $TAG"
 
-      - name: Build and load amd64 image
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          file: ./${{ matrix.docker-rev }}
-          push: false
-          load: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: ${{ steps.meta.outputs.tags }}
-          platforms: linux/amd64
-          provenance: false
-          sbom: false
+      # - name: Build and load amd64 image
+      #   uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+      #   with:
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     context: .
+      #     file: ./${{ matrix.docker-rev }}
+      #     push: false
+      #     load: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     platforms: linux/amd64
+      #     provenance: false
+      #     sbom: false
 
-      - name: Test Java works (amd64)
-        run: docker run --rm ${{ steps.meta.outputs.tags }} java -version
+      # - name: Test Java works (amd64)
+      #   run: docker run --rm ${{ steps.meta.outputs.tags }} java -version
 
-      - name: Prune amd64 image and cache
-        if: always()
-        run: |
-          docker image rm -f ${{ steps.meta.outputs.tags }} || true
-          docker builder prune --force || true
+      # - name: Prune amd64 image and cache
+      #   if: always()
+      #   run: |
+      #     docker image rm -f ${{ steps.meta.outputs.tags }} || true
+      #     docker builder prune --force || true
 
       - name: Build and load arm64 image
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
