@@ -80,7 +80,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle and spring security ${{ matrix.spring-security }}
-        run: ./gradlew clean build
+        run: ./gradlew clean build -x spotlessApply
         env:
           DISABLE_ADDITIONAL_FEATURES: ${{ matrix.spring-security }}
 
@@ -309,7 +309,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build application
-        run: ./gradlew clean build
+        run: ./gradlew clean build -x spotlessApply
         env:
           DISABLE_ADDITIONAL_FEATURES: true
           STIRLING_PDF_DESKTOP_UI: false
