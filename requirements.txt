@@ -1,9 +1,0 @@
-mkdocs-material[imaging]==9.5.32
-mkdocs-macros-plugin==1.0.5
-mkdocs-click
-mkdocs-minify-plugin
-mkdocs-autorefs
-mkdocs-git-authors-plugin
-mkdocs-git-revision-date-localized-plugin
-mkdocs-git-committers-plugin-2
-mkdocs-literate-nav
