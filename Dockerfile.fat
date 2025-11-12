@@ -126,28 +126,32 @@ RUN --mount=type=cache,target=/var/cache/apk \
     # Calibre fixes
     apk fix --no-cache calibre
 
-RUN set -eux; \
+RUN --mount=type=cache,target=/var/cache/apk \
+    set -eux; \
     case "${TARGETARCH}" in \
-        amd64) libreoffice_arch="x86-64" ;; \
-        arm64) libreoffice_arch="aarch64" ;; \
+        amd64) \
+            libreoffice_arch_dir="x86_64"; \
+            libreoffice_arch_pkg="x86-64"; \
+            curl -fsSL "https://download.documentfoundation.org/libreoffice/stable/${LIBREOFFICE_VERSION}/deb/${libreoffice_arch_dir}/LibreOffice_${LIBREOFFICE_VERSION}_Linux_${libreoffice_arch_pkg}_deb.tar.gz" -o /tmp/lo.tar.gz; \
+            mkdir -p /tmp/libreoffice; \
+            tar -xzf /tmp/lo.tar.gz -C /tmp/libreoffice --strip-components=1; \
+            for pkg in /tmp/libreoffice/DEBS/*.deb; do \
+                dpkg-deb -x "${pkg}" /; \
+            done; \
+            libreoffice_dir="$(find /opt -maxdepth 1 -type d -name 'libreoffice*' | head -n 1)"; \
+            [ -n "${libreoffice_dir}" ]; \
+            rm -f /opt/libreoffice; \
+            ln -sf "${libreoffice_dir}" /opt/libreoffice; \
+            ;; \
+        arm64) \
+            apk add --no-cache libreoffice; \
+            ln -sf /usr/lib/libreoffice /opt/libreoffice; \
+            ;; \
         *) echo "Unsupported TARGETARCH: ${TARGETARCH}" >&2; exit 1 ;; \
-    esac && \
-    curl -fsSL "https://download.documentfoundation.org/libreoffice/stable/${LIBREOFFICE_VERSION}/deb/${libreoffice_arch}/LibreOffice_${LIBREOFFICE_VERSION}_Linux_${libreoffice_arch}_deb.tar.gz" -o /tmp/lo.tar.gz
-
-RUN set -eux; \
-    mkdir -p /tmp/libreoffice && \
-    tar -xzf /tmp/lo.tar.gz -C /tmp/libreoffice --strip-components=1 && \
-    for pkg in /tmp/libreoffice/DEBS/*.deb; do \
-        dpkg-deb -x "${pkg}" /; \
-    done && \
-    libreoffice_dir="$(find /opt -maxdepth 1 -type d -name 'libreoffice*' | head -n 1)" && \
-    [ -n "${libreoffice_dir}" ] && \
-    rm -f /opt/libreoffice && \
-    ln -sf "${libreoffice_dir}" /opt/libreoffice && \
-    rm -f /usr/bin/soffice /usr/bin/soffice.bin && \
-    ln -sf /opt/libreoffice/program/soffice /usr/bin/soffice && \
-    ln -sf /opt/libreoffice/program/soffice.bin /usr/bin/soffice.bin && \
-    rm -rf /tmp/libreoffice /tmp/lo.tar.gz
+    esac; \
+    ln -sf /opt/libreoffice/program/soffice /usr/bin/soffice; \
+    ln -sf /opt/libreoffice/program/soffice.bin /usr/bin/soffice.bin; \
+    rm -rf /tmp/libreoffice /tmp/lo.tar.gz || true
 
 RUN python3 -m venv /opt/venv && \
     /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools && \
