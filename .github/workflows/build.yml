@@ -254,7 +254,7 @@ jobs:
 
       - name: Install Docker Compose
         run: |
-          sudo curl -SL "https://github.com/docker/compose/releases/download/v2.37.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo curl -SL "https://github.com/docker/compose/releases/download/v2.40.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
 
       - name: Set up Python
@@ -361,6 +361,15 @@ jobs:
           provenance: false
           sbom: false
 
+      - name: Test Java works (amd64)
+        run: docker run --rm ${{ steps.meta.outputs.tags }} java -version
+
+      - name: Prune amd64 image and cache
+        if: always()
+        run: |
+          docker image rm -f ${{ steps.meta.outputs.tags }} || true
+          docker builder prune --force || true
+
       - name: Build and load arm64 image
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         with:
@@ -375,9 +384,6 @@ jobs:
           platforms: linux/arm64/v8
           provenance: false
           sbom: false
-
-      - name: Test Java works (amd64)
-        run: docker run --rm ${{ steps.meta.outputs.tags }} java -version
 
       - name: Test Java works (arm64)
         run: docker run --rm --platform linux/arm64 ${{ steps.meta.outputs.tags }} java -version
@@ -410,6 +416,12 @@ jobs:
             $TAG \
             sh -c "java -jar /app.jar --version && echo 'Stirling-PDF fat started on arm64!'" || \
             (echo "Startup failed on arm64!" && exit 1)
+
+      - name: Cleanup arm64 image and cache
+        if: always()
+        run: |
+          docker image rm -f ${{ steps.meta.outputs.tags }} || true
+          docker builder prune --force || true
 
       - name: Upload Docker build reports
         if: always()
