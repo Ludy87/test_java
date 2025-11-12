@@ -76,6 +76,9 @@ jobs:
         with:
           gradle-version: 8.14
 
+      - name: Permissions for Gradle Wrapper
+        run: chmod +x ./gradlew
+
       - name: Build with Gradle and spring security ${{ matrix.spring-security }}
         run: ./gradlew clean build
         env:
@@ -161,6 +164,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
 
+      - name: Permissions for Gradle Wrapper
+        run: chmod +x ./gradlew
+
       - name: Generate OpenAPI documentation
         run: ./gradlew :stirling-pdf:generateOpenApiDocs
         env:
@@ -190,6 +196,9 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
+
+      - name: Permissions for Gradle Wrapper
+        run: chmod +x ./gradlew
 
       - name: Check licenses for compatibility
         run: ./gradlew clean checkLicense
@@ -295,6 +304,9 @@ jobs:
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
         with:
           gradle-version: 8.14
+
+      - name: Permissions for Gradle Wrapper
+        run: chmod +x ./gradlew
 
       - name: Build application
         run: ./gradlew clean build
