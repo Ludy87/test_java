@@ -95,7 +95,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
 RUN --mount=type=cache,target=/var/cache/apk \
     apk add --no-cache \
       python3 py3-pip py3-opencv ocrmypdf \
-      py3-pillow@testing py3-pdf2image@testing
+      py3-pillow py3-pdf2image
 
 # Calibre (musl-native) + strip QtWebEngine bloat
 RUN --mount=type=cache,target=/var/cache/apk \
