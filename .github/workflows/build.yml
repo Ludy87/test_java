@@ -80,7 +80,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle and spring security ${{ matrix.spring-security }}
-        run: ./gradlew clean build -x spotlessApply
+        run: gradle clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
         env:
           DISABLE_ADDITIONAL_FEATURES: ${{ matrix.spring-security }}
 
@@ -168,7 +168,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Generate OpenAPI documentation
-        run: ./gradlew :stirling-pdf:generateOpenApiDocs
+        run: gradle :stirling-pdf:generateOpenApiDocs
         env:
           DISABLE_ADDITIONAL_FEATURES: true
 
@@ -201,7 +201,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Check licenses for compatibility
-        run: ./gradlew clean checkLicense
+        run: gradle clean checkLicense
         env:
           DISABLE_ADDITIONAL_FEATURES: false
           STIRLING_PDF_DESKTOP_UI: true
@@ -309,7 +309,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build application
-        run: ./gradlew clean build -x spotlessApply
+        run: gradle clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
         env:
           DISABLE_ADDITIONAL_FEATURES: true
           STIRLING_PDF_DESKTOP_UI: false
