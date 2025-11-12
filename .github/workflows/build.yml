@@ -41,6 +41,7 @@ jobs:
         uses: Ludy87/paths-filter@60749e7204a97015125792f44771f16fef911572 # v3.1.2
         id: changes
         with:
+          base: docker_test
           filters: ".github/config/.files.yaml"
   build:
     runs-on: ubuntu-latest
