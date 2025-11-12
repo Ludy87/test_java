@@ -2,11 +2,13 @@
 FROM gradle:8.14-jdk21 AS build
 
 # Copy minimal files first for better caching
-COPY build.gradle.kts settings.gradle.kts gradlew ./
-COPY gradle ./gradle
-COPY app/core/build.gradle.kts app/core/
-COPY app/common/build.gradle.kts app/common/
-COPY app/proprietary/build.gradle.kts app/proprietary/
+COPY build.gradle .
+COPY settings.gradle .
+COPY gradlew .
+COPY gradle gradle/
+COPY app/core/build.gradle core/.
+COPY app/common/build.gradle common/.
+COPY app/proprietary/build.gradle proprietary/.
 
 # Download dependencies
 RUN ./gradlew build -x spotlessApply -x spotlessCheck -x test -x sonarqube || return 0
