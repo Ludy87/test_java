@@ -122,11 +122,18 @@ RUN --mount=type=cache,target=/var/cache/apk \
 
 RUN --mount=type=cache,target=/var/cache/apk \
     # Calibre (musl-native) + QtWebEngine Runtime
-    apk add --no-cache calibre && \
+    apk add --no-cache calibre binutils && \
     # Calibre fixes
     apk fix --no-cache calibre && \
     # Remove Calibre localisation bundle to keep image size manageable
-    rm -f /usr/share/calibre/localization/locales.zip
+    rm -f /usr/share/calibre/localization/locales.zip && \
+    if command -v strip >/dev/null 2>&1; then \
+        for lib in /usr/lib/libQt6WebEngineCore.so.6*; do \
+            [ -f "$lib" ] || continue; \
+            strip --strip-unneeded "$lib" || true; \
+        done; \
+    fi && \
+    apk del --no-cache binutils || true
 
 RUN --mount=type=cache,target=/var/cache/apk \
     set -eux; \
