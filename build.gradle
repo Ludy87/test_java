@@ -418,7 +418,7 @@ dependencies {
     // compileOnly "org.bouncycastle:bcpg-jdk18on:$bouncycastleVersion"
     implementation "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
     implementation "io.micrometer:micrometer-core:1.14.3"
-    implementation group: "com.google.zxing", name: "core", version: "3.5.3"
+    implementation group: "com.google.zxing", name: "core", version: "3.5.4"
     // https://mvnrepository.com/artifact/org.commonmark/commonmark
     implementation "org.commonmark:commonmark:0.24.0"
     implementation "org.commonmark:commonmark-ext-gfm-tables:0.24.0"
