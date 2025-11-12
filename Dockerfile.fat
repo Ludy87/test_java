@@ -124,7 +124,9 @@ RUN --mount=type=cache,target=/var/cache/apk \
     # Calibre (musl-native) + QtWebEngine Runtime
     apk add --no-cache calibre && \
     # Calibre fixes
-    apk fix --no-cache calibre
+    apk fix --no-cache calibre && \
+    # Remove Calibre localisation bundle to keep image size manageable
+    rm -f /usr/share/calibre/localization/locales.zip
 
 RUN --mount=type=cache,target=/var/cache/apk \
     set -eux; \
