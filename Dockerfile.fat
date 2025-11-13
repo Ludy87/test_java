@@ -21,10 +21,10 @@ ENV DISABLE_ADDITIONAL_FEATURES=false STIRLING_PDF_DESKTOP_UI=false
 RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
 # Main stage
-FROM alpine:3.20
+FROM alpine:3.22.2
 
 # Community-Repo aktivieren
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.20/community" >> /etc/apk/repositories
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.22.2/community" >> /etc/apk/repositories
 
 # Alle Pakete in einem RUN
 RUN --mount=type=cache,target=/var/cache/apk \
