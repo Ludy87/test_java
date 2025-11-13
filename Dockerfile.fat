@@ -24,6 +24,7 @@ RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 FROM alpine:3.22
 
 ARG VERSION_TAG
+ARG GLIBC_VERSION=2.38-r0
 
 # Enable community repository
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.22/community" >> /etc/apk/repositories
@@ -74,6 +75,11 @@ RUN --mount=type=cache,target=/var/cache/apk \
 # Install Calibre using the official binary installer to avoid repository conflicts
 RUN set -eux; \
     apk add --no-cache libxcomposite libxdamage libxtst nss; \
+    curl -L https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub; \
+    curl -L https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk -o /tmp/glibc.apk; \
+    curl -L https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk -o /tmp/glibc-bin.apk; \
+    apk add --no-cache /tmp/glibc.apk /tmp/glibc-bin.apk; \
+    rm -f /tmp/glibc.apk /tmp/glibc-bin.apk; \
     curl -L https://download.calibre-ebook.com/linux-installer.sh -o /tmp/calibre-installer.sh; \
     sh /tmp/calibre-installer.sh install_dir=/opt/calibre bin_dir=/usr/bin; \
     rm -f /tmp/calibre-installer.sh
