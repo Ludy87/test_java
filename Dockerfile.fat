@@ -42,6 +42,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     openssl \
     openssl-dev \
     openjdk21-jre \
+    ffmpeg \
     # Document conversion
     gcompat \
     libc6-compat \
@@ -72,9 +73,10 @@ RUN --mount=type=cache,target=/var/cache/apk \
 
 # Install Calibre using the official binary installer to avoid repository conflicts
 RUN set -eux; \
-    apk add --no-cache libxcomposite libxdamage libxtst libnss3; \
+    apk add --no-cache libxcomposite libxdamage libxtst nss; \
     curl -L https://download.calibre-ebook.com/linux-installer.sh -o /tmp/calibre-installer.sh; \
-    sh /tmp/calibre-installer.sh install_dir=/opt/calibre bin_dir=/u
+    sh /tmp/calibre-installer.sh install_dir=/opt/calibre bin_dir=/usr/bin; \
+    rm -f /tmp/calibre-installer.sh
 
 # Python venv + pip packages
 RUN set -eux; \
