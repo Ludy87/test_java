@@ -20,16 +20,15 @@ COPY . .
 ENV DISABLE_ADDITIONAL_FEATURES=false STIRLING_PDF_DESKTOP_UI=false
 RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
-# Main stage
-FROM alpine:3.22
+# Main stage – GLIBC NATIV!
+FROM bellsoft/alpaquita-linux-base:glibc
 
 ARG VERSION_TAG
-ARG GLIBC_VERSION=2.35-r1
 
 # Enable community repository
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.22/community" >> /etc/apk/repositories
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.20/community" >> /etc/apk/repositories
 
-# Install all packages in one RUN command
+# Install all packages in one RUN command (OHNE gcompat/libc6-compat!)
 RUN --mount=type=cache,target=/var/cache/apk \
     apk upgrade --no-cache && \
     apk add --no-cache \
@@ -45,8 +44,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
     openjdk21-jre \
     ffmpeg \
     # Document conversion
-    gcompat \
-    libc6-compat \
     libreoffice \
     poppler-utils \
     tesseract-ocr \
@@ -72,33 +69,9 @@ RUN --mount=type=cache,target=/var/cache/apk \
     py3-pillow \
     py3-pdf2image
 
-# Install Calibre with full glibc (sgerrand) — FINAL & WORKING
+# Install Calibre – EINFACH & OHNE HACK
 RUN set -eux; \
-    # Remove conflicting musl compat
-    apk del --no-cache gcompat libc6-compat || true; \
-    \
-    # Install X11/NSS deps
     apk add --no-cache libxcomposite libxdamage libxtst nss; \
-    \
-    # Install sgerrand key
-    curl -L https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub; \
-    \
-    # Download glibc + bin + i18n (für locale!)
-    curl -fsSL https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk -o /tmp/glibc.apk; \
-    curl -fsSL https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk -o /tmp/glibc-bin.apk; \
-    curl -fsSL https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-i18n-${GLIBC_VERSION}.apk -o /tmp/glibc-i18n.apk; \
-    \
-    # Install with force overwrite
-    apk add --no-cache --allow-untrusted --force-overwrite \
-        /tmp/glibc.apk /tmp/glibc-bin.apk /tmp/glibc-i18n.apk; \
-    \
-    # Clean up
-    rm -f /tmp/glibc*.apk; \
-    \
-    # Initialize locale (jetzt mit i18n-Daten!)
-    /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8; \
-    \
-    # Install Calibre
     curl -L https://download.calibre-ebook.com/linux-installer.sh -o /tmp/calibre-installer.sh; \
     sh /tmp/calibre-installer.sh install_dir=/opt/calibre bin_dir=/usr/bin; \
     rm -f /tmp/calibre-installer.sh
@@ -148,7 +121,9 @@ ENV DISABLE_ADDITIONAL_FEATURES=true \
     STIRLING_TEMPFILES_DIRECTORY=/tmp/stirling-pdf \
     TMPDIR=/tmp/stirling-pdf \
     TEMP=/tmp/stirling-pdf \
-    TMP=/tmp/stirling-pdf
+    TMP=/tmp/stirling-pdf \
+    LANG=en_US.UTF-8 \
+    LC_ALL=en_US.UTF-8
 
 EXPOSE 8080/tcp
 
