@@ -72,7 +72,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     py3-pillow \
     py3-pdf2image
 
-# Install Calibre with full glibc (sgerrand) — FULLY WORKING
+# Install Calibre with full glibc (sgerrand) — FINAL & WORKING
 RUN set -eux; \
     # Remove conflicting musl compat
     apk del --no-cache gcompat libc6-compat || true; \
@@ -83,19 +83,19 @@ RUN set -eux; \
     # Install sgerrand key
     curl -L https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub; \
     \
-    # Download ALL 3 sgerrand packages (glibc + bin + compat)
+    # Download glibc + bin + i18n (für locale!)
     curl -fsSL https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk -o /tmp/glibc.apk; \
     curl -fsSL https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk -o /tmp/glibc-bin.apk; \
-    curl -fsSL https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-compat-${GLIBC_VERSION}.apk -o /tmp/glibc-compat.apk; \
+    curl -fsSL https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-i18n-${GLIBC_VERSION}.apk -o /tmp/glibc-i18n.apk; \
     \
     # Install with force overwrite
     apk add --no-cache --allow-untrusted --force-overwrite \
-        /tmp/glibc.apk /tmp/glibc-bin.apk /tmp/glibc-compat.apk; \
+        /tmp/glibc.apk /tmp/glibc-bin.apk /tmp/glibc-i18n.apk; \
     \
     # Clean up
     rm -f /tmp/glibc*.apk; \
     \
-    # Initialize locale (NOW WORKS!)
+    # Initialize locale (jetzt mit i18n-Daten!)
     /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8; \
     \
     # Install Calibre
