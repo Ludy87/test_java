@@ -392,7 +392,7 @@ jobs:
 
           # LibreOffice binary linkage
           docker run --rm --platform linux/arm64 $TAG \
-            sh -c "ldd /usr/bin/soffice.bin > /dev/null && echo 'LibreOffice binary linked OK'" || \
+            sh -c "ldd /usr/lib/libreoffice/program/soffice.bin > /dev/null && echo 'LibreOffice binary linked OK'" || \
             (echo "LibreOffice binary broken on arm64!" && exit 1)
 
           # Python uno import

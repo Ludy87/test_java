@@ -17,12 +17,35 @@ WORKDIR /app
 COPY . .
 
 # Build the application with DISABLE_ADDITIONAL_FEATURES=false
-RUN DISABLE_ADDITIONAL_FEATURES=false \
-    STIRLING_PDF_DESKTOP_UI=false \
-    ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
+ENV DISABLE_ADDITIONAL_FEATURES=false STIRLING_PDF_DESKTOP_UI=false
+RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
 # Main stage
-FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412
+FROM alpine:3.20
+
+# Community-Repo aktivieren
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.20/community" >> /etc/apk/repositories
+
+# Alle Pakete in einem RUN
+RUN --mount=type=cache,target=/var/cache/apk \
+    apk upgrade --no-cache && \
+    apk add --no-cache \
+    ca-certificates tzdata tini bash curl shadow su-exec openssl openssl-dev \
+    openjdk21-jre ffmpeg gcompat libc6-compat libreoffice poppler-utils \
+    tesseract-ocr tesseract-ocr-data-eng tesseract-ocr-data-chi_sim \
+    tesseract-ocr-data-deu tesseract-ocr-data-fra tesseract-ocr-data-por \
+    unpaper font-terminus font-dejavu font-noto font-noto-cjk \
+    font-awesome font-noto-extra font-liberation font-linux-libertine font-urw-base35 \
+    python3 py3-pip py3-opencv ocrmypdf py3-pillow py3-pdf2image
+
+# Python venv + pip packages
+RUN set -eux; \
+    python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools && \
+    /opt/venv/bin/pip install --no-cache-dir --upgrade unoserver weasyprint && \
+    ln -s /usr/lib/libreoffice/program/uno.py /opt/venv/lib/python3.12/site-packages/ && \
+    ln -s /usr/lib/libreoffice/program/unohelper.py /opt/venv/lib/python3.12/site-packages/ && \
+    ln -s /usr/lib/libreoffice/program /opt/venv/lib/python3.12/site-packages/LibreOffice
 
 # Copy necessary files
 COPY scripts /scripts
@@ -31,6 +54,18 @@ COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/no
 COPY --from=build /app/app/core/build/libs/*.jar app.jar
 
 ARG VERSION_TAG
+
+# Verzeichnisse, Fonts, Rechte
+RUN set -eux; \
+    mv /usr/share/tessdata /usr/share/tessdata-original && \
+    mkdir -p /home/stirlingpdfuser /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
+    ln -s /usr/share/fontconfig/conf.avail/69-urw-*.conf /etc/fonts/conf.d/ && \
+    fc-cache -f -v && \
+    chmod +x /scripts/* && \
+    addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
+    chown -R stirlingpdfuser:stirlingpdfgroup \
+    /home/stirlingpdfuser /scripts /usr/share/fonts/opentype/noto \
+    /configs /customFiles /pipeline /tmp/stirling-pdf /app.jar
 
 # Set Environment Variables
 ENV DISABLE_ADDITIONAL_FEATURES=true \
@@ -51,62 +86,6 @@ ENV DISABLE_ADDITIONAL_FEATURES=true \
     TMPDIR=/tmp/stirling-pdf \
     TEMP=/tmp/stirling-pdf \
     TMP=/tmp/stirling-pdf
-
-
-# JDK for app
-RUN echo "@main https://dl-cdn.alpinelinux.org/alpine/edge/main" | tee -a /etc/apk/repositories && \
-    echo "@community https://dl-cdn.alpinelinux.org/alpine/edge/community" | tee -a /etc/apk/repositories && \
-    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" | tee -a /etc/apk/repositories && \
-    apk upgrade --no-cache -a && \
-    apk add --no-cache \
-    ca-certificates \
-    tzdata \
-    tini \
-    bash \
-    curl \
-    shadow \
-    su-exec \
-    openssl \
-    openssl-dev \
-    openjdk21-jre \
-    ffmpeg \
-    # Doc conversion
-    gcompat \
-    libc6-compat \
-    libreoffice \
-    # pdftohtml
-    poppler-utils \
-    # OCR MY PDF (unpaper for descew and other advanced featues)
-    tesseract-ocr-data-eng \
-    tesseract-ocr-data-chi_sim \
-	tesseract-ocr-data-deu \
-	tesseract-ocr-data-fra \
-	tesseract-ocr-data-por \
-    unpaper \
-    font-terminus font-dejavu font-noto font-noto-cjk font-awesome font-noto-extra font-liberation font-linux-libertine font-urw-base35 \
-    # CV
-    py3-opencv \
-    python3 \
-    ocrmypdf \
-    py3-pip \
-    py3-pillow@testing \
-    py3-pdf2image@testing && \
-    python3 -m venv /opt/venv && \
-    /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools && \
-    /opt/venv/bin/pip install --no-cache-dir --upgrade unoserver weasyprint && \
-    ln -s /usr/lib/libreoffice/program/uno.py /opt/venv/lib/python3.12/site-packages/ && \
-    ln -s /usr/lib/libreoffice/program/unohelper.py /opt/venv/lib/python3.12/site-packages/ && \
-    ln -s /usr/lib/libreoffice/program /opt/venv/lib/python3.12/site-packages/LibreOffice && \
-    mv /usr/share/tessdata /usr/share/tessdata-original && \
-    mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
-    # Configure URW Base 35 fonts
-    ln -s /usr/share/fontconfig/conf.avail/69-urw-*.conf /etc/fonts/conf.d/ && \
-    fc-cache -f -v && \
-    chmod +x /scripts/* && \
-    # User permissions
-    addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
-    chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline /tmp/stirling-pdf && \
-    chown stirlingpdfuser:stirlingpdfgroup /app.jar
 
 EXPOSE 8080/tcp
 # Set user and run command
