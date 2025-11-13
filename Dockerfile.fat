@@ -24,7 +24,7 @@ RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 FROM alpine:3.22
 
 ARG VERSION_TAG
-ARG GLIBC_VERSION=2.38-r0
+ARG GLIBC_VERSION=2.35-r1
 
 # Enable community repository
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.22/community" >> /etc/apk/repositories
