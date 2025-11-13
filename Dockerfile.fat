@@ -21,7 +21,7 @@ ENV DISABLE_ADDITIONAL_FEATURES=false STIRLING_PDF_DESKTOP_UI=false
 RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
 # Main stage – GLIBC NATIV!
-FROM bellsoft/alpaquita-linux-base:3.23-glibc
+FROM bellsoft/alpaquita-linux-base:glibc
 
 ARG VERSION_TAG
 
