@@ -21,22 +21,55 @@ ENV DISABLE_ADDITIONAL_FEATURES=false STIRLING_PDF_DESKTOP_UI=false
 RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
 # Main stage
-FROM alpine:3.22.2
+FROM alpine:3.22
 
-# Community-Repo aktivieren
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.22.2/community" >> /etc/apk/repositories
+ARG VERSION_TAG
 
-# Alle Pakete in einem RUN
+# Enable community repository
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/v3.22/community" >> /etc/apk/repositories
+
+# Install all packages in one RUN command
 RUN --mount=type=cache,target=/var/cache/apk \
     apk upgrade --no-cache && \
     apk add --no-cache \
-    ca-certificates tzdata tini bash curl shadow su-exec openssl openssl-dev \
-    openjdk21-jre ffmpeg gcompat libc6-compat libreoffice poppler-utils \
-    tesseract-ocr tesseract-ocr-data-eng tesseract-ocr-data-chi_sim \
-    tesseract-ocr-data-deu tesseract-ocr-data-fra tesseract-ocr-data-por \
-    unpaper font-terminus font-dejavu font-noto font-noto-cjk \
-    font-awesome font-noto-extra font-liberation font-linux-libertine font-urw-base35 \
-    python3 py3-pip py3-opencv ocrmypdf py3-pillow py3-pdf2image
+    ca-certificates \
+    tzdata \
+    tini \
+    bash \
+    curl \
+    shadow \
+    su-exec \
+    openssl \
+    openssl-dev \
+    openjdk21-jre \
+    ffmpeg \
+    # Document conversion
+    gcompat \
+    libc6-compat \
+    libreoffice \
+    poppler-utils \
+    tesseract-ocr \
+    tesseract-ocr-data-eng \
+    tesseract-ocr-data-chi_sim \
+    tesseract-ocr-data-deu \
+    tesseract-ocr-data-fra \
+    tesseract-ocr-data-por \
+    unpaper \
+    font-terminus \
+    font-dejavu \
+    font-noto \
+    font-noto-cjk \
+    font-awesome \
+    font-noto-extra \
+    font-liberation \
+    font-linux-libertine \
+    font-urw-base35 \
+    python3 \
+    py3-pip \
+    py3-opencv \
+    ocrmypdf \
+    py3-pillow \
+    py3-pdf2image
 
 # Python venv + pip packages
 RUN set -eux; \
@@ -53,9 +86,7 @@ COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/no
 # first /app directory is for the build stage, second is for the final image
 COPY --from=build /app/app/core/build/libs/*.jar app.jar
 
-ARG VERSION_TAG
-
-# Verzeichnisse, Fonts, Rechte
+# Directories, fonts, permissions
 RUN set -eux; \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p /home/stirlingpdfuser /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
@@ -67,7 +98,7 @@ RUN set -eux; \
     /home/stirlingpdfuser /scripts /usr/share/fonts/opentype/noto \
     /configs /customFiles /pipeline /tmp/stirling-pdf /app.jar
 
-# Set Environment Variables
+# Set environment variables
 ENV DISABLE_ADDITIONAL_FEATURES=true \
     VERSION_TAG=$VERSION_TAG \
     JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=75 -XX:InitiatingHeapOccupancyPercent=20 -XX:+G1PeriodicGCInvokesConcurrent -XX:G1PeriodicGCInterval=10000 -XX:+UseStringDeduplication -XX:G1PeriodicGCSystemLoadThreshold=70" \
@@ -88,6 +119,7 @@ ENV DISABLE_ADDITIONAL_FEATURES=true \
     TMP=/tmp/stirling-pdf
 
 EXPOSE 8080/tcp
+
 # Set user and run command
 ENTRYPOINT ["tini", "--", "/scripts/init.sh"]
 CMD ["sh", "-c", "java -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/tmp/stirling-pdf -jar /app.jar & /opt/venv/bin/unoserver --port 2003 --interface 127.0.0.1"]
