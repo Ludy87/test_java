@@ -117,31 +117,55 @@ RUN --mount=type=cache,target=/var/cache/apk \
         arm64)  LO_ARCH="aarch64"; LO_PKG="aarch64" ;; \
         *) echo "Unsupported TARGETARCH: ${TARGETARCH}"; exit 1 ;; \
     esac; \
-    curl -fsSL "https://download.documentfoundation.org/libreoffice/stable/${LIBREOFFICE_VERSION}/deb/${LO_ARCH}/LibreOffice_${LIBREOFFICE_VERSION}_Linux_${LO_PKG}_deb.tar.gz" \
-         -o /tmp/lo.tar.gz; \
-    mkdir -p /tmp/lo && tar -xzf /tmp/lo.tar.gz -C /tmp/lo --strip-components=1; \
+    \
+    LO_TARBALL="LibreOffice_${LIBREOFFICE_VERSION}_Linux_${LO_PKG}_deb.tar.gz"; \
+    LO_URL="https://download.documentfoundation.org/libreoffice/stable/${LIBREOFFICE_VERSION}/deb/${LO_ARCH}/${LO_TARBALL}"; \
+    \
+    echo "Lade LibreOffice herunter: ${LO_URL}"; \
+    curl -fsSL "${LO_URL}" -o /tmp/lo.tar.gz; \
+    mkdir -p /tmp/lo; \
+    tar -xzf /tmp/lo.tar.gz -C /tmp/lo --strip-components=1; \
+    \
+    # Alle .deb-Pakete entpacken
     for deb in /tmp/lo/DEBS/*.deb; do \
         dpkg-deb -x "$deb" /; \
     done; \
+    \
     rm -rf /tmp/lo /tmp/lo.tar.gz; \
     \
-    # Create expected directory structure
-    mkdir -p /usr/lib/libreoffice/program; \
-    ln -sf /opt/libreoffice* /usr/lib/libreoffice/program; \
+    # Echten LibreOffice-Ordner finden (z. B. /opt/libreoffice25.2.6)
+    LO_DIR=$(find /opt -type d -name 'libreoffice*' | head -n1); \
+    if [ -z "$LO_DIR" ]; then \
+        echo "Fehler: LibreOffice-Verzeichnis nicht gefunden!"; exit 1; \
+    fi; \
+    echo "LibreOffice gefunden in: $LO_DIR"; \
     \
-    # Binaries
-    ln -sf /usr/lib/libreoffice/program/soffice /usr/bin/soffice; \
-    ln -sf /usr/lib/libreoffice/program/soffice.bin /usr/bin/soffice.bin;
+    # Korrekte Standardpfade anlegen
+    mkdir -p /usr/lib/libreoffice/program; \
+    ln -sf "${LO_DIR}" /usr/lib/libreoffice/; \
+    ln -sf /usr/lib/libreoffice /usr/lib/libreoffice/program; \
+    \
+    # Binaries direkt verlinken
+    ln -sf "${LO_DIR}/program/soffice" /usr/bin/soffice; \
+    ln -sf "${LO_DIR}/program/soffice.bin" /usr/bin/soffice.bin; \
+    \
+    # Test: funktioniert der Binary?
+    /usr/bin/soffice --headless --version > /dev/null && echo "LibreOffice OK"
 
 # === Python venv + unoserver ===
 RUN python3 -m venv /opt/venv && \
     /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools && \
     /opt/venv/bin/pip install --no-cache-dir --upgrade unoserver weasyprint && \
     \
-    # Correct Python UNO bindings (point to /usr/lib/libreoffice/program)
-    ln -sf /usr/lib/libreoffice/program/uno.py /opt/venv/lib/python3.12/site-packages/uno.py && \
-    ln -sf /usr/lib/libreoffice/program/unohelper.py /opt/venv/lib/python3.12/site-packages/unohelper.py && \
-    ln -sf /usr/lib/libreoffice/program /opt/venv/lib/python3.12/site-packages/LibreOffice && \
+    # --- KORREKTE Python UNO Bindings (dynamisch für amd64 & arm64) --- \
+    LO_DIR=$(find /opt -type d -name 'libreoffice*' | head -n1); \
+    if [ -z "$LO_DIR" ]; then \
+        echo "FEHLER: LibreOffice-Verzeichnis nicht gefunden!"; exit 1; \
+    fi; \
+    echo "UNO-Bindings werden verlinkt von: $LO_DIR/program"; \
+    ln -sf "${LO_DIR}/program/uno.py" /opt/venv/lib/python3.12/site-packages/uno.py && \
+    ln -sf "${LO_DIR}/program/unohelper.py" /opt/venv/lib/python3.12/site-packages/unohelper.py && \
+    ln -sf "${LO_DIR}/program" /opt/venv/lib/python3.12/site-packages/LibreOffice && \
     \
     # Tesseract data
     mv /usr/share/tessdata /usr/share/tessdata-original && \
