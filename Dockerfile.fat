@@ -69,7 +69,10 @@ RUN --mount=type=cache,target=/var/cache/apk \
     py3-opencv \
     ocrmypdf \
     py3-pillow \
-    py3-pdf2image
+    py3-pdf2image \
+    # Calibre
+    calibre && \
+    apk fix --no-cache calibre
 
 # Python venv + pip packages
 RUN set -eux; \
