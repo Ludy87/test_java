@@ -42,7 +42,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
     openssl \
     openssl-dev \
     openjdk21-jre \
-    ffmpeg \
     # Document conversion
     gcompat \
     libc6-compat \
@@ -69,10 +68,13 @@ RUN --mount=type=cache,target=/var/cache/apk \
     py3-opencv \
     ocrmypdf \
     py3-pillow \
-    py3-pdf2image \
-    # Calibre
-    calibre && \
-    apk fix --no-cache calibre
+    py3-pdf2image
+
+# Install Calibre using the official binary installer to avoid repository conflicts
+RUN set -eux; \
+    apk add --no-cache libxcomposite libxdamage libxtst libnss3; \
+    curl -L https://download.calibre-ebook.com/linux-installer.sh -o /tmp/calibre-installer.sh; \
+    sh /tmp/calibre-installer.sh install_dir=/opt/calibre bin_dir=/u
 
 # Python venv + pip packages
 RUN set -eux; \
@@ -115,7 +117,7 @@ ENV DISABLE_ADDITIONAL_FEATURES=true \
     PYTHONPATH=/usr/lib/libreoffice/program:/opt/venv/lib/python3.12/site-packages \
     UNO_PATH=/usr/lib/libreoffice/program \
     URE_BOOTSTRAP=file:///usr/lib/libreoffice/program/fundamentalrc \
-    PATH=$PATH:/opt/venv/bin \
+    PATH=$PATH:/opt/venv/bin:/opt/calibre/bin \
     STIRLING_TEMPFILES_DIRECTORY=/tmp/stirling-pdf \
     TMPDIR=/tmp/stirling-pdf \
     TEMP=/tmp/stirling-pdf \
