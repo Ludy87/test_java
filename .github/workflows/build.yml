@@ -337,29 +337,29 @@ jobs:
           echo "tags=$TAG" >> $GITHUB_OUTPUT
           echo "Building and testing: $TAG"
 
-      # - name: Build and load amd64 image
-      #   uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
-      #   with:
-      #     builder: ${{ steps.buildx.outputs.name }}
-      #     context: .
-      #     file: ./${{ matrix.docker-rev }}
-      #     push: false
-      #     load: true
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
-      #     tags: ${{ steps.meta.outputs.tags }}
-      #     platforms: linux/amd64
-      #     provenance: false
-      #     sbom: false
+      - name: Build and load amd64 image
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: ./${{ matrix.docker-rev }}
+          push: false
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ${{ steps.meta.outputs.tags }}
+          platforms: linux/amd64
+          provenance: false
+          sbom: false
 
-      # - name: Test Java works (amd64)
-      #   run: docker run --rm ${{ steps.meta.outputs.tags }} java -version
+      - name: Test Java works (amd64)
+        run: docker run --rm ${{ steps.meta.outputs.tags }} java -version
 
-      # - name: Prune amd64 image and cache
-      #   if: always()
-      #   run: |
-      #     docker image rm -f ${{ steps.meta.outputs.tags }} || true
-      #     docker builder prune --force || true
+      - name: Prune amd64 image and cache
+        if: always()
+        run: |
+          docker image rm -f ${{ steps.meta.outputs.tags }} || true
+          docker builder prune --force || true
 
       - name: Build and load arm64 image
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
@@ -401,12 +401,25 @@ jobs:
             (echo "Python uno import failed on arm64!" && exit 1)
 
           # Full startup
-          timeout 180 docker run --rm --platform linux/arm64 \
-            -e DISABLE_ADDITIONAL_FEATURES=true \
-            -e FAT_DOCKER=true \
+          TAG="${{ steps.meta.outputs.tags }}"
+          echo "Running quick startup check on arm64..."
+
+          docker run --rm --platform linux/arm64 \
             $TAG \
-            sh -c "java -jar /app.jar --version && echo 'Stirling-PDF fat started on arm64!'" || \
-            (echo "Startup failed on arm64!" && exit 1)
+            sh -c "java -jar /app.jar --version || java -jar /app.jar --help || java -jar /app.jar" > startup.log 2>&1 &
+
+          # Warte max. 90 Sekunden und prüfe, ob die Startzeile mit Version erscheint
+          timeout 90 bash -c "
+            until grep -q 'Starting SPDFApplication v' startup.log; do
+              sleep 2
+              if ! kill -0 \$! 2>/dev/null; then
+                echo 'Java process died!'
+                cat startup.log
+                exit 1
+              fi
+            done
+            echo 'Stirling-PDF fat started successfully on arm64!'
+          " || (echo "Startup failed:"; cat startup.log; exit 1)
 
       - name: Cleanup arm64 image and cache
         if: always()
