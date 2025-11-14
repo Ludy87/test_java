@@ -1,129 +1,142 @@
-# Build the application
+# ========================================
+# STAGE 1: Build Stirling PDF (Gradle)
+# ========================================
 FROM gradle:8.14-jdk21 AS build
 
-COPY build.gradle .
-COPY settings.gradle .
-COPY gradlew .
-COPY gradle gradle/
-COPY app/core/build.gradle core/.
-COPY app/common/build.gradle common/.
-COPY app/proprietary/build.gradle proprietary/.
-RUN ./gradlew build -x spotlessApply -x spotlessCheck -x test -x sonarqube || return 0
+WORKDIR /build
 
-# Set the working directory
-WORKDIR /app
+# Copy Gradle files
+COPY build.gradle.kts settings.gradle.kts gradlew ./
+COPY gradle ./gradle
+COPY app/core/build.gradle.kts app/core/
+COPY app/common/build.gradle.kts app/common/
+COPY app/proprietary/build.gradle.kts app/proprietary/
 
-# Copy the entire project to the working directory
+# Download dependencies (cache layer)
+RUN ./gradlew build -x spotlessApply -x spotlessCheck -x test -x sonarqube || true
+
+# Copy source
 COPY . .
 
-# Build the application with DISABLE_ADDITIONAL_FEATURES=false
+# Build with features enabled (for fat image)
 ENV DISABLE_ADDITIONAL_FEATURES=false STIRLING_PDF_DESKTOP_UI=false
 RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
-# Main stage – GLIBC NATIV!
-FROM bellsoft/alpaquita-linux-base:glibc
 
-ARG VERSION_TAG
+# ========================================
+# STAGE 2: Build Calibre (only ebook-convert)
+# ========================================
+FROM python:3.12-slim-bookworm AS calibre-builder
 
-# Install all packages in one RUN command (OHNE gcompat/libc6-compat!)
-RUN --mount=type=cache,target=/var/cache/apk \
-    apk upgrade --no-cache --no-progress --repositories-file /etc/apk/repositories && \
-    apk add --no-cache --no-progress --repositories-file /etc/apk/repositories \
-    ca-certificates \
-    tzdata \
-    tini \
-    bash \
-    curl \
-    shadow \
-    su-exec \
-    openssl \
-    openssl-dev \
-    openjdk21-jre \
-    ffmpeg \
-    # Document conversion
-    libreoffice \
-    poppler-utils \
-    tesseract-ocr \
-    tesseract-ocr-data-eng \
-    tesseract-ocr-data-chi_sim \
-    tesseract-ocr-data-deu \
-    tesseract-ocr-data-fra \
-    tesseract-ocr-data-por \
-    unpaper \
-    font-terminus \
-    font-dejavu \
-    font-noto \
-    font-noto-cjk \
-    font-awesome \
-    font-noto-extra \
-    font-liberation \
-    font-linux-libertine \
-    font-urw-base35 \
-    python3 \
-    py3-pip \
-    py3-opencv \
-    ocrmypdf \
-    py3-pillow \
-    py3-pdf2image
+ENV CALIBRE_VERSION=7.12.0
+WORKDIR /tmp
 
-# Install Calibre – EINFACH & OHNE HACK
-RUN set -eux; \
-    apk add --no-cache --no-progress --repositories-file /etc/apk/repositories libxcomposite libxdamage libxtst nss; \
-    curl -L https://download.calibre-ebook.com/linux-installer.sh -o /tmp/calibre-installer.sh; \
-    sh /tmp/calibre-installer.sh install_dir=/opt/calibre bin_dir=/usr/bin; \
-    rm -f /tmp/calibre-installer.sh
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget xz-utils ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-# Python venv + pip packages
-RUN set -eux; \
-    python3 -m venv /opt/venv && \
-    /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools && \
-    /opt/venv/bin/pip install --no-cache-dir --upgrade unoserver weasyprint && \
-    ln -s /usr/lib/libreoffice/program/uno.py /opt/venv/lib/python3.12/site-packages/ && \
-    ln -s /usr/lib/libreoffice/program/unohelper.py /opt/venv/lib/python3.12/site-packages/ && \
-    ln -s /usr/lib/libreoffice/program /opt/venv/lib/python3.12/site-packages/LibreOffice
+# Download prebuilt Linux binary (official, fastest, smallest)
+RUN wget -O calibre.txz "https://download.calibre-ebook.com/${CALIBRE_VERSION}/calibre-${CALIBRE_VERSION}-x86_64.txz" \
+    && tar xJvf calibre.txz -C /opt \
+    && mv /opt/calibre-${CALIBRE_VERSION}-x86_64 /opt/calibre \
+    && rm calibre.txz
 
-# Copy necessary files
+# Keep only ebook-convert and minimal runtime
+RUN mkdir -p /opt/calibre-bin && \
+    cp /opt/calibre/ebook-convert /opt/calibre-bin/ && \
+    cp -r /opt/calibre/resources /opt/calibre-bin/ || true && \
+    find /opt/calibre -name "*.py" -path "*/ebook_convert/*" -exec cp --parents {} /opt/calibre-bin/ \; || true && \
+    rm -rf /opt/calibre
+
+
+# ========================================
+# STAGE 3: Final Runtime Image (Alpine)
+# ========================================
+FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412
+
+# === Copy app + scripts ===
 COPY scripts /scripts
 COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
-# first /app directory is for the build stage, second is for the final image
-COPY --from=build /app/app/core/build/libs/*.jar app.jar
+COPY --from=build /build/app/core/build/libs/*.jar /app.jar
 
-# Directories, fonts, permissions
-RUN set -eux; \
-    mv /usr/share/tessdata /usr/share/tessdata-original && \
-    mkdir -p /home/stirlingpdfuser /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
-    ln -s /usr/share/fontconfig/conf.avail/69-urw-*.conf /etc/fonts/conf.d/ && \
-    fc-cache -f -v && \
-    chmod +x /scripts/* && \
-    addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
-    chown -R stirlingpdfuser:stirlingpdfgroup \
-    /home/stirlingpdfuser /scripts /usr/share/fonts/opentype/noto \
-    /configs /customFiles /pipeline /tmp/stirling-pdf /app.jar
+# === Copy only ebook-convert from Calibre ===
+COPY --from=calibre-builder /opt/calibre-bin /opt/calibre
 
-# Set environment variables
-ENV DISABLE_ADDITIONAL_FEATURES=true \
-    VERSION_TAG=$VERSION_TAG \
+# === Arguments & Environment ===
+ARG VERSION_TAG=latest
+ENV VERSION_TAG=${VERSION_TAG} \
+    DISABLE_ADDITIONAL_FEATURES=true \
     JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=75 -XX:InitiatingHeapOccupancyPercent=20 -XX:+G1PeriodicGCInvokesConcurrent -XX:G1PeriodicGCInterval=10000 -XX:+UseStringDeduplication -XX:G1PeriodicGCSystemLoadThreshold=70" \
     JAVA_CUSTOM_OPTS="" \
     HOME=/home/stirlingpdfuser \
-    PUID=1000 \
-    PGID=1000 \
-    UMASK=022 \
+    PUID=1000 PGID=1000 UMASK=022 \
     FAT_DOCKER=true \
     INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false \
     PYTHONPATH=/usr/lib/libreoffice/program:/opt/venv/lib/python3.12/site-packages \
     UNO_PATH=/usr/lib/libreoffice/program \
     URE_BOOTSTRAP=file:///usr/lib/libreoffice/program/fundamentalrc \
-    PATH=$PATH:/opt/venv/bin:/opt/calibre/bin \
+    PATH=$PATH:/opt/venv/bin:/opt/calibre \
     STIRLING_TEMPFILES_DIRECTORY=/tmp/stirling-pdf \
     TMPDIR=/tmp/stirling-pdf \
     TEMP=/tmp/stirling-pdf \
-    TMP=/tmp/stirling-pdf \
-    LANG=en_US.UTF-8 \
-    LC_ALL=en_US.UTF-8
+    TMP=/tmp/stirling-pdf
 
+# === Install Runtime Dependencies ===
+RUN apk add --no-cache \
+    # Core
+    bash curl shadow su-exec openssl tini \
+    ca-certificates tzdata \
+    # Java
+    openjdk21-jre \
+    # Media
+    ffmpeg gcompat libc6-compat \
+    # PDF Tools
+    poppler-utils \
+    libreoffice \
+    # OCR
+    tesseract-ocr tesseract-ocr-data-eng tesseract-ocr-data-chi_sim \
+    tesseract-ocr-data-deu tesseract-ocr-data-fra tesseract-ocr-data-por \
+    unpaper \
+    # Fonts
+    font-terminus font-dejavu font-noto font-noto-cjk font-awesome \
+    font-noto-extra font-liberation font-linux-libertine font-urw-base35 \
+    # Python + PDF tools
+    python3 py3-pip py3-pillow py3-opencv py3-pdf2image ocrmypdf \
+    # Calibre runtime (minimal)
+    fontconfig libstdc++ libgcc
+
+# === Python Virtual Environment ===
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools && \
+    /opt/venv/bin/pip install --no-cache-dir unoserver weasyprint
+
+# === LibreOffice Python Bridge ===
+RUN ln -s /usr/lib/libreoffice/program/uno.py /opt/venv/lib/python3.12/site-packages/uno.py && \
+    ln -s /usr/lib/libreoffice/program/unohelper.py /opt/venv/lib/python3.12/site-packages/unohelper.py && \
+    mkdir -p /opt/venv/lib/python3.12/site-packages/LibreOffice && \
+    ln -s /usr/lib/libreoffice/program /opt/venv/lib/python3.12/site-packages/LibreOffice/program
+
+# === Tesseract Data ===
+RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
+    mkdir -p /usr/share/tessdata && \
+    ln -s /usr/share/tessdata-original/* /usr/share/tessdata/ || true
+
+# === Directories & Permissions ===
+RUN mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
+    addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
+    chown -R stirlingpdfuser:stirlingpdfgroup \
+        $HOME /scripts /usr/share/fonts/opentype/noto \
+        /configs /customFiles /pipeline /tmp/stirling-pdf \
+        /app.jar /opt/calibre && \
+    chmod +x /scripts/* && \
+    ln -sf /bin/bash /bin/sh && \
+    ln -sf /opt/calibre/ebook-convert /usr/local/bin/ebook-convert
+
+# === Font Cache ===
+RUN fc-cache -f -v
+
+# === Expose & Run ===
 EXPOSE 8080/tcp
 
-# Set user and run command
 ENTRYPOINT ["tini", "--", "/scripts/init.sh"]
 CMD ["sh", "-c", "java -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/tmp/stirling-pdf -jar /app.jar & /opt/venv/bin/unoserver --port 2003 --interface 127.0.0.1"]
