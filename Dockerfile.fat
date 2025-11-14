@@ -77,12 +77,18 @@ RUN mv /usr/share/tessdata /usr/share/tessdata-original 2>/dev/null || true && \
     mkdir -p /usr/share/tessdata && \
     ln -s /usr/share/tessdata-original/* /usr/share/tessdata/ 2>/dev/null || true
 
-# User & Permissions
-ENV HOME=/home/stirlingpdfuser
-RUN groupadd -g 1000 stirlingpdfgroup || true && \
-    useradd -u 1000 -g 1000 -s /bin/bash -m stirlingpdfuser || true && \
-    mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
-    chown -R stirlingpdfuser:stirlingpdfgroup $HOME /configs /customFiles /pipeline /tmp/stirling-pdf /app.jar /opt/calibre /usr/share/fonts/truetype
+# User & Permissions – NUTZE EXISTIERENDEN UID/GID 1000
+RUN mkdir -p /home/stirlingpdfuser /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
+    chown -R 1000:1000 /home/stirlingpdfuser /configs /customFiles /pipeline /tmp/stirling-pdf /app.jar /opt/calibre /usr/share/fonts/truetype
+
+# Environment
+ENV HOME=/home/stirlingpdfuser \
+    PUID=1000 \
+    PGID=1000 \
+    JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=75" \
+    PATH=$PATH:/opt/venv/bin:/opt/calibre \
+    TMPDIR=/tmp/stirling-pdf \
+    LD_LIBRARY_PATH=/opt/calibre/lib
 
 # Font Cache
 RUN fc-cache -f -v
