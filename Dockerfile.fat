@@ -21,62 +21,102 @@ RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
 
 # ========================================
-# STAGE 2: Ubuntu 24.04 – ALLES AUS APT (inkl. Calibre!)
+# STAGE 2: Ubuntu 24.04 – Full runtime with all dependencies (incl. Calibre)
 # ========================================
 FROM ubuntu:24.04
 
-# Installiere alles direkt – inkl. Calibre!
+# Install everything required for runtime — including Calibre
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         openjdk-21-jre-headless \
-        ffmpeg poppler-utils libreoffice-script-provider-python \
+        ffmpeg poppler-utils libreoffice-nogui \
         tesseract-ocr tesseract-ocr-eng tesseract-ocr-chi-sim \
         tesseract-ocr-deu tesseract-ocr-fra tesseract-ocr-por unpaper \
         fonts-dejavu-core fonts-noto-core fonts-noto-cjk fonts-font-awesome fonts-liberation \
         python3 python3-pip python3-venv python3-pil python3-uno \
+        qpdf \
         fontconfig ca-certificates curl tini \
-        calibre && \
+        ghostscript \
+        calibre \
+        # Required libraries for WeasyPrint runtime
+        libcairo2 libpango-1.0-0 libpangoft2-1.0-0 libgdk-pixbuf-2.0-0 \
+        bash \
+        && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Copy app + fonts
+# Copy application JAR and bundled fonts
 COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/truetype/
 COPY --from=build /app/app/core/build/libs/*.jar /app.jar
 
-# Symlink – ebook-convert ist direkt in /usr/bin
-RUN ln -sf /usr/bin/ebook-convert /usr/local/bin/ebook-convert
+# Symlink — Calibre’s ebook-convert is located directly in /usr/bin
+RUN mkdir -p /opt/calibre && \
+    ln -sf /usr/bin/ebook-convert /opt/calibre/ebook-convert && \
+    /usr/bin/ebook-convert --version
 
-# Python venv + pip packages
-RUN python3 -m venv /opt/venv && \
+# ========================================
+# unoserver – Dedicated virtualenv using system LibreOffice UNO
+# ========================================
+RUN python3 -m venv /opt/unoserver-venv --system-site-packages && \
+    /opt/unoserver-venv/bin/pip install --no-cache-dir --upgrade pip && \
+    /opt/unoserver-venv/bin/pip install --no-cache-dir unoserver
+
+# ========================================
+# Main virtualenv for Stirling PDF (OCR, PDF, OpenCV, etc.)
+# ========================================
+RUN python3 -m venv /opt/venv --system-site-packages && \
     /opt/venv/bin/pip install --no-cache-dir --upgrade pip && \
-    /opt/venv/bin/pip install --no-cache-dir unoserver weasyprint pdf2image ocrmypdf opencv-python-headless
+    /opt/venv/bin/pip install --no-cache-dir \
+    weasyprint pdf2image ocrmypdf opencv-python-headless && \
+    /opt/venv/bin/python3 -c "import cv2; print('OpenCV OK', cv2.__version__)"
 
-# LibreOffice Bridge
-RUN ln -s /usr/lib/libreoffice/program/uno.py /opt/venv/lib/python3.12/site-packages/uno.py && \
-    ln -s /usr/lib/libreoffice/program/unohelper.py /opt/venv/lib/python3.12/site-packages/unohelper.py && \
-    mkdir -p /opt/venv/lib/python3.12/site-packages/LibreOffice && \
-    ln -s /usr/lib/libreoffice/program /opt/venv/lib/python3.12/site-packages/LibreOffice/program
+# ▼ IMPORTANT: Create symlinks AFTER /opt/venv exists
+RUN ln -sf /opt/unoserver-venv/bin/unoconvert /opt/venv/bin/unoconvert && \
+    ln -sf /opt/unoserver-venv/bin/unoserver  /opt/venv/bin/unoserver
 
-# Tesseract Data
-RUN mv /usr/share/tessdata /usr/share/tessdata-original 2>/dev/null || true && \
-    mkdir -p /usr/share/tessdata && \
-    ln -s /usr/share/tessdata-original/* /usr/share/tessdata/ 2>/dev/null || true
+# Tesseract data path — version-independent linking
+RUN \
+    TESS_PATH=$(find /usr/share/tesseract-ocr -type d -name tessdata | head -1) && \
+    if [ -z "$TESS_PATH" ]; then \
+    echo "ERROR: tessdata not found!" >&2; exit 1; \
+    fi && \
+    ln -sf "$TESS_PATH" /usr/share/tessdata && \
+    echo "tessdata linked: $TESS_PATH → /usr/share/tessdata"
 
-# User & Permissions – UID/GID 1000
+# Create user directories and set permissions (UID/GID 1000)
 RUN mkdir -p /home/stirlingpdfuser /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
-    chown -R 1000:1000 /home/stirlingpdfuser /configs /customFiles /pipeline /tmp/stirling-pdf /app.jar /usr/share/fonts/truetype
+    chown -R 1000:1000 /home/stirlingpdfuser /configs /logs /customFiles /pipeline /tmp/stirling-pdf /app.jar /usr/share/fonts/truetype
 
-# Font Cache
+# Rebuild the font cache
 RUN fc-cache -f -v
 
-# Environment – NUR EINMAL!
+# QT/Calibre headless setup (offscreen rendering, no display server)
+RUN mkdir -p /tmp/xdg && chown -R 1000:1000 /tmp/xdg && chmod 700 /tmp/xdg
+ENV QT_QPA_PLATFORM=offscreen \
+    XDG_RUNTIME_DIR=/tmp/xdg
+
+# Environment configuration
+# ▼ NOTE: /opt/venv comes first in PATH so that Python tools (cv2/ocrmypdf/weasyprint) are loaded from there
 ENV HOME=/home/stirlingpdfuser \
     PUID=1000 \
     PGID=1000 \
     JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=75" \
-    PATH=$PATH:/opt/venv/bin \
+    PATH="/opt/venv/bin:/opt/unoserver-venv/bin:${PATH}" \
     TMPDIR=/tmp/stirling-pdf
+
+# Run as non-root user (prevents QtWebEngine/Chromium sandbox errors)
+USER 1000:1000
 
 EXPOSE 8080/tcp
 
 ENTRYPOINT ["tini", "--"]
-CMD ["sh", "-c", "java -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/tmp/stirling-pdf -jar /app.jar & /opt/venv/bin/unoserver --port 2003 --interface 127.0.0.1 && wait -n"]
+
+# ========================================
+# CMD: Start Java application and unoserver (LibreOffice Python bridge)
+# ========================================
+CMD ["bash", "-c", "\
+    set -e; mkdir -p /tmp/xdg; \
+    java -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/tmp/stirling-pdf -jar /app.jar & APP_PID=$!; \
+    /opt/unoserver-venv/bin/unoserver --port 2003 --interface 127.0.0.1 & UNO_PID=$!; \
+    trap 'kill $APP_PID $UNO_PID 2>/dev/null || true' TERM INT EXIT; \
+    while kill -0 $APP_PID $UNO_PID 2>/dev/null; do sleep 1; done \
+    "]
