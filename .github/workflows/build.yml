@@ -280,6 +280,9 @@ jobs:
     # needs: [files-changed, build] # tmp disable
     needs: [files-changed]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     strategy:
       fail-fast: false
       matrix:
@@ -349,14 +352,22 @@ jobs:
           echo "tags=$TAG" >> $GITHUB_OUTPUT
           echo "Building and testing: $TAG"
 
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build and load amd64 image
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           file: ./${{ matrix.docker-rev }}
-          push: false
-          load: true
+          push: true
+          # push: false
+          # load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
@@ -385,8 +396,9 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           file: ./${{ matrix.docker-rev }}
-          push: false
-          load: true
+          push: true
+          # push: false
+          # load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
