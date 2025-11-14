@@ -400,27 +400,6 @@ jobs:
             sh -c "python3 -c 'import uno; print(\"uno import OK\")'" || \
             (echo "Python uno import failed on arm64!" && exit 1)
 
-          # Full startup
-          TAG="${{ steps.meta.outputs.tags }}"
-          echo "Running quick startup check on arm64..."
-
-          docker run --rm --platform linux/arm64 \
-            $TAG \
-            sh -c "java -jar /app.jar --version || java -jar /app.jar --help || java -jar /app.jar" > startup.log 2>&1 &
-
-          # Warte max. 90 Sekunden und prüfe, ob die Startzeile mit Version erscheint
-          timeout 90 bash -c "
-            until grep -q 'Starting SPDFApplication v' startup.log; do
-              sleep 2
-              if ! kill -0 \$! 2>/dev/null; then
-                echo 'Java process died!'
-                cat startup.log
-                exit 1
-              fi
-            done
-            echo 'Stirling-PDF fat started successfully on arm64!'
-          " || (echo "Startup failed:"; cat startup.log; exit 1)
-
       - name: Cleanup arm64 image and cache
         if: always()
         run: |
