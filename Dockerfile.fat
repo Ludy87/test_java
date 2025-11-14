@@ -26,16 +26,11 @@ RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 FROM ghcr.io/linuxserver/calibre:8.14.0 AS calibre-builder
 
 RUN mkdir -p /opt/calibre && \
-    # 1. ebook-convert (Wrapper)
     cp /usr/bin/ebook-convert /opt/calibre/ebook-convert && \
     chmod +x /opt/calibre/ebook-convert && \
-    # 2. Ressourcen
     cp -r /usr/share/calibre /opt/calibre/resources 2>/dev/null || true && \
-    # 3. Python-Module
     find /usr -name "*.py" -path "*/ebook_convert/*" -exec cp --parents {} /opt/calibre/ \; 2>/dev/null || true && \
-    # 4. ALLE .so-Dateien (libcalibre-launcher.so, etc.)
     cp -r /usr/lib/calibre /opt/calibre/lib 2>/dev/null || true && \
-    # 5. Test
     /opt/calibre/ebook-convert --version
 
 
@@ -140,9 +135,10 @@ RUN mv /usr/share/tessdata /usr/share/tessdata-original 2>/dev/null || true && \
 RUN mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
     addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
     chown -R stirlingpdfuser:stirlingpdfgroup \
-        $HOME /scripts /usr/share/fonts/opentype/noto \
-        /configs /customFiles /pipeline /tmp/stirling-pdf \
-        /app.jar /opt/calibre && \
+    $HOME \
+    /usr/share/fonts/opentype/noto \
+    /configs /customFiles /pipeline /tmp/stirling-pdf \
+    /app.jar /opt/calibre && \
     chmod +x /scripts/* && \
     ln -sf /bin/bash /bin/sh
 
@@ -152,5 +148,10 @@ RUN fc-cache -f -v
 # === Expose & Run ===
 EXPOSE 8080/tcp
 
-ENTRYPOINT ["tini", "--", "/scripts/init.sh"]
-CMD ["sh", "-c", "LD_LIBRARY_PATH=/opt/calibre/lib java -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/tmp/stirling-pdf -jar /app.jar & /opt/venv/bin/unoserver --port 2003 --interface 127.0.0.1"]
+# === ALLES IM CMD – KEIN init.sh NÖTIG! ===
+CMD ["sh", "-c", "\
+    export LD_LIBRARY_PATH=/opt/calibre/lib:$LD_LIBRARY_PATH && \
+    java -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/tmp/stirling-pdf -jar /app.jar & \
+    /opt/venv/bin/unoserver --port 2003 --interface 127.0.0.1 && \
+    wait -n \
+    "]
