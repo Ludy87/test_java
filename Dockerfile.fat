@@ -90,9 +90,9 @@ ENV VERSION_TAG=${VERSION_TAG} \
 # === Install Core + Java ===
 RUN apk update && \
     apk add --no-cache \
-    bash curl shadow su-exec openssl tini \
-    ca-certificates tzdata \
-    openjdk21-jre-headless
+    ca-certificates tzdata tini \
+    bash curl shadow su-exec openssl openssl-dev \
+    openjdk21-jre
 
 # === Install Media + PDF Tools ===
 RUN apk add --no-cache \
