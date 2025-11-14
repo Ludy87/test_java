@@ -19,14 +19,14 @@ WORKDIR /app
 COPY . .
 
 # Build the application with DISABLE_ADDITIONAL_FEATURES=false
-RUN DISABLE_ADDITIONAL_FEATURES=false \
-    STIRLING_PDF_DESKTOP_UI=false \
-    ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
+ENV DISABLE_ADDITIONAL_FEATURES=false \
+    STIRLING_PDF_DESKTOP_UI=false
+RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
 # ========================================
 # STAGE 2: Calibre Builder (aus LinuxServer-Image – Guide-abgeleitet!)
 # ========================================
-FROM ghcr.io/linuxserver/calibre:7.12.0 AS calibre-builder
+FROM ghcr.io/linuxserver/calibre:8.14.0 AS calibre-builder
 
 # Finde & kopiere nur ebook-convert + Dependencies
 RUN mkdir -p /opt/calibre && \
@@ -51,10 +51,21 @@ COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/no
 # first /app directory is for the build stage, second is for the final image
 COPY --from=build /app/app/core/build/libs/*.jar app.jar
 
-# === Copy only ebook-convert from Calibre ===
+# === Copy ebook-convert ===
 COPY --from=calibre-builder /opt/calibre /opt/calibre
 
-# Symlink
+# === glibc-Kompatibilität für Calibre ===
+RUN apk add --no-cache \
+    gcompat \
+    libc6-compat \
+    libstdc++ \
+    && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+    && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r1/glibc-2.35-r1.apk \
+    && apk add --no-cache glibc-2.35-r1.apk \
+    && rm glibc-2.35-r1.apk \
+    && ln -s /usr/lib/libcrypto.so.3 /usr/lib/libcrypto.so.1.1 2>/dev/null || true
+
+# === Symlink ===
 RUN ln -sf /opt/calibre/ebook-convert /usr/local/bin/ebook-convert
 
 # === Arguments & Environment ===
@@ -76,28 +87,42 @@ ENV VERSION_TAG=${VERSION_TAG} \
     TEMP=/tmp/stirling-pdf \
     TMP=/tmp/stirling-pdf
 
-# === Install Runtime Dependencies ===
-RUN apk add --no-cache \
-    # Core
+# === Install Core + Java ===
+RUN apk update && \
+    apk add --no-cache \
     bash curl shadow su-exec openssl tini \
     ca-certificates tzdata \
-    # Java
-    openjdk21-jre \
-    # Media
-    ffmpeg gcompat libc6-compat \
-    # PDF Tools
+    openjdk21-jre-headless
+
+# === Install Media + PDF Tools ===
+RUN apk add --no-cache \
+    ffmpeg \
     poppler-utils \
-    libreoffice \
-    # OCR
-    tesseract-ocr tesseract-ocr-data-eng tesseract-ocr-data-chi_sim \
-    tesseract-ocr-data-deu tesseract-ocr-data-fra tesseract-ocr-data-por \
-    unpaper \
-    # Fonts
-    font-terminus font-dejavu font-noto font-noto-cjk font-awesome \
-    font-noto-extra font-liberation font-linux-libertine font-urw-base35 \
-    # Python + PDF tools
+    libreoffice
+
+# === Install OCR ===
+RUN apk add --no-cache \
+    tesseract-ocr \
+    tesseract-ocr-data-eng \
+    tesseract-ocr-data-chi_sim \
+    tesseract-ocr-data-deu \
+    tesseract-ocr-data-fra \
+    tesseract-ocr-data-por \
+    unpaper
+
+# === Install Fonts (nur existierende) ===
+RUN apk add --no-cache \
+    font-dejavu \
+    font-noto \
+    font-noto-cjk \
+    font-awesome \
+    font-liberation \
+    font-urw-base35 || true
+
+# === Install Python + PDF tools ===
+RUN apk update && \
+    apk add --no-cache \
     python3 py3-pip py3-pillow py3-opencv py3-pdf2image ocrmypdf \
-    # Calibre runtime (minimal)
     fontconfig libstdc++ libgcc
 
 # === Python Virtual Environment ===
@@ -112,20 +137,19 @@ RUN ln -s /usr/lib/libreoffice/program/uno.py /opt/venv/lib/python3.12/site-pack
     ln -s /usr/lib/libreoffice/program /opt/venv/lib/python3.12/site-packages/LibreOffice/program
 
 # === Tesseract Data ===
-RUN mv /usr/share/tessdata /usr/share/tessdata-original && \
+RUN mv /usr/share/tessdata /usr/share/tessdata-original 2>/dev/null || true && \
     mkdir -p /usr/share/tessdata && \
-    ln -s /usr/share/tessdata-original/* /usr/share/tessdata/ || true
+    ln -s /usr/share/tessdata-original/* /usr/share/tessdata/ 2>/dev/null || true
 
 # === Directories & Permissions ===
 RUN mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
     addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
     chown -R stirlingpdfuser:stirlingpdfgroup \
-    $HOME /scripts /usr/share/fonts/opentype/noto \
-    /configs /customFiles /pipeline /tmp/stirling-pdf \
-    /app.jar /opt/calibre && \
+        $HOME /scripts /usr/share/fonts/opentype/noto \
+        /configs /customFiles /pipeline /tmp/stirling-pdf \
+        /app.jar /opt/calibre && \
     chmod +x /scripts/* && \
-    ln -sf /bin/bash /bin/sh && \
-    ln -sf /opt/calibre/ebook-convert /usr/local/bin/ebook-convert
+    ln -sf /bin/bash /bin/sh
 
 # === Font Cache ===
 RUN fc-cache -f -v
