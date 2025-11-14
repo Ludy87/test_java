@@ -371,11 +371,11 @@ jobs:
           provenance: false
           sbom: false
 
-      - name: Show amd64 image size
-        run: |
-          SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
-          FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
-          echo "Image size (amd64): ${FORMATTED}"
+      # - name: Show amd64 image size
+      #   run: |
+      #     SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
+      #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
+      #     echo "Image size (amd64): ${FORMATTED}"
 
       - name: Test Java works (amd64)
         run: docker run --rm ${{ steps.meta.outputs.tags }} java -version
@@ -402,11 +402,11 @@ jobs:
           provenance: false
           sbom: false
 
-      - name: Show arm64 image size
-        run: |
-          SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
-          FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
-          echo "Image size (arm64): ${FORMATTED}"
+      # - name: Show arm64 image size
+      #   run: |
+      #     SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
+      #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
+      #     echo "Image size (arm64): ${FORMATTED}"
 
       - name: Test Java works (arm64)
         run: docker run --rm --platform linux/arm64 ${{ steps.meta.outputs.tags }} java -version
