@@ -21,7 +21,7 @@ RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
 
 # ========================================
-# STAGE 2: Calibre Builder – ALLES KOPIEREN!
+# STAGE 2: Calibre Builder
 # ========================================
 FROM ghcr.io/linuxserver/calibre:8.14.0 AS calibre-builder
 
@@ -31,127 +31,69 @@ RUN mkdir -p /opt/calibre && \
     cp -r /usr/share/calibre /opt/calibre/resources 2>/dev/null || true && \
     find /usr -name "*.py" -path "*/ebook_convert/*" -exec cp --parents {} /opt/calibre/ \; 2>/dev/null || true && \
     cp -r /usr/lib/calibre /opt/calibre/lib 2>/dev/null || true && \
+    find /usr -name "libstdc++.so.6" -exec cp {} /opt/calibre/lib/ \; 2>/dev/null || true && \
+    find /usr -name "libgcc_s.so.1" -exec cp {} /opt/calibre/lib/ \; 2>/dev/null || true && \
     /opt/calibre/ebook-convert --version
 
 
 # ========================================
-# STAGE 3: Finales Alpine-Image
+# STAGE 3: Ubuntu 24.04 (optimiert – ~700 MB)
 # ========================================
-FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412
+FROM ubuntu:24.04
+
+# Update & install only required packages
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        openjdk-21-jre-headless \
+        ffmpeg poppler-utils libreoffice \
+        tesseract-ocr tesseract-ocr-eng tesseract-ocr-chi-sim \
+        tesseract-ocr-deu tesseract-ocr-fra tesseract-ocr-por unpaper \
+        fonts-dejavu-core fonts-noto-core fonts-noto-cjk fonts-font-awesome fonts-liberation \
+        python3 python3-pip python3-venv python3-pil python3-opencv \
+        fontconfig ca-certificates curl tini && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy app + fonts
-COPY scripts /scripts
-COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
+COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/truetype/
 COPY --from=build /app/app/core/build/libs/*.jar /app.jar
-
-# === Copy ebook-convert + libs ===
 COPY --from=calibre-builder /opt/calibre /opt/calibre
 
-# === glibc-Kompatibilität (OHNE gcompat!) ===
-RUN apk add --no-cache libc6-compat libstdc++ libgcc && \
-    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r1/glibc-2.35-r1.apk && \
-    apk add --no-cache --force-overwrite glibc-2.35-r1.apk && \
-    rm glibc-2.35-r1.apk
-
-# === Symlink ===
+# Symlink
 RUN ln -sf /opt/calibre/ebook-convert /usr/local/bin/ebook-convert
 
-# === Environment ===
-ARG VERSION_TAG=latest
-ENV VERSION_TAG=${VERSION_TAG} \
-    DISABLE_ADDITIONAL_FEATURES=true \
-    JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=75 -XX:InitiatingHeapOccupancyPercent=20 -XX:+G1PeriodicGCInvokesConcurrent -XX:G1PeriodicGCInterval=10000 -XX:+UseStringDeduplication -XX:G1PeriodicGCSystemLoadThreshold=70" \
-    JAVA_CUSTOM_OPTS="" \
-    HOME=/home/stirlingpdfuser \
-    PUID=1000 PGID=1000 UMASK=022 \
-    FAT_DOCKER=true \
-    INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false \
-    PYTHONPATH=/usr/lib/libreoffice/program:/opt/venv/lib/python3.12/site-packages \
-    UNO_PATH=/usr/lib/libreoffice/program \
-    URE_BOOTSTRAP=file:///usr/lib/libreoffice/program/fundamentalrc \
-    PATH=$PATH:/opt/venv/bin:/opt/calibre \
-    STIRLING_TEMPFILES_DIRECTORY=/tmp/stirling-pdf \
-    TMPDIR=/tmp/stirling-pdf \
-    TEMP=/tmp/stirling-pdf \
-    TMP=/tmp/stirling-pdf
-
-
-# === Install Core + Java ===
-RUN apk update && \
-    apk add --no-cache \
-    bash curl shadow su-exec openssl tini \
-    ca-certificates tzdata \
-    openjdk21-jre
-
-# === Media + PDF Tools ===
-RUN apk add --no-cache \
-    ffmpeg \
-    poppler-utils \
-    libreoffice
-
-# === OCR ===
-RUN apk add --no-cache \
-    tesseract-ocr \
-    tesseract-ocr-data-eng \
-    tesseract-ocr-data-chi_sim \
-    tesseract-ocr-data-deu \
-    tesseract-ocr-data-fra \
-    tesseract-ocr-data-por \
-    unpaper
-
-# === Fonts ===
-RUN apk add --no-cache \
-    font-dejavu \
-    font-noto \
-    font-noto-cjk \
-    font-awesome \
-    font-liberation \
-    font-urw-base35 || true
-
-# === Python + Tools ===
-RUN apk update && \
-    apk add --no-cache \
-    python3 py3-pip py3-pillow py3-opencv py3-pdf2image ocrmypdf \
-    fontconfig
-
-# === Python venv ===
+# Python venv + pip packages (pdf2image, ocrmypdf)
 RUN python3 -m venv /opt/venv && \
-    /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools && \
-    /opt/venv/bin/pip install --no-cache-dir unoserver weasyprint
+    /opt/venv/bin/pip install --no-cache-dir --upgrade pip && \
+    /opt/venv/bin/pip install --no-cache-dir unoserver weasyprint pdf2image ocrmypdf
 
-# === LibreOffice Bridge ===
+# LibreOffice Bridge
 RUN ln -s /usr/lib/libreoffice/program/uno.py /opt/venv/lib/python3.12/site-packages/uno.py && \
     ln -s /usr/lib/libreoffice/program/unohelper.py /opt/venv/lib/python3.12/site-packages/unohelper.py && \
     mkdir -p /opt/venv/lib/python3.12/site-packages/LibreOffice && \
     ln -s /usr/lib/libreoffice/program /opt/venv/lib/python3.12/site-packages/LibreOffice/program
 
-# === Tesseract Data ===
+# Tesseract Data
 RUN mv /usr/share/tessdata /usr/share/tessdata-original 2>/dev/null || true && \
     mkdir -p /usr/share/tessdata && \
     ln -s /usr/share/tessdata-original/* /usr/share/tessdata/ 2>/dev/null || true
 
-# === User & Permissions ===
-RUN mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
-    addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
-    chown -R stirlingpdfuser:stirlingpdfgroup \
-    $HOME \
-    /usr/share/fonts/opentype/noto \
-    /configs /customFiles /pipeline /tmp/stirling-pdf \
-    /app.jar /opt/calibre && \
-    chmod +x /scripts/* && \
-    ln -sf /bin/bash /bin/sh
+# User & Permissions
+ENV HOME=/home/stirlingpdfuser
+RUN groupadd -g 1000 stirlingpdfgroup || true && \
+    useradd -u 1000 -g 1000 -s /bin/bash -m stirlingpdfuser || true && \
+    mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
+    chown -R stirlingpdfuser:stirlingpdfgroup $HOME /configs /customFiles /pipeline /tmp/stirling-pdf /app.jar /opt/calibre /usr/share/fonts/truetype
 
-# === Font Cache ===
+# Font Cache
 RUN fc-cache -f -v
 
-# === Expose & Run ===
+# Environment (Linter-sicher: LD_LIBRARY_PATH zuerst!)
+ENV LD_LIBRARY_PATH=/opt/calibre/lib \
+    JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=75" \
+    PATH=$PATH:/opt/venv/bin:/opt/calibre \
+    TMPDIR=/tmp/stirling-pdf
+
 EXPOSE 8080/tcp
 
-# === ALLES IM CMD – KEIN init.sh NÖTIG! ===
-CMD ["sh", "-c", "\
-    export LD_LIBRARY_PATH=/opt/calibre/lib:$LD_LIBRARY_PATH && \
-    java -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/tmp/stirling-pdf -jar /app.jar & \
-    /opt/venv/bin/unoserver --port 2003 --interface 127.0.0.1 && \
-    wait -n \
-    "]
+ENTRYPOINT ["tini", "--"]
+CMD ["sh", "-c", "java -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/tmp/stirling-pdf -jar /app.jar & /opt/venv/bin/unoserver --port 2003 --interface 127.0.0.1 && wait -n"]
