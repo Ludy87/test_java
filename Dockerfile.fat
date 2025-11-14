@@ -12,63 +12,57 @@ COPY app/common/build.gradle common/.
 COPY app/proprietary/build.gradle proprietary/.
 RUN ./gradlew build -x spotlessApply -x spotlessCheck -x test -x sonarqube || return 0
 
-# Set the working directory
 WORKDIR /app
-
-# Copy the entire project to the working directory
 COPY . .
 
-# Build the application with DISABLE_ADDITIONAL_FEATURES=false
 ENV DISABLE_ADDITIONAL_FEATURES=false \
     STIRLING_PDF_DESKTOP_UI=false
 RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
+
 # ========================================
-# STAGE 2: Calibre Builder (aus LinuxServer-Image – Guide-abgeleitet!)
+# STAGE 2: Calibre Builder – ALLES KOPIEREN!
 # ========================================
 FROM ghcr.io/linuxserver/calibre:8.14.0 AS calibre-builder
 
-# Finde & kopiere nur ebook-convert + Dependencies
 RUN mkdir -p /opt/calibre && \
-    # ebook-convert ist in /usr/bin (Standard im Image)
+    # 1. ebook-convert (Wrapper)
     cp /usr/bin/ebook-convert /opt/calibre/ebook-convert && \
     chmod +x /opt/calibre/ebook-convert && \
-    # Kopiere resources (Fonts, Mimetypes, etc.)
+    # 2. Ressourcen
     cp -r /usr/share/calibre /opt/calibre/resources 2>/dev/null || true && \
-    # Kopiere Python-Module für ebook-convert
+    # 3. Python-Module
     find /usr -name "*.py" -path "*/ebook_convert/*" -exec cp --parents {} /opt/calibre/ \; 2>/dev/null || true && \
-    # Test: Muss laufen!
+    # 4. ALLE .so-Dateien (libcalibre-launcher.so, etc.)
+    cp -r /usr/lib/calibre /opt/calibre/lib 2>/dev/null || true && \
+    # 5. Test
     /opt/calibre/ebook-convert --version
 
+
 # ========================================
-# STAGE 3: Final Runtime Image (Alpine)
+# STAGE 3: Finales Alpine-Image
 # ========================================
 FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412
 
-# === Copy app + scripts ===
+# Copy app + fonts
 COPY scripts /scripts
 COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
-# first /app directory is for the build stage, second is for the final image
-COPY --from=build /app/app/core/build/libs/*.jar app.jar
+COPY --from=build /app/app/core/build/libs/*.jar /app.jar
 
-# === Copy ebook-convert ===
+# === Copy ebook-convert + libs ===
 COPY --from=calibre-builder /opt/calibre /opt/calibre
 
-# === glibc-Kompatibilität für Calibre ===
-RUN apk add --no-cache \
-    gcompat \
-    libc6-compat \
-    libstdc++ \
-    && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-    && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r1/glibc-2.35-r1.apk \
-    && apk add --no-cache glibc-2.35-r1.apk \
-    && rm glibc-2.35-r1.apk \
-    && ln -s /usr/lib/libcrypto.so.3 /usr/lib/libcrypto.so.1.1 2>/dev/null || true
+# === glibc-Kompatibilität (OHNE gcompat!) ===
+RUN apk add --no-cache libc6-compat libstdc++ libgcc && \
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r1/glibc-2.35-r1.apk && \
+    apk add --no-cache --force-overwrite glibc-2.35-r1.apk && \
+    rm glibc-2.35-r1.apk
 
 # === Symlink ===
 RUN ln -sf /opt/calibre/ebook-convert /usr/local/bin/ebook-convert
 
-# === Arguments & Environment ===
+# === Environment ===
 ARG VERSION_TAG=latest
 ENV VERSION_TAG=${VERSION_TAG} \
     DISABLE_ADDITIONAL_FEATURES=true \
@@ -87,20 +81,21 @@ ENV VERSION_TAG=${VERSION_TAG} \
     TEMP=/tmp/stirling-pdf \
     TMP=/tmp/stirling-pdf
 
+
 # === Install Core + Java ===
 RUN apk update && \
     apk add --no-cache \
-    ca-certificates tzdata tini \
-    bash curl shadow su-exec openssl openssl-dev \
+    bash curl shadow su-exec openssl tini \
+    ca-certificates tzdata \
     openjdk21-jre
 
-# === Install Media + PDF Tools ===
+# === Media + PDF Tools ===
 RUN apk add --no-cache \
     ffmpeg \
     poppler-utils \
     libreoffice
 
-# === Install OCR ===
+# === OCR ===
 RUN apk add --no-cache \
     tesseract-ocr \
     tesseract-ocr-data-eng \
@@ -110,7 +105,7 @@ RUN apk add --no-cache \
     tesseract-ocr-data-por \
     unpaper
 
-# === Install Fonts (nur existierende) ===
+# === Fonts ===
 RUN apk add --no-cache \
     font-dejavu \
     font-noto \
@@ -119,18 +114,18 @@ RUN apk add --no-cache \
     font-liberation \
     font-urw-base35 || true
 
-# === Install Python + PDF tools ===
+# === Python + Tools ===
 RUN apk update && \
     apk add --no-cache \
     python3 py3-pip py3-pillow py3-opencv py3-pdf2image ocrmypdf \
-    fontconfig libstdc++ libgcc
+    fontconfig
 
-# === Python Virtual Environment ===
+# === Python venv ===
 RUN python3 -m venv /opt/venv && \
     /opt/venv/bin/pip install --no-cache-dir --upgrade pip setuptools && \
     /opt/venv/bin/pip install --no-cache-dir unoserver weasyprint
 
-# === LibreOffice Python Bridge ===
+# === LibreOffice Bridge ===
 RUN ln -s /usr/lib/libreoffice/program/uno.py /opt/venv/lib/python3.12/site-packages/uno.py && \
     ln -s /usr/lib/libreoffice/program/unohelper.py /opt/venv/lib/python3.12/site-packages/unohelper.py && \
     mkdir -p /opt/venv/lib/python3.12/site-packages/LibreOffice && \
@@ -141,7 +136,7 @@ RUN mv /usr/share/tessdata /usr/share/tessdata-original 2>/dev/null || true && \
     mkdir -p /usr/share/tessdata && \
     ln -s /usr/share/tessdata-original/* /usr/share/tessdata/ 2>/dev/null || true
 
-# === Directories & Permissions ===
+# === User & Permissions ===
 RUN mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
     addgroup -S stirlingpdfgroup && adduser -S stirlingpdfuser -G stirlingpdfgroup && \
     chown -R stirlingpdfuser:stirlingpdfgroup \
@@ -158,4 +153,4 @@ RUN fc-cache -f -v
 EXPOSE 8080/tcp
 
 ENTRYPOINT ["tini", "--", "/scripts/init.sh"]
-CMD ["sh", "-c", "java -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/tmp/stirling-pdf -jar /app.jar & /opt/venv/bin/unoserver --port 2003 --interface 127.0.0.1"]
+CMD ["sh", "-c", "LD_LIBRARY_PATH=/opt/calibre/lib java -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/tmp/stirling-pdf -jar /app.jar & /opt/venv/bin/unoserver --port 2003 --interface 127.0.0.1"]
