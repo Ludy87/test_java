@@ -34,7 +34,7 @@ RUN mkdir -p /opt/calibre && \
     cp /usr/bin/ebook-convert /opt/calibre/ebook-convert && \
     chmod +x /opt/calibre/ebook-convert && \
     # Kopiere resources (Fonts, Mimetypes, etc.)
-    cp -r /usr/share/calibre /opt/calibre/resources || true && \
+    cp -r /usr/share/calibre /opt/calibre/resources 2>/dev/null || true && \
     # Kopiere Python-Module für ebook-convert
     find /usr -name "*.py" -path "*/ebook_convert/*" -exec cp --parents {} /opt/calibre/ \; 2>/dev/null || true && \
     # Test: Muss laufen!
@@ -52,7 +52,10 @@ COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/no
 COPY --from=build /app/app/core/build/libs/*.jar app.jar
 
 # === Copy only ebook-convert from Calibre ===
-COPY --from=calibre-builder /opt/calibre-bin /opt/calibre
+COPY --from=calibre-builder /opt/calibre /opt/calibre
+
+# Symlink
+RUN ln -sf /opt/calibre/ebook-convert /usr/local/bin/ebook-convert
 
 # === Arguments & Environment ===
 ARG VERSION_TAG=latest
