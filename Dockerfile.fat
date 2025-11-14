@@ -21,27 +21,11 @@ RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
 
 # ========================================
-# STAGE 2: Calibre Builder
-# ========================================
-FROM ghcr.io/linuxserver/calibre:8.14.0 AS calibre-builder
-
-RUN mkdir -p /opt/calibre && \
-    cp /usr/bin/ebook-convert /opt/calibre/ebook-convert && \
-    chmod +x /opt/calibre/ebook-convert && \
-    cp -r /usr/share/calibre /opt/calibre/resources 2>/dev/null || true && \
-    find /usr -name "*.py" -path "*/ebook_convert/*" -exec cp --parents {} /opt/calibre/ \; 2>/dev/null || true && \
-    cp -r /usr/lib/calibre /opt/calibre/lib 2>/dev/null || true && \
-    find /usr -name "libstdc++.so.6" -exec cp {} /opt/calibre/lib/ \; 2>/dev/null || true && \
-    find /usr -name "libgcc_s.so.1" -exec cp {} /opt/calibre/lib/ \; 2>/dev/null || true && \
-    /opt/calibre/ebook-convert --version
-
-
-# ========================================
-# STAGE 3: Ubuntu 24.04 (optimiert – ~700 MB)
+# STAGE 2: Ubuntu 24.04 – ALLES AUS APT (inkl. Calibre!)
 # ========================================
 FROM ubuntu:24.04
 
-# Update & install only required packages
+# Installiere alles direkt – inkl. Calibre!
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         openjdk-21-jre-headless \
@@ -50,18 +34,18 @@ RUN apt-get update && \
         tesseract-ocr-deu tesseract-ocr-fra tesseract-ocr-por unpaper \
         fonts-dejavu-core fonts-noto-core fonts-noto-cjk fonts-font-awesome fonts-liberation \
         python3 python3-pip python3-venv python3-pil \
-        fontconfig ca-certificates curl tini && \
+        fontconfig ca-certificates curl tini \
+        calibre && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy app + fonts
 COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/truetype/
 COPY --from=build /app/app/core/build/libs/*.jar /app.jar
-COPY --from=calibre-builder /opt/calibre /opt/calibre
 
-# Symlink
-RUN ln -sf /opt/calibre/ebook-convert /usr/local/bin/ebook-convert
+# Symlink – ebook-convert ist direkt in /usr/bin
+RUN ln -sf /usr/bin/ebook-convert /usr/local/bin/ebook-convert
 
-# Python venv + pip packages (pdf2image, ocrmypdf)
+# Python venv + pip packages
 RUN python3 -m venv /opt/venv && \
     /opt/venv/bin/pip install --no-cache-dir --upgrade pip && \
     /opt/venv/bin/pip install --no-cache-dir unoserver weasyprint pdf2image ocrmypdf opencv-python-headless
@@ -77,26 +61,19 @@ RUN mv /usr/share/tessdata /usr/share/tessdata-original 2>/dev/null || true && \
     mkdir -p /usr/share/tessdata && \
     ln -s /usr/share/tessdata-original/* /usr/share/tessdata/ 2>/dev/null || true
 
-# User & Permissions – NUTZE EXISTIERENDEN UID/GID 1000
+# User & Permissions – UID/GID 1000
 RUN mkdir -p /home/stirlingpdfuser /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
-    chown -R 1000:1000 /home/stirlingpdfuser /configs /customFiles /pipeline /tmp/stirling-pdf /app.jar /opt/calibre /usr/share/fonts/truetype
-
-# Environment
-ENV HOME=/home/stirlingpdfuser \
-    PUID=1000 \
-    PGID=1000 \
-    JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=75" \
-    PATH=$PATH:/opt/venv/bin:/opt/calibre \
-    TMPDIR=/tmp/stirling-pdf \
-    LD_LIBRARY_PATH=/opt/calibre/lib
+    chown -R 1000:1000 /home/stirlingpdfuser /configs /customFiles /pipeline /tmp/stirling-pdf /app.jar /usr/share/fonts/truetype
 
 # Font Cache
 RUN fc-cache -f -v
 
-# Environment (Linter-sicher: LD_LIBRARY_PATH zuerst!)
-ENV LD_LIBRARY_PATH=/opt/calibre/lib \
+# Environment – NUR EINMAL!
+ENV HOME=/home/stirlingpdfuser \
+    PUID=1000 \
+    PGID=1000 \
     JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=75" \
-    PATH=$PATH:/opt/venv/bin:/opt/calibre \
+    PATH=$PATH:/opt/venv/bin \
     TMPDIR=/tmp/stirling-pdf
 
 EXPOSE 8080/tcp
