@@ -33,7 +33,7 @@ RUN apt-get update && \
         tesseract-ocr tesseract-ocr-eng tesseract-ocr-chi-sim \
         tesseract-ocr-deu tesseract-ocr-fra tesseract-ocr-por unpaper \
         fonts-dejavu-core fonts-noto-core fonts-noto-cjk fonts-font-awesome fonts-liberation \
-        python3 python3-pip python3-venv python3-pil \
+        python3 python3-pip python3-venv python3-pil python3-uno \
         fontconfig ca-certificates curl tini \
         calibre && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
