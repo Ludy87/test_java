@@ -315,15 +315,10 @@ jobs:
 
       - name: Free disk space on runner
         run: |
-          echo "Disk space before cleanup:"
-          df -h
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /usr/local/share/boost
+          echo "Disk space before cleanup:" && df -h
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android /usr/local/share/boost
           docker system prune -af || true
-          echo "Disk space after cleanup:"
-          df -h
+          echo "Disk space after cleanup:" && df -h
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
@@ -340,7 +335,6 @@ jobs:
         id: repoowner
         run: echo "lowercase=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
-      # NEW: Variante aus Dockerfile ableiten (Dockerfile.fat -> fat)
       - name: Derive image variant
         id: variant
         shell: bash
@@ -349,7 +343,6 @@ jobs:
           VARIANT=$(echo "$RAW" | tr '[:upper:]' '[:lower:]' | sed -E 's#^dockerfile\.##')
           echo "variant=$VARIANT" >> $GITHUB_OUTPUT
 
-      # NEW: Docker metadata (Variante 3)
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
@@ -372,6 +365,25 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.source=${{ github.repository }}
 
+      # NEW: exakt 1 Tag für Tests auswählen (variant-branch-shortsha bevorzugen)
+      - name: Choose primary tag for tests
+        id: testtag
+        shell: bash
+        run: |
+          IMAGE="ghcr.io/${{ steps.repoowner.outputs.lowercase }}/stirling-pdf-test"
+          VARIANT="${{ steps.variant.outputs.variant }}"
+          BRANCH="$(echo "${GITHUB_REF_NAME:-${{ github.ref_name }}}" | tr '[:upper:]' '[:lower:]')"
+          SHA_SHORT="$(echo "${GITHUB_SHA}" | cut -c1-8)"
+          CANDIDATE="$IMAGE:$VARIANT-$BRANCH-$SHA_SHORT"
+          ALL_TAGS="$(echo '${{ steps.meta.outputs.tags }}' | tr ' ' '\n')"
+          if echo "$ALL_TAGS" | grep -qx "$CANDIDATE"; then
+            SELECTED="$CANDIDATE"
+          else
+            SELECTED="$(echo "$ALL_TAGS" | head -n1)"
+          fi
+          echo "tag=$SELECTED" >> $GITHUB_OUTPUT
+          echo "Using test tag: $SELECTED"
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
         with:
@@ -390,7 +402,7 @@ jobs:
           # load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}           # ALLE Tags publishen
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
           provenance: false
@@ -405,13 +417,13 @@ jobs:
       - name: Test Java works (amd64)
         timeout-minutes: 5
         run: |
-          docker run --rm --entrypoint "" ${{ steps.meta.outputs.tags }} \
+          docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
           sh -lc 'java -version'
 
       - name: Prune amd64 image and cache
         if: always()
         run: |
-          docker image rm -f ${{ steps.meta.outputs.tags }} || true
+          docker image rm -f ${{ steps.testtag.outputs.tag }} || true
           docker builder prune --force || true
 
       - name: Build and push arm64 image
@@ -425,7 +437,7 @@ jobs:
           # load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}           # ALLE Tags publishen
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/arm64/v8
           provenance: false
@@ -440,29 +452,26 @@ jobs:
       - name: Test Java works (arm64)
         timeout-minutes: 5
         run: |
-          docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.meta.outputs.tags }} \
+          docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.testtag.outputs.tag }} \
           sh -lc 'java -version'
 
       - name: Test app.jar exists (arm64)
         timeout-minutes: 2
         run: |
-          docker run --rm --platform linux/arm64 \
-            --entrypoint sh ${{ steps.meta.outputs.tags }} \
+          docker run --rm --platform linux/arm64 --entrypoint sh ${{ steps.testtag.outputs.tag }} \
             -lc 'test -f /app.jar && echo "app.jar OK" || (echo "ERROR: app.jar missing!" && exit 1)'
 
       - name: Deep arm64 tests (fat image only)
         if: matrix.docker-rev == 'Dockerfile.fat'
         timeout-minutes: 5
         run: |
-          TAG="${{ steps.meta.outputs.tags }}"
+          TAG="${{ steps.testtag.outputs.tag }}"
           echo "Running deep tests on arm64 for fat image..."
 
-          # LibreOffice binary linkage
           docker run --rm --platform linux/arm64 --entrypoint sh "$TAG" -lc \
             'ldd /usr/lib/libreoffice/program/soffice.bin >/dev/null && echo "LibreOffice binary linked OK"' || \
             (echo "LibreOffice binary broken on arm64!" && exit 1)
 
-          # Python uno import
           docker run --rm --platform linux/arm64 --entrypoint python3 "$TAG" -c \
             'import uno; print("uno import OK")' || \
             (echo "Python uno import failed on arm64!" && exit 1)
@@ -470,7 +479,7 @@ jobs:
       - name: Cleanup arm64 image and cache
         if: always()
         run: |
-          docker image rm -f ${{ steps.meta.outputs.tags }} || true
+          docker image rm -f ${{ steps.testtag.outputs.tag }} || true
           docker builder prune --force || true
 
       - name: Upload Docker build reports
