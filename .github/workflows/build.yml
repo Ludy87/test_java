@@ -81,7 +81,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle and spring security ${{ matrix.spring-security }}
-        run: ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
+        run: ./gradlew clean build -x spotlessApply -x spotlessCheck -x sonarqube
         env:
           DISABLE_ADDITIONAL_FEATURES: ${{ matrix.spring-security }}
 
