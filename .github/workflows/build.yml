@@ -62,85 +62,85 @@ jobs:
         with:
           egress-policy: audit
 
-      # - name: Checkout repository
-      #   uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      # - name: Set up JDK ${{ matrix.jdk-version }}
-      #   uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
-      #   with:
-      #     java-version: ${{ matrix.jdk-version }}
-      #     distribution: "temurin"
+      - name: Set up JDK ${{ matrix.jdk-version }}
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+        with:
+          java-version: ${{ matrix.jdk-version }}
+          distribution: "temurin"
 
-      # - name: Setup Gradle
-      #   uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
-      #   with:
-      #     gradle-version: 8.14
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
+        with:
+          gradle-version: 8.14
 
-      # - name: Permissions for Gradle Wrapper
-      #   run: chmod +x ./gradlew
+      - name: Permissions for Gradle Wrapper
+        run: chmod +x ./gradlew
 
-      # - name: Build with Gradle and spring security ${{ matrix.spring-security }}
-      #   run: ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
-      #   env:
-      #     DISABLE_ADDITIONAL_FEATURES: ${{ matrix.spring-security }}
+      - name: Build with Gradle and spring security ${{ matrix.spring-security }}
+        run: ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
+        env:
+          DISABLE_ADDITIONAL_FEATURES: ${{ matrix.spring-security }}
 
-      # - name: Check Test Reports Exist
-      #   id: check-reports
-      #   if: always()
-      #   run: |
-      #     declare -a dirs=(
-      #       "app/core/build/reports/tests/"
-      #       "app/core/build/test-results/"
-      #       "app/common/build/reports/tests/"
-      #       "app/common/build/test-results/"
-      #       "app/proprietary/build/reports/tests/"
-      #       "app/proprietary/build/test-results/"
-      #     )
-      #     missing_reports=()
-      #     for dir in "${dirs[@]}"; do
-      #       if [ ! -d "$dir" ]; then
-      #         missing_reports+=("$dir")
-      #       fi
-      #     done
-      #     if [ ${#missing_reports[@]} -gt 0 ]; then
-      #       echo "ERROR: The following required test report directories are missing:"
-      #       printf '%s\n' "${missing_reports[@]}"
-      #       exit 1
-      #     fi
-      #     echo "All required test report directories are present"
+      - name: Check Test Reports Exist
+        id: check-reports
+        if: always()
+        run: |
+          declare -a dirs=(
+            "app/core/build/reports/tests/"
+            "app/core/build/test-results/"
+            "app/common/build/reports/tests/"
+            "app/common/build/test-results/"
+            "app/proprietary/build/reports/tests/"
+            "app/proprietary/build/test-results/"
+          )
+          missing_reports=()
+          for dir in "${dirs[@]}"; do
+            if [ ! -d "$dir" ]; then
+              missing_reports+=("$dir")
+            fi
+          done
+          if [ ${#missing_reports[@]} -gt 0 ]; then
+            echo "ERROR: The following required test report directories are missing:"
+            printf '%s\n' "${missing_reports[@]}"
+            exit 1
+          fi
+          echo "All required test report directories are present"
 
-      # - name: Upload Test Reports
-      #   if: always()
-      #   uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-      #   with:
-      #     name: test-reports-jdk-${{ matrix.jdk-version }}-spring-security-${{ matrix.spring-security }}
-      #     path: |
-      #       app/core/build/reports/jacoco/test
-      #       app/core/build/reports/tests/
-      #       app/core/build/test-results/
-      #       app/core/build/reports/problems/
-      #       app/common/build/reports/tests/
-      #       app/common/build/test-results/
-      #       app/common/build/reports/jacoco/test
-      #       app/common/build/reports/problems/
-      #       app/proprietary/build/reports/tests/
-      #       app/proprietary/build/test-results/
-      #       app/proprietary/build/reports/jacoco/test
-      #       app/proprietary/build/reports/problems/
-      #       build/reports/problems/
-      #     retention-days: 3
-      #     if-no-files-found: warn
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: test-reports-jdk-${{ matrix.jdk-version }}-spring-security-${{ matrix.spring-security }}
+          path: |
+            app/core/build/reports/jacoco/test
+            app/core/build/reports/tests/
+            app/core/build/test-results/
+            app/core/build/reports/problems/
+            app/common/build/reports/tests/
+            app/common/build/test-results/
+            app/common/build/reports/jacoco/test
+            app/common/build/reports/problems/
+            app/proprietary/build/reports/tests/
+            app/proprietary/build/test-results/
+            app/proprietary/build/reports/jacoco/test
+            app/proprietary/build/reports/problems/
+            build/reports/problems/
+          retention-days: 3
+          if-no-files-found: warn
 
-      # - name: Add coverage to PR with spring security ${{ matrix.spring-security }} and JDK ${{ matrix.jdk-version }}
-      #   id: jacoco
-      #   uses: madrapps/jacoco-report@50d3aff4548aa991e6753342d9ba291084e63848 # v1.7.2
-      #   with:
-      #     paths: |
-      #       ${{ github.workspace }}/**/build/reports/jacoco/test/jacocoTestReport.xml
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     min-coverage-overall: 10
-      #     min-coverage-changed-files: 0
-      #     comment-type: summary
+      - name: Add coverage to PR with spring security ${{ matrix.spring-security }} and JDK ${{ matrix.jdk-version }}
+        id: jacoco
+        uses: madrapps/jacoco-report@50d3aff4548aa991e6753342d9ba291084e63848 # v1.7.2
+        with:
+          paths: |
+            ${{ github.workspace }}/**/build/reports/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 10
+          min-coverage-changed-files: 0
+          comment-type: summary
 
   check-generateOpenApiDocs:
     if: needs.files-changed.outputs.openapi == 'true'
@@ -216,7 +216,7 @@ jobs:
           retention-days: 3
 
   docker-compose-tests:
-    if: needs.files-changed.outputs.project != 'true'
+    if: needs.files-changed.outputs.project == 'true'
     needs: files-changed
     # if: github.event_name == 'push' && github.ref == 'refs/heads/main' ||
     #     (github.event_name == 'pull_request' &&
