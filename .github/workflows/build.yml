@@ -402,10 +402,11 @@ jobs:
       #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
       #     echo "Image size (amd64): ${FORMATTED}"
 
-      # WICHTIG: ENTRYPOINT überschreiben + Timeout, damit nicht die App startet/hängt
       - name: Test Java works (amd64)
         timeout-minutes: 5
-        run: docker run --rm --entrypoint java ${{ steps.meta.outputs.tags }} -version
+        run: |
+          docker run --rm --entrypoint "" ${{ steps.meta.outputs.tags }} \
+          sh -lc 'java -version'
 
       - name: Prune amd64 image and cache
         if: always()
@@ -438,7 +439,9 @@ jobs:
 
       - name: Test Java works (arm64)
         timeout-minutes: 5
-        run: docker run --rm --platform linux/arm64 --entrypoint java ${{ steps.meta.outputs.tags }} -version
+        run: |
+          docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.meta.outputs.tags }} \
+          sh -lc 'java -version'
 
       - name: Test app.jar exists (arm64)
         timeout-minutes: 2
