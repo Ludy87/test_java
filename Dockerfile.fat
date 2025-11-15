@@ -59,8 +59,24 @@ RUN apt-get update && \
         && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Minimal-GL/EGL-Runtime für Qt/WebEngine
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    libegl1 \
+    libopengl0 \
+    # häufig ebenfalls benötigt von Calibre/Qt (schadet nicht, ist klein):
+    libxkbcommon-x11-0 libxrandr2 libxcomposite1 libxi6 libxrender1 \
+    libnss3 libx11-xcb1 libxcb-cursor0 libdbus-1-3 fontconfig \
+    && rm -rf /var/lib/apt/lists/*
+
+
 # Install Calibre from the official binary installer to avoid pulling hundreds of apt dependencies
-RUN curl -fsSL https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends xz-utils \
+    && curl -fsSL https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin \
+    && apt-get purge -y xz-utils \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy application JAR and bundled fonts
 COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/truetype/
