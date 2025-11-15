@@ -70,6 +70,7 @@ jobs:
         with:
           java-version: ${{ matrix.jdk-version }}
           distribution: "temurin"
+          cache: gradle
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
@@ -105,12 +106,14 @@ jobs:
           if [ ${#missing_reports[@]} -gt 0 ]; then
             echo "ERROR: The following required test report directories are missing:"
             printf '%s\n' "${missing_reports[@]}"
-            exit 1
+            echo "reports-present=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "All required test report directories are present"
+            echo "reports-present=true" >> "$GITHUB_OUTPUT"
           fi
-          echo "All required test report directories are present"
 
       - name: Upload Test Reports
-        if: always()
+        if: always() && steps.check-reports.outputs.reports-present == 'true'
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: test-reports-jdk-${{ matrix.jdk-version }}-spring-security-${{ matrix.spring-security }}
@@ -132,6 +135,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Add coverage to PR with spring security ${{ matrix.spring-security }} and JDK ${{ matrix.jdk-version }}
+        if: steps.check-reports.outputs.reports-present == 'true'
         id: jacoco
         uses: madrapps/jacoco-report@50d3aff4548aa991e6753342d9ba291084e63848 # v1.7.2
         with:
@@ -160,6 +164,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: gradle
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
@@ -196,6 +201,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: gradle
 
       - name: Permissions for Gradle Wrapper
         run: chmod +x ./gradlew
@@ -248,6 +254,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: gradle
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
@@ -270,6 +277,7 @@ jobs:
 
       - name: Run Docker Compose Tests
         run: |
+          chmod +x ./gradlew
           chmod +x ./testing/test_webpages.sh
           chmod +x ./testing/test.sh
           chmod +x ./testing/test_disabledEndpoints.sh
