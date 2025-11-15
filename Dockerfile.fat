@@ -23,7 +23,7 @@ RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 # ========================================
 # STAGE 2: Ubuntu 24.04 – Full runtime with all dependencies (incl. Calibre)
 # ========================================
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 # Install everything required for runtime — including Calibre
 RUN apt-get update && \
