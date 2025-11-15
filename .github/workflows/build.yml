@@ -89,9 +89,9 @@ jobs:
         id: check-reports
         if: always()
         run: |
-          ls -la app/core/
-          ls -la app/common/
-          ls -la app/proprietary/
+          ls -la app/core/build/
+          ls -la app/common/build/
+          ls -la app/proprietary/build/
           declare -a dirs=(
             "app/core/build/reports/tests/"
             "app/core/build/test-results/"
