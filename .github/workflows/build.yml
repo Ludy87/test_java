@@ -355,18 +355,24 @@ jobs:
         id: meta
         uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
         with:
-          images: ghcr.io/${{ steps.repoowner.outputs.lowercase }}/stirling-pdf-test
+          images: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/stirling-pdf-test
+            ghcr.io/${{ steps.repoowner.outputs.lowercase }}/stirling-pdf-test
           flavor: |
             latest=false
           tags: |
-            # PR-Tag: ci-pr123
-            type=ref,event=pr,prefix=ci-,suffix=,enable=true
-            # Branch-Tag: ci-docker_test
-            type=ref,event=branch,prefix=ci-,suffix=,enable=true
-            # Kurz-SHA: sha-77e20f11
-            type=sha,format=short,prefix=sha-
-            # Custom: <variant>-<branch>-<sha>
-            type=raw,value=${{ steps.variant.outputs.variant }}-{{branch}}-{{sha}},enable=true
+            type=raw,value=alpha,enable=true
+            type=raw,value=dev-{{branch}}-{{shortsha}},enable=true
+            type=raw,value=${{ steps.variant.outputs.variant }}-{{branch}}-{{shortsha}},enable=true
+            # # Full-SHA: sha-77e20f11c
+            # # PR-Tag: ci-pr123
+            # type=ref,event=pr,prefix=ci-,suffix=,enable=true
+            # # Branch-Tag: ci-docker_test
+            # type=ref,event=branch,prefix=ci-,suffix=,enable=true
+            # # Kurz-SHA: sha-77e20f11
+            # type=sha,format=short,prefix=sha-
+            # # Custom: <variant>-<branch>-<sha>
+            # type=raw,value=${{ steps.variant.outputs.variant }}-{{branch}}-{{sha}},enable=true
           labels: |
             org.opencontainers.image.title=stirling-pdf-test
             org.opencontainers.image.description=CI test image for Stirling PDF
@@ -392,12 +398,18 @@ jobs:
           echo "tag=$SELECTED" >> $GITHUB_OUTPUT
           echo "Using test tag: $SELECTED"
 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_API }}
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ github.token }}
 
       - name: Build and push amd64 image
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
