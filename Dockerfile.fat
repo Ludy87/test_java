@@ -40,7 +40,7 @@ RUN ./gradlew --no-daemon clean build \
 # ========================================
 FROM ubuntu:26.04
 
-# Install all runtime dependencies — including Calibre
+# Install system runtime dependencies (Calibre installed via official binary)
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         openjdk-21-jre-headless \
@@ -52,21 +52,27 @@ RUN apt-get update && \
         qpdf \
         fontconfig ca-certificates curl tini \
         ghostscript \
-        calibre \
+        # calibre \
         # Required libraries for WeasyPrint runtime
         libcairo2 libpango-1.0-0 libpangoft2-1.0-0 libgdk-pixbuf-2.0-0 \
         bash \
         && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Install Calibre from the official binary installer to avoid pulling hundreds of apt dependencies
+RUN curl -fsSL https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin
+
 # Copy application JAR and bundled fonts
 COPY app/core/src/main/resources/static/fonts/*.ttf /usr/share/fonts/truetype/
 COPY --from=build /app/app/core/build/libs/*.jar /app.jar
 
-# Symlink — Calibre’s ebook-convert is located directly in /usr/bin
-RUN mkdir -p /opt/calibre && \
-    ln -sf /usr/bin/ebook-convert /opt/calibre/ebook-convert && \
-    /usr/bin/ebook-convert --version
+# # Symlink — Calibre’s ebook-convert is located directly in /usr/bin
+# RUN mkdir -p /opt/calibre && \
+#     ln -sf /usr/bin/ebook-convert /opt/calibre/ebook-convert && \
+#     /usr/bin/ebook-convert --version
+# Verify Calibre installation and provide expected symlink
+RUN ln -sf /opt/calibre/ebook-convert /usr/bin/ebook-convert && \
+    /opt/calibre/ebook-convert --version
 
 # ========================================
 # unoserver – Dedicated virtualenv using system LibreOffice UNO
