@@ -63,9 +63,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Calibre (offizieller Installer)
 RUN apt-get update \
- && apt-get install -y --no-install-recommends xz-utils gpgv curl \
+ && apt-get install -y --no-install-recommends xz-utils gpgv curl xdg-utils \
  && curl -fsSL https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin \
- && apt-get purge -y xz-utils gpgv curl \
+ && apt-get purge -y xz-utils gpgv curl xdg-utils \
  && apt-get autoremove -y \
  && rm -rf /var/lib/apt/lists/*
 
