@@ -1,23 +1,38 @@
 # ========================================
-# STAGE 1: Build Stirling PDF (Gradle)
+# STAGE 1: Build Stirling PDF (Gradle) — Alpine
 # ========================================
-FROM gradle:8.14-jdk21 AS build
+FROM eclipse-temurin:21-jdk-alpine AS build
+
+# Tools required for gradlew
+RUN apk add --no-cache bash unzip curl git
+
+WORKDIR /workspace
 
 COPY build.gradle .
 COPY settings.gradle .
 COPY gradlew .
 COPY gradle gradle/
+RUN chmod +x gradlew
+
+# Directories for module Gradle files (for better cache reuse)
+RUN mkdir -p core common proprietary
 COPY app/core/build.gradle core/.
 COPY app/common/build.gradle common/.
 COPY app/proprietary/build.gradle proprietary/.
-RUN ./gradlew build -x spotlessApply -x spotlessCheck -x test -x sonarqube || return 0
+
+# Warm build (ignore errors just like the original using || true)
+RUN ./gradlew --no-daemon build \
+    -x spotlessApply -x spotlessCheck -x test -x sonarqube || true
 
 WORKDIR /app
 COPY . .
 
 ENV DISABLE_ADDITIONAL_FEATURES=false \
     STIRLING_PDF_DESKTOP_UI=false
-RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
+
+RUN ./gradlew --no-daemon clean build \
+    -x spotlessApply -x spotlessCheck -x test -x sonarqube
+
 
 
 # ========================================
@@ -25,7 +40,7 @@ RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 # ========================================
 FROM ubuntu:26.04
 
-# Install everything required for runtime — including Calibre
+# Install all runtime dependencies — including Calibre
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         openjdk-21-jre-headless \

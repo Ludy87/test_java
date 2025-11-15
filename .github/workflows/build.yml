@@ -340,13 +340,37 @@ jobs:
         id: repoowner
         run: echo "lowercase=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
-      - name: Generate safe test tag
-        id: meta
+      # NEW: Variante aus Dockerfile ableiten (Dockerfile.fat -> fat)
+      - name: Derive image variant
+        id: variant
+        shell: bash
         run: |
-          SAFE_NAME=$(echo "${{ matrix.docker-rev }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9.-]/-/g')
-          TAG="ghcr.io/${{ steps.repoowner.outputs.lowercase }}/stirling-pdf-test:${SAFE_NAME}-${{ github.sha }}"
-          echo "tags=$TAG" >> $GITHUB_OUTPUT
-          echo "Building and testing: $TAG"
+          RAW="${{ matrix.docker-rev }}"
+          VARIANT=$(echo "$RAW" | tr '[:upper:]' '[:lower:]' | sed -E 's#^dockerfile\.##')
+          echo "variant=$VARIANT" >> $GITHUB_OUTPUT
+
+      # NEW: Docker metadata (Variante 3)
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
+        with:
+          images: ghcr.io/${{ steps.repoowner.outputs.lowercase }}/stirling-pdf-test
+          flavor: |
+            latest=false
+          tags: |
+            # PR-Tag: ci-pr123
+            type=ref,event=pr,prefix=ci-,suffix=,enable=true
+            # Branch-Tag: ci-docker_test
+            type=ref,event=branch,prefix=ci-,suffix=,enable=true
+            # Kurz-SHA: sha-77e20f11
+            type=sha,format=short,prefix=sha-
+            # Custom: <variant>-<branch>-<sha>
+            type=raw,value=${{ steps.variant.outputs.variant }}-{{branch}}-{{sha}},enable=true
+          labels: |
+            org.opencontainers.image.title=stirling-pdf-test
+            org.opencontainers.image.description=CI test image for Stirling PDF
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=${{ github.repository }}
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
@@ -355,7 +379,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and load amd64 image
+      - name: Build and push amd64 image
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -367,6 +391,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
           provenance: false
           sbom: false
@@ -386,7 +411,7 @@ jobs:
           docker image rm -f ${{ steps.meta.outputs.tags }} || true
           docker builder prune --force || true
 
-      - name: Build and load arm64 image
+      - name: Build and push arm64 image
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         with:
           builder: ${{ steps.buildx.outputs.name }}
@@ -398,6 +423,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/arm64/v8
           provenance: false
           sbom: false
