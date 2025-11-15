@@ -402,6 +402,11 @@ jobs:
       #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
       #     echo "Image size (amd64): ${FORMATTED}"
 
+      # WICHTIG: ENTRYPOINT überschreiben + Timeout, damit nicht die App startet/hängt
+      - name: Test Java works (amd64)
+        timeout-minutes: 5
+        run: docker run --rm --entrypoint java ${{ steps.meta.outputs.tags }} -version
+
       - name: Prune amd64 image and cache
         if: always()
         run: |
@@ -431,25 +436,32 @@ jobs:
       #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
       #     echo "Image size (arm64): ${FORMATTED}"
 
+      - name: Test Java works (arm64)
+        timeout-minutes: 5
+        run: docker run --rm --platform linux/arm64 --entrypoint java ${{ steps.meta.outputs.tags }} -version
+
       - name: Test app.jar exists (arm64)
+        timeout-minutes: 2
         run: |
-          docker run --rm --platform linux/arm64 ${{ steps.meta.outputs.tags }} \
-            sh -c "test -f /app.jar && echo 'app.jar OK' || (echo 'ERROR: app.jar missing!' && exit 1)"
+          docker run --rm --platform linux/arm64 \
+            --entrypoint sh ${{ steps.meta.outputs.tags }} \
+            -lc 'test -f /app.jar && echo "app.jar OK" || (echo "ERROR: app.jar missing!" && exit 1)'
 
       - name: Deep arm64 tests (fat image only)
         if: matrix.docker-rev == 'Dockerfile.fat'
+        timeout-minutes: 5
         run: |
           TAG="${{ steps.meta.outputs.tags }}"
           echo "Running deep tests on arm64 for fat image..."
 
           # LibreOffice binary linkage
-          docker run --rm --platform linux/arm64 $TAG \
-            sh -c "ldd /usr/lib/libreoffice/program/soffice.bin > /dev/null && echo 'LibreOffice binary linked OK'" || \
+          docker run --rm --platform linux/arm64 --entrypoint sh "$TAG" -lc \
+            'ldd /usr/lib/libreoffice/program/soffice.bin >/dev/null && echo "LibreOffice binary linked OK"' || \
             (echo "LibreOffice binary broken on arm64!" && exit 1)
 
           # Python uno import
-          docker run --rm --platform linux/arm64 $TAG \
-            sh -c "python3 -c 'import uno; print(\"uno import OK\")'" || \
+          docker run --rm --platform linux/arm64 --entrypoint python3 "$TAG" -c \
+            'import uno; print("uno import OK")' || \
             (echo "Python uno import failed on arm64!" && exit 1)
 
       - name: Cleanup arm64 image and cache
