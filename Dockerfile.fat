@@ -53,7 +53,7 @@ RUN apt-get update && \
         fonts-dejavu-core fonts-noto-core fonts-noto-cjk fonts-font-awesome fonts-liberation \
         python3 python3-pip python3-venv python3-pil python3-uno \
         qpdf \
-        fontconfig ca-certificates curl tini \
+        fontconfig ca-certificates tini \
         ghostscript \
         # calibre \
         # Required libraries for WeasyPrint runtime
@@ -73,9 +73,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Calibre from the official binary installer to avoid pulling hundreds of apt dependencies
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends xz-utils gpgv \
+    && apt-get install -y --no-install-recommends xz-utils gpgv curl \
     && curl -fsSL https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin \
-    && apt-get purge -y xz-utils gpgv \
+    && apt-get purge -y xz-utils gpgv curl \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
