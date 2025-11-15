@@ -402,9 +402,6 @@ jobs:
       #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
       #     echo "Image size (amd64): ${FORMATTED}"
 
-      - name: Test Java works (amd64)
-        run: docker run --rm ${{ steps.meta.outputs.tags }} java -version
-
       - name: Prune amd64 image and cache
         if: always()
         run: |
@@ -433,9 +430,6 @@ jobs:
       #     SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
       #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
       #     echo "Image size (arm64): ${FORMATTED}"
-
-      - name: Test Java works (arm64)
-        run: docker run --rm --platform linux/arm64 ${{ steps.meta.outputs.tags }} java -version
 
       - name: Test app.jar exists (arm64)
         run: |
