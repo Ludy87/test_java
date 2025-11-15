@@ -21,7 +21,7 @@ RUN ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 
 
 # ========================================
-# STAGE 2: Ubuntu 24.04 – Full runtime with all dependencies (incl. Calibre)
+# STAGE 2: Ubuntu 26.04 – Full runtime with all dependencies (incl. Calibre)
 # ========================================
 FROM ubuntu:26.04
 
