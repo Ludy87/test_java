@@ -89,6 +89,7 @@ jobs:
         id: check-reports
         if: always()
         run: |
+          ls -la app/
           declare -a dirs=(
             "app/core/build/reports/tests/"
             "app/core/build/test-results/"
