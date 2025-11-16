@@ -60,6 +60,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrender1 \
     libxtst6 \
     libxi6 \
+    libxkbcommon0 \
+    libxkbfile1 \
     # && rm -rf /var/lib/apt/lists/*
     \
     # Qt-WebEngine Laufzeit für Calibre
@@ -128,7 +130,7 @@ ENV DISABLE_ADDITIONAL_FEATURES=true \
     FAT_DOCKER=true \
     INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false \
     UNO_PATH=/usr/lib/libreoffice/program \
-    URE_BOOTSTRAP=file:///usr/lib/libreoffice/program/fundamentalrc \
+    URE_BOOTSTRAP=file:///etc/libreoffice/unorc \
     STIRLING_TEMPFILES_DIRECTORY=/tmp/stirling-pdf \
     TMPDIR=/tmp/stirling-pdf \
     TEMP=/tmp/stirling-pdf \
