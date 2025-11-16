@@ -440,6 +440,18 @@ jobs:
           docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
           sh -lc 'java -version'
 
+      - name: Test share dir (amd64)
+        timeout-minutes: 5
+        run: |
+          docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+          sh -lc 'ls -la /usr/share/'
+
+      - name: Test tessdata dir (amd64)
+        timeout-minutes: 5
+        run: |
+          docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+          sh -lc 'ls -la /usr/share/tessdata'
+
       - name: Prune amd64 image and cache
         if: always()
         run: |
@@ -474,6 +486,18 @@ jobs:
         run: |
           docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.testtag.outputs.tag }} \
           sh -lc 'java -version'
+
+      - name: Test share dir (amd64)
+        timeout-minutes: 5
+        run: |
+          docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+          sh -lc 'ls -la /usr/share/'
+
+      - name: Test tessdata dir (amd64)
+        timeout-minutes: 5
+        run: |
+          docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+          sh -lc 'ls -la /usr/share/tessdata'
 
       - name: Test app.jar exists (arm64)
         timeout-minutes: 2
