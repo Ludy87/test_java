@@ -113,7 +113,7 @@ public class ConvertOfficeController {
             else {
                 libreOfficeProfile = Files.createTempDirectory("libreoffice_profile_");
                 List<String> command = new ArrayList<>();
-                command.add("soffice");
+                command.add(runtimePathConfig.getSOfficePath());
                 command.add("--env:UserInstallation=" + libreOfficeProfile.toUri().toString());
                 command.add("--headless");
                 command.add("--nologo");

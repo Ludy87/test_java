@@ -66,9 +66,11 @@ import io.github.pixee.security.Filenames;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import stirling.software.SPDF.model.api.converters.PdfToPdfARequest;
+import stirling.software.common.configuration.RuntimePathConfig;
 import stirling.software.common.util.ExceptionUtils;
 import stirling.software.common.util.ProcessExecutor;
 import stirling.software.common.util.ProcessExecutor.ProcessExecutorResult;
@@ -78,7 +80,10 @@ import stirling.software.common.util.WebResponseUtils;
 @RequestMapping("/api/v1/convert")
 @Slf4j
 @Tag(name = "Convert", description = "Convert APIs")
+@RequiredArgsConstructor
 public class ConvertPDFToPDFA {
+
+    private final RuntimePathConfig runtimePathConfig;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, value = "/pdf/pdfa")
     @Operation(
@@ -231,7 +236,7 @@ public class ConvertPDFToPDFA {
             List<String> command =
                     new ArrayList<>(
                             Arrays.asList(
-                                    "soffice",
+                                    runtimePathConfig.getSOfficePath(),
                                     "--env:UserInstallation="
                                             + libreOfficeProfile.toUri().toString(),
                                     "--headless",

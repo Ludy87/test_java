@@ -373,6 +373,7 @@ public class ApplicationProperties {
             private String unoconvert;
             private String calibre;
             private String ocrmypdf;
+            private String soffice;
         }
     }
 

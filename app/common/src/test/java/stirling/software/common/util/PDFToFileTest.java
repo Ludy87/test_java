@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.github.pixee.security.ZipSecurity;
 
+import stirling.software.common.configuration.RuntimePathConfig;
 import stirling.software.common.util.ProcessExecutor.ProcessExecutorResult;
 
 /**
@@ -48,6 +49,7 @@ class PDFToFileTest {
     @Mock private ProcessExecutor mockProcessExecutor;
     @Mock private ProcessExecutorResult mockExecutorResult;
     @Mock private TempFileManager mockTempFileManager;
+    @Mock private RuntimePathConfig mockRuntimePathConfig;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -609,6 +611,105 @@ class PDFToFileTest {
                             .getContentDisposition()
                             .toString()
                             .contains("output.docx"));
+        }
+    }
+
+    @Test
+    void testProcessPdfToOfficeFormat_UsesUnoconvertWhenConfigured()
+            throws IOException, InterruptedException {
+        when(mockRuntimePathConfig.getUnoConvertPath()).thenReturn("/custom/unoconvert");
+        PDFToFile pdfToFileWithUno = new PDFToFile(mockTempFileManager, mockRuntimePathConfig);
+
+        try (MockedStatic<ProcessExecutor> mockedStaticProcessExecutor =
+                mockStatic(ProcessExecutor.class)) {
+            MultipartFile pdfFile =
+                    new MockMultipartFile(
+                            "file",
+                            "document.pdf",
+                            MediaType.APPLICATION_PDF_VALUE,
+                            "Fake PDF content".getBytes());
+
+            mockedStaticProcessExecutor
+                    .when(() -> ProcessExecutor.getInstance(ProcessExecutor.Processes.LIBRE_OFFICE))
+                    .thenReturn(mockProcessExecutor);
+
+            when(mockProcessExecutor.runCommandWithOutputHandling(
+                            argThat(args -> args.contains("/custom/unoconvert"))))
+                    .thenAnswer(
+                            invocation -> {
+                                List<String> args = invocation.getArgument(0);
+                                String outputPath = args.get(args.size() - 1);
+                                Files.write(Path.of(outputPath), "Fake DOCX content".getBytes());
+                                return mockExecutorResult;
+                            });
+
+            ResponseEntity<byte[]> response =
+                    pdfToFileWithUno.processPdfToOfficeFormat(pdfFile, "docx", "writer_pdf_import");
+
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertNotNull(response.getBody());
+            assertTrue(response.getBody().length > 0);
+            assertTrue(
+                    response.getHeaders()
+                            .getContentDisposition()
+                            .toString()
+                            .contains("document.docx"));
+        }
+    }
+
+    @Test
+    void testProcessPdfToOfficeFormat_FallsBackWhenUnoconvertFails()
+            throws IOException, InterruptedException {
+        when(mockRuntimePathConfig.getUnoConvertPath()).thenReturn("/custom/unoconvert");
+        PDFToFile pdfToFileWithUno = new PDFToFile(mockTempFileManager, mockRuntimePathConfig);
+
+        try (MockedStatic<ProcessExecutor> mockedStaticProcessExecutor =
+                mockStatic(ProcessExecutor.class)) {
+            MultipartFile pdfFile =
+                    new MockMultipartFile(
+                            "file",
+                            "document.pdf",
+                            MediaType.APPLICATION_PDF_VALUE,
+                            "Fake PDF content".getBytes());
+
+            mockedStaticProcessExecutor
+                    .when(() -> ProcessExecutor.getInstance(ProcessExecutor.Processes.LIBRE_OFFICE))
+                    .thenReturn(mockProcessExecutor);
+
+            when(mockProcessExecutor.runCommandWithOutputHandling(
+                            argThat(args -> args.contains("/custom/unoconvert"))))
+                    .thenThrow(new IOException("Conversion failed"));
+
+            when(mockProcessExecutor.runCommandWithOutputHandling(
+                            argThat(args -> args.contains("soffice"))))
+                    .thenAnswer(
+                            invocation -> {
+                                List<String> args = invocation.getArgument(0);
+                                String outDir = null;
+                                for (int i = 0; i < args.size(); i++) {
+                                    if ("--outdir".equals(args.get(i)) && i + 1 < args.size()) {
+                                        outDir = args.get(i + 1);
+                                        break;
+                                    }
+                                }
+                                assertNotNull(outDir);
+                                Files.write(
+                                        Path.of(outDir, "document.docx"),
+                                        "Fallback DOCX content".getBytes());
+                                return mockExecutorResult;
+                            });
+
+            ResponseEntity<byte[]> response =
+                    pdfToFileWithUno.processPdfToOfficeFormat(pdfFile, "docx", "writer_pdf_import");
+
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertNotNull(response.getBody());
+            assertTrue(response.getBody().length > 0);
+            assertTrue(
+                    response.getHeaders()
+                            .getContentDisposition()
+                            .toString()
+                            .contains("document.docx"));
         }
     }
 }
