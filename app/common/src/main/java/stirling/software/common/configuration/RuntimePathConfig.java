@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
 import stirling.software.common.model.ApplicationProperties;
 import stirling.software.common.model.ApplicationProperties.CustomPaths.Operations;
 import stirling.software.common.model.ApplicationProperties.CustomPaths.Pipeline;
@@ -75,8 +76,7 @@ public class RuntimePathConfig {
                         defaultCalibrePath, operations != null ? operations.getCalibre() : null);
         this.ocrMyPdfPath =
                 resolvePath(
-                        defaultOcrMyPdfPath,
-                        operations != null ? operations.getOcrmypdf() : null);
+                        defaultOcrMyPdfPath, operations != null ? operations.getOcrmypdf() : null);
     }
 
     private String resolvePath(String defaultPath, String customPath) {

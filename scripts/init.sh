@@ -37,5 +37,5 @@ chown -R stirlingpdfuser:stirlingpdfgroup /tmp/stirling-pdf || true
 chmod -R 755 /tmp/stirling-pdf || true
 
 # === 2. HINZUGEFÜGT: exec mit korrektem Java-Start (headless + LD_LIBRARY_PATH) ===
-/scripts/init-without-ocr.sh "$@"
+exec /scripts/init-without-ocr.sh "$@"
 # === ENDE HINZUGEFÜGT ===
