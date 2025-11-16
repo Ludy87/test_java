@@ -22,7 +22,7 @@ check_health() {
     local compose_file=$2
     local end=$((SECONDS+60))
 
-    echo -n "Waiting for $service_name to become healthy..."
+    echo -n "Waiting for $service_name to become healthy... $(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}healthy{{end}}' "$service_name")"
     until [ "$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}healthy{{end}}' "$service_name")" == "healthy" ] || [ $SECONDS -ge $end ]; do
         sleep 3
         echo -n "."
@@ -322,7 +322,7 @@ main() {
     # Building Docker images with security enabled
     # docker build --no-cache --pull --build-arg VERSION_TAG=alpha -t stirlingtools/stirling-pdf:latest -f ./Dockerfile .
     # docker build --no-cache --pull --build-arg VERSION_TAG=alpha -t stirlingtools/stirling-pdf:latest-ultra-lite -f ./Dockerfile.ultra-lite .
-    docker build --no-cache --pull --build-arg VERSION_TAG=alpha -t docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest-fat -f ./Dockerfile.fat .
+    docker build --no-cache --pull --build-arg VERSION_TAG=alpha -t ghcr.io/ludy87/stirling-pdf-test:alpha -f ./Dockerfile.fat .
 
 
     # Test each configuration with security
