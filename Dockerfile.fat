@@ -140,7 +140,8 @@ ENV DISABLE_ADDITIONAL_FEATURES=true \
 RUN python3 -m venv /opt/venv --system-site-packages \
     && /opt/venv/bin/pip install --no-cache-dir --upgrade pip \
     && /opt/venv/bin/pip install --no-cache-dir weasyprint pdf2image ocrmypdf opencv-python-headless \
-    && /opt/venv/bin/python -c "import cv2; print('OpenCV OK', cv2.__version__)"
+    && /opt/venv/bin/python -c "import cv2; print('OpenCV OK', cv2.__version__)" \
+    && /opt/venv/bin/python -c "import ocrmypdf; print('OCRmyPDF OK', ocrmypdf.__version__)"
 
 # unoserver in eigenem venv (nutzt systemweite UNO-Bridge)
 RUN python3 -m venv /opt/unoserver-venv --system-site-packages \

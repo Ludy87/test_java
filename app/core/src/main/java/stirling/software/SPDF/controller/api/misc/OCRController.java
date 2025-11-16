@@ -37,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import stirling.software.SPDF.config.EndpointConfiguration;
 import stirling.software.SPDF.model.api.misc.ProcessPdfWithOcrRequest;
+import stirling.software.common.configuration.RuntimePathConfig;
 import stirling.software.common.model.ApplicationProperties;
 import stirling.software.common.service.CustomPDFDocumentFactory;
 import stirling.software.common.util.*;
@@ -53,6 +54,7 @@ public class OCRController {
     private final CustomPDFDocumentFactory pdfDocumentFactory;
     private final TempFileManager tempFileManager;
     private final EndpointConfiguration endpointConfiguration;
+    private final RuntimePathConfig runtimePathConfig;
 
     private boolean isOcrMyPdfEnabled() {
         return endpointConfiguration.isGroupEnabled("OCRmyPDF");
@@ -217,7 +219,7 @@ public class OCRController {
         List<String> command =
                 new ArrayList<>(
                         Arrays.asList(
-                                "ocrmypdf",
+                                runtimePathConfig.getOcrMyPdfPath(),
                                 "--verbose",
                                 "2",
                                 "--output-type",

@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
 import stirling.software.common.model.ApplicationProperties;
 import stirling.software.common.model.ApplicationProperties.CustomPaths.Operations;
 import stirling.software.common.model.ApplicationProperties.CustomPaths.Pipeline;
@@ -22,6 +21,7 @@ public class RuntimePathConfig {
     private final String weasyPrintPath;
     private final String unoConvertPath;
     private final String calibrePath;
+    private final String ocrMyPdfPath;
 
     // Pipeline paths
     private final String pipelineWatchedFoldersPath;
@@ -59,6 +59,7 @@ public class RuntimePathConfig {
         String defaultWeasyPrintPath = isDocker ? "/opt/venv/bin/weasyprint" : "weasyprint";
         String defaultUnoConvertPath = isDocker ? "/opt/venv/bin/unoconvert" : "unoconvert";
         String defaultCalibrePath = isDocker ? "/opt/calibre/ebook-convert" : "ebook-convert";
+        String defaultOcrMyPdfPath = isDocker ? "/opt/venv/bin/ocrmypdf" : "ocrmypdf";
 
         Operations operations = properties.getSystem().getCustomPaths().getOperations();
         this.weasyPrintPath =
@@ -72,6 +73,10 @@ public class RuntimePathConfig {
         this.calibrePath =
                 resolvePath(
                         defaultCalibrePath, operations != null ? operations.getCalibre() : null);
+        this.ocrMyPdfPath =
+                resolvePath(
+                        defaultOcrMyPdfPath,
+                        operations != null ? operations.getOcrmypdf() : null);
     }
 
     private String resolvePath(String defaultPath, String customPath) {

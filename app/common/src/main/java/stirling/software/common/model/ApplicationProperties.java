@@ -372,6 +372,7 @@ public class ApplicationProperties {
             private String weasyprint;
             private String unoconvert;
             private String calibre;
+            private String ocrmypdf;
         }
     }
 

@@ -14,6 +14,9 @@ esac
 
 export LD_LIBRARY_PATH="/usr/lib/libreoffice/program${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
+export PATH="/opt/venv/bin:$PATH"
+export PYTHONPATH="/opt/venv/lib/python3.13/site-packages${PYTHONPATH:+:$PYTHONPATH}"
+
 echo "Copying original files without overwriting existing files"
 mkdir -p /usr/share/tessdata
 
