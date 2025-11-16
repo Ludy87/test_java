@@ -63,7 +63,9 @@ class PDFToFileTest {
                 .when(mockTempFileManager.createTempDirectory())
                 .thenAnswer(invocation -> Files.createTempDirectory("test"));
 
-        pdfToFile = new PDFToFile(mockTempFileManager);
+        when(mockRuntimePathConfig.getSOfficePath()).thenReturn("/usr/bin/soffice");
+
+        pdfToFile = new PDFToFile(mockTempFileManager, mockRuntimePathConfig);
     }
 
     @Test
@@ -365,7 +367,8 @@ class PDFToFileTest {
             when(mockProcessExecutor.runCommandWithOutputHandling(
                             argThat(
                                     args ->
-                                            args.contains("--convert-to")
+                                            args != null
+                                                    && args.contains("--convert-to")
                                                     && args.contains("docx"))))
                     .thenAnswer(
                             invocation -> {
@@ -426,7 +429,11 @@ class PDFToFileTest {
                     .thenReturn(mockProcessExecutor);
 
             when(mockProcessExecutor.runCommandWithOutputHandling(
-                            argThat(args -> args.contains("--convert-to") && args.contains("odp"))))
+                            argThat(
+                                    args ->
+                                            args != null
+                                                    && args.contains("--convert-to")
+                                                    && args.contains("odp"))))
                     .thenAnswer(
                             invocation -> {
                                 // When command is executed, find the output directory argument
@@ -515,7 +522,8 @@ class PDFToFileTest {
             when(mockProcessExecutor.runCommandWithOutputHandling(
                             argThat(
                                     args ->
-                                            args.contains("--convert-to")
+                                            args != null
+                                                    && args.contains("--convert-to")
                                                     && args.contains("txt:Text"))))
                     .thenAnswer(
                             invocation -> {
@@ -634,7 +642,7 @@ class PDFToFileTest {
                     .thenReturn(mockProcessExecutor);
 
             when(mockProcessExecutor.runCommandWithOutputHandling(
-                            argThat(args -> args.contains("/custom/unoconvert"))))
+                            argThat(args -> args != null && args.contains("/custom/unoconvert"))))
                     .thenAnswer(
                             invocation -> {
                                 List<String> args = invocation.getArgument(0);
@@ -677,11 +685,11 @@ class PDFToFileTest {
                     .thenReturn(mockProcessExecutor);
 
             when(mockProcessExecutor.runCommandWithOutputHandling(
-                            argThat(args -> args.contains("/custom/unoconvert"))))
+                            argThat(args -> args != null && args.contains("/custom/unoconvert"))))
                     .thenThrow(new IOException("Conversion failed"));
 
             when(mockProcessExecutor.runCommandWithOutputHandling(
-                            argThat(args -> args.contains("soffice"))))
+                            argThat(args -> args != null && args.contains("soffice"))))
                     .thenAnswer(
                             invocation -> {
                                 List<String> args = invocation.getArgument(0);
