@@ -46,7 +46,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates tzdata tini curl bash fontconfig \
     openjdk-21-jre-headless \
     ffmpeg poppler-utils qpdf ghostscript ocrmypdf \
-    libreoffice-nogui \
+    libreoffice-nogui libreoffice-java-common \
     python3 python3-venv python3-pip python3-uno python3-pil \
     tesseract-ocr tesseract-ocr-eng tesseract-ocr-deu tesseract-ocr-fra tesseract-ocr-por tesseract-ocr-chi-sim \
     libcairo2 libpango-1.0-0 libpangoft2-1.0-0 libgdk-pixbuf-2.0-0 \
@@ -56,12 +56,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libfreetype6 \
     libfontconfig1 \
     libx11-6 \
+    libxt6 \
     libxext6 \
     libxrender1 \
     libxtst6 \
     libxi6 \
+    libxinerama1 \
     libxkbcommon0 \
     libxkbfile1 \
+    libsm6 \
+    libice6 \
     \
     # Qt-WebEngine Laufzeit für Calibre
     libegl1 libopengl0 libgl1 \
