@@ -4,6 +4,14 @@ set -euo pipefail
 # ---------- Kleine Logger-Helfer ----------
 log() { printf '%s\n' "$*" >&2; }
 
+# === 1. HINZUGEFÜGT: LD_LIBRARY_PATH für amd64 + arm64 ===
+ARCH=$(uname -m)
+case "$ARCH" in
+  x86_64)  export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH ;;
+  aarch64) export LD_LIBRARY_PATH=/usr/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH ;;
+esac
+# === ENDE HINZUGEFÜGT ===
+
 # ---------- VERSION_TAG: Fallback aus Build-Stage ----------
 if [ -z "${VERSION_TAG:-}" ] && [ -f /etc/stirling_version ]; then
   VERSION_TAG="$(tr -d '\r\n' < /etc/stirling_version)"
@@ -12,7 +20,8 @@ fi
 
 # ---------- JAVA_OPTS ----------
 export JAVA_TOOL_OPTIONS="${JAVA_BASE_OPTS:-} ${JAVA_CUSTOM_OPTS:-}"
-log "running with JAVA_TOOL_OPTIONS ${JAVA_BASE_OPTS:-} ${JAVA_CUSTOM_OPTS:-}"
+export JAVA_TOOL_OPTIONS="-Djava.awt.headless=true ${JAVA_TOOL_OPTIONS}"
+log "running with JAVA_TOOL_OPTIONS ${JAVA_TOOL_OPTIONS}"
 log "Running Stirling PDF with DISABLE_ADDITIONAL_FEATURES=${DISABLE_ADDITIONAL_FEATURES:-} and VERSION_TAG=${VERSION_TAG:-<unset>}"
 
 # ---------- UMASK robust ----------

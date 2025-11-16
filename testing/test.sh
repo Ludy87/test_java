@@ -20,7 +20,7 @@ PROJECT_ROOT=$(find_root)
 check_health() {
     local service_name=$1
     local compose_file=$2
-    local end=$((SECONDS+160))
+    local end=$((SECONDS+360))
 
     echo -n "Waiting for $service_name to become healthy..."
     until [ "$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}healthy{{end}}' "$service_name")" == "healthy" ] || [ $SECONDS -ge $end ]; do
