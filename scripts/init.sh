@@ -12,6 +12,8 @@ case "$ARCH" in
     ;;
 esac
 
+export LD_LIBRARY_PATH="/usr/lib/libreoffice/program${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
 echo "Copying original files without overwriting existing files"
 mkdir -p /usr/share/tessdata
 
