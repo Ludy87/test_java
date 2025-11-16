@@ -45,7 +45,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates tzdata tini curl bash fontconfig \
     openjdk-21-jre-headless \
-    ffmpeg poppler-utils qpdf ghostscript \
+    ffmpeg poppler-utils qpdf ghostscript ocrmypdf \
     libreoffice-nogui \
     python3 python3-venv python3-pip python3-uno python3-pil \
     tesseract-ocr tesseract-ocr-eng tesseract-ocr-deu tesseract-ocr-fra tesseract-ocr-por tesseract-ocr-chi-sim \
@@ -139,9 +139,8 @@ ENV DISABLE_ADDITIONAL_FEATURES=true \
 # Python venv (OCR/WeasyPrint/OpenCV)
 RUN python3 -m venv /opt/venv --system-site-packages \
     && /opt/venv/bin/pip install --no-cache-dir --upgrade pip \
-    && /opt/venv/bin/pip install --no-cache-dir weasyprint pdf2image ocrmypdf opencv-python-headless \
-    && /opt/venv/bin/python -c "import cv2; print('OpenCV OK', cv2.__version__)" \
-    && /opt/venv/bin/python -c "import ocrmypdf; print('OCRmyPDF OK', ocrmypdf.__version__)"
+    && /opt/venv/bin/pip install --no-cache-dir weasyprint pdf2image opencv-python-headless \
+    && /opt/venv/bin/python -c "import cv2; print('OpenCV OK', cv2.__version__)"
 
 # unoserver in eigenem venv (nutzt systemweite UNO-Bridge)
 RUN python3 -m venv /opt/unoserver-venv --system-site-packages \
