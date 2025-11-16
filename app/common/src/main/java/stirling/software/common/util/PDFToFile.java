@@ -365,7 +365,7 @@ public class PDFToFile {
         command.add("--convert-to");
         command.add(outputFormat);
         if (libreOfficeFilter != null && !libreOfficeFilter.isBlank()) {
-            command.add("--infilter=" + libreOfficeFilter);
+            command.add("--input-filter=" + libreOfficeFilter);
         }
         command.add(inputFile.toString());
         command.add(outputFile.toString());
