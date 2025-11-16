@@ -450,7 +450,7 @@ jobs:
         timeout-minutes: 5
         run: |
           docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
-          sh -lc 'ls -la /usr/share/tessdata'
+          sh -lc 'ls -la /usr/share/tessdata/'
 
       - name: Prune amd64 image and cache
         if: always()
@@ -497,7 +497,7 @@ jobs:
         timeout-minutes: 5
         run: |
           docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
-          sh -lc 'ls -la /usr/share/tessdata'
+          sh -lc 'ls -la /usr/share/tessdata/'
 
       - name: Test app.jar exists (arm64)
         timeout-minutes: 2
