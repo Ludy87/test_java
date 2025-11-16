@@ -63,7 +63,7 @@ class PDFToFileTest {
                 .when(mockTempFileManager.createTempDirectory())
                 .thenAnswer(invocation -> Files.createTempDirectory("test"));
 
-        when(mockRuntimePathConfig.getSOfficePath()).thenReturn("/usr/bin/soffice");
+        lenient().when(mockRuntimePathConfig.getSOfficePath()).thenReturn("/usr/bin/soffice");
 
         pdfToFile = new PDFToFile(mockTempFileManager, mockRuntimePathConfig);
     }
@@ -689,7 +689,14 @@ class PDFToFileTest {
                     .thenThrow(new IOException("Conversion failed"));
 
             when(mockProcessExecutor.runCommandWithOutputHandling(
-                            argThat(args -> args != null && args.contains("soffice"))))
+                            argThat(
+                                    args ->
+                                            args != null
+                                                    && args.stream()
+                                                            .anyMatch(
+                                                                    arg ->
+                                                                            arg.contains(
+                                                                                    "soffice")))))
                     .thenAnswer(
                             invocation -> {
                                 List<String> args = invocation.getArgument(0);
