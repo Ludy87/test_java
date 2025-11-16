@@ -1,13 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-# === 1. HINZUGEFÜGT: LD_LIBRARY_PATH für javaldx (amd64 + arm64) ===
+# === LD_LIBRARY_PATH für amd64 + arm64 (set -u safe) ===
 ARCH=$(uname -m)
 case "$ARCH" in
-  x86_64)  export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH ;;
-  aarch64) export LD_LIBRARY_PATH=/usr/lib/aarch64-linux-gnu:$LD_LIBRARY_PATH ;;
+  x86_64)
+    export LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    ;;
+  aarch64)
+    export LD_LIBRARY_PATH="/usr/lib/aarch64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    ;;
 esac
-# === ENDE HINZUGEFÜGT ===
 
 echo "Copying original files without overwriting existing files"
 mkdir -p /usr/share/tessdata
