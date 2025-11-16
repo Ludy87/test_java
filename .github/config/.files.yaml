@@ -16,6 +16,7 @@ docker: &docker
   - ".github/workflows/build.yml"
   - scripts/init.sh
   - scripts/init-without-ocr.sh
+  - exampleYmlFiles/**
 
 project: &project
   - app/(common|core|proprietary)/src/(main|test)/java/**
