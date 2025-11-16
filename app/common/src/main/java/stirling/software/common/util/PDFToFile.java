@@ -241,6 +241,7 @@ public class PDFToFile {
         byte[] fileBytes;
         String fileName;
 
+        Path libreOfficeProfile = null;
         try (TempFile inputFileTemp = new TempFile(tempFileManager, ".pdf");
                 TempDirectory outputDirTemp = new TempDirectory(tempFileManager)) {
 
@@ -251,18 +252,18 @@ public class PDFToFile {
             inputFile.transferTo(tempInputFile);
 
             // Run the LibreOffice command
-            List<String> command =
-                    new ArrayList<>(
-                            Arrays.asList(
-                                    "soffice",
-                                    "--headless",
-                                    "--nologo",
-                                    "--infilter=" + libreOfficeFilter,
-                                    "--convert-to",
-                                    outputFormat,
-                                    "--outdir",
-                                    tempOutputDir.toString(),
-                                    tempInputFile.toString()));
+            libreOfficeProfile = Files.createTempDirectory("libreoffice_profile_");
+            List<String> command = new ArrayList<>();
+            command.add("soffice");
+            command.add("--env:UserInstallation=" + libreOfficeProfile.toUri().toString());
+            command.add("--headless");
+            command.add("--nologo");
+            command.add("--infilter=" + libreOfficeFilter);
+            command.add("--convert-to");
+            command.add(outputFormat);
+            command.add("--outdir");
+            command.add(tempOutputDir.toString());
+            command.add(tempInputFile.toString());
             ProcessExecutorResult returnCode =
                     ProcessExecutor.getInstance(ProcessExecutor.Processes.LIBRE_OFFICE)
                             .runCommandWithOutputHandling(command);
@@ -299,6 +300,10 @@ public class PDFToFile {
                 }
 
                 fileBytes = byteArrayOutputStream.toByteArray();
+            }
+        } finally {
+            if (libreOfficeProfile != null) {
+                FileUtils.deleteQuietly(libreOfficeProfile.toFile());
             }
         }
         return WebResponseUtils.bytesToWebResponse(

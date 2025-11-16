@@ -225,26 +225,33 @@ public class ConvertPDFToPDFA {
                         ? "pdf:writer_pdf_Export:{\"SelectPdfVersion\":{\"type\":\"long\",\"value\":\"2\"}}"
                         : "pdf:writer_pdf_Export:{\"SelectPdfVersion\":{\"type\":\"long\",\"value\":\"1\"}}";
 
-        // Prepare LibreOffice command
-        List<String> command =
-                new ArrayList<>(
-                        Arrays.asList(
-                                "soffice",
-                                "--headless",
-                                "--nologo",
-                                "--convert-to",
-                                pdfFilter,
-                                "--outdir",
-                                tempOutputDir.toString(),
-                                tempInputFile.toString()));
+        Path libreOfficeProfile = Files.createTempDirectory("libreoffice_profile_");
+        try {
+            // Prepare LibreOffice command
+            List<String> command =
+                    new ArrayList<>(
+                            Arrays.asList(
+                                    "soffice",
+                                    "--env:UserInstallation="
+                                            + libreOfficeProfile.toUri().toString(),
+                                    "--headless",
+                                    "--nologo",
+                                    "--convert-to",
+                                    pdfFilter,
+                                    "--outdir",
+                                    tempOutputDir.toString(),
+                                    tempInputFile.toString()));
 
-        ProcessExecutorResult returnCode =
-                ProcessExecutor.getInstance(ProcessExecutor.Processes.LIBRE_OFFICE)
-                        .runCommandWithOutputHandling(command);
+            ProcessExecutorResult returnCode =
+                    ProcessExecutor.getInstance(ProcessExecutor.Processes.LIBRE_OFFICE)
+                            .runCommandWithOutputHandling(command);
 
-        if (returnCode.getRc() != 0) {
-            log.error("PDF/A conversion failed with return code: {}", returnCode.getRc());
-            throw ExceptionUtils.createPdfaConversionFailedException();
+            if (returnCode.getRc() != 0) {
+                log.error("PDF/A conversion failed with return code: {}", returnCode.getRc());
+                throw ExceptionUtils.createPdfaConversionFailedException();
+            }
+        } finally {
+            FileUtils.deleteQuietly(libreOfficeProfile.toFile());
         }
 
         // Get the output file
