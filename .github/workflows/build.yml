@@ -2,8 +2,8 @@ name: Build and Test Workflow
 
 on:
   workflow_dispatch:
-  push:
-    branches: ['main', 'docker_test']
+  # push:
+  #   branches: ['main', 'docker_test']
   pull_request:
     branches: ['main', 'docker_test']
 
