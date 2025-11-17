@@ -72,13 +72,13 @@ mkdir -p /usr/share/tessdata
 
 # Copy original tesseract data files if present.
 if [ -d /usr/share/tessdata-original ]; then
-  cp -r --update=none /usr/share/tessdata-original/. /usr/share/tessdata/ || true
+  cp -rn /usr/share/tessdata-original/. /usr/share/tessdata/ || true
 fi
 
 # Merge tessdata from different Tesseract versions if available.
 for version in 4.00 5; do
   SRC="/usr/share/tesseract-ocr/${version}/tessdata"
-  [ -d "$SRC" ] && cp -r --update=none "$SRC"/* /usr/share/tessdata/ 2>/dev/null || true
+  [ -d "$SRC" ] && cp -rn "$SRC"/* /usr/share/tessdata/ 2>/dev/null || true
 done
 
 # === Temp dir ===
