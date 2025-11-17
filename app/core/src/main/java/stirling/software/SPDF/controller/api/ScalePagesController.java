@@ -1,10 +1,13 @@
 package stirling.software.SPDF.controller.api;
 
+import io.github.pixee.security.Filenames;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.multipdf.LayerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -12,140 +15,128 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
 import org.apache.pdfbox.util.Matrix;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
-import lombok.RequiredArgsConstructor;
-
 import stirling.software.SPDF.model.api.general.ScalePagesRequest;
-import stirling.software.common.service.CustomPDFDocumentFactory;
-import stirling.software.common.util.ExceptionUtils;
-import stirling.software.common.util.GeneralUtils;
-import stirling.software.common.util.WebResponseUtils;
+import stirling.software.SPDF.service.CustomPDDocumentFactory;
+import stirling.software.SPDF.utils.WebResponseUtils;
 
 @RestController
 @RequestMapping("/api/v1/general")
 @Tag(name = "General", description = "General APIs")
-@RequiredArgsConstructor
 public class ScalePagesController {
 
-    private final CustomPDFDocumentFactory pdfDocumentFactory;
+  private final CustomPDDocumentFactory pdfDocumentFactory;
 
-    @PostMapping(value = "/scale-pages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(
-            summary = "Change the size of a PDF page/document",
-            description =
-                    "This operation takes an input PDF file and the size to scale the pages to in"
-                            + " the output PDF file. Input:PDF Output:PDF Type:SISO")
-    public ResponseEntity<byte[]> scalePages(@ModelAttribute ScalePagesRequest request)
-            throws IOException {
-        MultipartFile file = request.getFileInput();
-        String targetPDRectangle = request.getPageSize();
-        float scaleFactor = request.getScaleFactor();
+  @Autowired
+  public ScalePagesController(CustomPDDocumentFactory pdfDocumentFactory) {
+    this.pdfDocumentFactory = pdfDocumentFactory;
+  }
 
-        PDDocument sourceDocument = pdfDocumentFactory.load(file);
-        PDDocument outputDocument =
-                pdfDocumentFactory.createNewDocumentBasedOnOldDocument(sourceDocument);
+  @PostMapping(value = "/scale-pages", consumes = "multipart/form-data")
+  @Operation(
+      summary = "Change the size of a PDF page/document",
+      description =
+          "This operation takes an input PDF file and the size to scale the pages to in the output"
+              + " PDF file. Input:PDF Output:PDF Type:SISO")
+  public ResponseEntity<byte[]> scalePages(@ModelAttribute ScalePagesRequest request)
+      throws IOException {
+    MultipartFile file = request.getFileInput();
+    String targetPDRectangle = request.getPageSize();
+    float scaleFactor = request.getScaleFactor();
 
-        PDRectangle targetSize = getTargetSize(targetPDRectangle, sourceDocument);
+    PDDocument sourceDocument = Loader.loadPDF(file.getBytes());
+    PDDocument outputDocument =
+        pdfDocumentFactory.createNewDocumentBasedOnOldDocument(sourceDocument);
 
-        int totalPages = sourceDocument.getNumberOfPages();
-        for (int i = 0; i < totalPages; i++) {
-            PDPage sourcePage = sourceDocument.getPage(i);
-            PDRectangle sourceSize = sourcePage.getMediaBox();
+    PDRectangle targetSize = getTargetSize(targetPDRectangle, sourceDocument);
 
-            float scaleWidth = targetSize.getWidth() / sourceSize.getWidth();
-            float scaleHeight = targetSize.getHeight() / sourceSize.getHeight();
-            float scale = Math.min(scaleWidth, scaleHeight) * scaleFactor;
+    int totalPages = sourceDocument.getNumberOfPages();
+    for (int i = 0; i < totalPages; i++) {
+      PDPage sourcePage = sourceDocument.getPage(i);
+      PDRectangle sourceSize = sourcePage.getMediaBox();
 
-            PDPage newPage = new PDPage(targetSize);
-            outputDocument.addPage(newPage);
+      float scaleWidth = targetSize.getWidth() / sourceSize.getWidth();
+      float scaleHeight = targetSize.getHeight() / sourceSize.getHeight();
+      float scale = Math.min(scaleWidth, scaleHeight) * scaleFactor;
 
-            PDPageContentStream contentStream =
-                    new PDPageContentStream(
-                            outputDocument,
-                            newPage,
-                            PDPageContentStream.AppendMode.APPEND,
-                            true,
-                            true);
+      PDPage newPage = new PDPage(targetSize);
+      outputDocument.addPage(newPage);
 
-            float x = (targetSize.getWidth() - sourceSize.getWidth() * scale) / 2;
-            float y = (targetSize.getHeight() - sourceSize.getHeight() * scale) / 2;
+      PDPageContentStream contentStream =
+          new PDPageContentStream(
+              outputDocument, newPage, PDPageContentStream.AppendMode.APPEND, true, true);
 
-            contentStream.saveGraphicsState();
-            contentStream.transform(Matrix.getTranslateInstance(x, y));
-            contentStream.transform(Matrix.getScaleInstance(scale, scale));
+      float x = (targetSize.getWidth() - sourceSize.getWidth() * scale) / 2;
+      float y = (targetSize.getHeight() - sourceSize.getHeight() * scale) / 2;
 
-            LayerUtility layerUtility = new LayerUtility(outputDocument);
-            PDFormXObject form = layerUtility.importPageAsForm(sourceDocument, i);
-            contentStream.drawForm(form);
+      contentStream.saveGraphicsState();
+      contentStream.transform(Matrix.getTranslateInstance(x, y));
+      contentStream.transform(Matrix.getScaleInstance(scale, scale));
 
-            contentStream.restoreGraphicsState();
-            contentStream.close();
-        }
+      LayerUtility layerUtility = new LayerUtility(outputDocument);
+      PDFormXObject form = layerUtility.importPageAsForm(sourceDocument, i);
+      contentStream.drawForm(form);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        outputDocument.save(baos);
-        outputDocument.close();
-        sourceDocument.close();
-
-        return WebResponseUtils.bytesToWebResponse(
-                baos.toByteArray(),
-                GeneralUtils.generateFilename(file.getOriginalFilename(), "_scaled.pdf"));
+      contentStream.restoreGraphicsState();
+      contentStream.close();
     }
 
-    private PDRectangle getTargetSize(String targetPDRectangle, PDDocument sourceDocument) {
-        if ("KEEP".equals(targetPDRectangle)) {
-            if (sourceDocument.getNumberOfPages() == 0) {
-                // Do not return null here; throw a clear exception so callers don't get a nullable
-                // PDRectangle.
-                throw ExceptionUtils.createInvalidPageSizeException("KEEP");
-            }
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    outputDocument.save(baos);
+    outputDocument.close();
+    sourceDocument.close();
 
-            // use the first page to determine the target page size
-            PDPage sourcePage = sourceDocument.getPage(0);
-            PDRectangle sourceSize = sourcePage.getMediaBox();
+    return WebResponseUtils.bytesToWebResponse(
+        baos.toByteArray(),
+        Filenames.toSimpleFileName(file.getOriginalFilename()).replaceFirst("[.][^.]+$", "")
+            + "_scaled.pdf");
+  }
 
-            if (sourceSize == null) {
-                // If media box is unexpectedly null, treat it as invalid
-                throw ExceptionUtils.createInvalidPageSizeException("KEEP");
-            }
+  private PDRectangle getTargetSize(String targetPDRectangle, PDDocument sourceDocument) {
+    if ("KEEP".equals(targetPDRectangle)) {
+      if (sourceDocument.getNumberOfPages() == 0) {
+        return null;
+      }
 
-            return sourceSize;
-        }
+      // use the first page to determine the target page size
+      PDPage sourcePage = sourceDocument.getPage(0);
+      PDRectangle sourceSize = sourcePage.getMediaBox();
 
-        Map<String, PDRectangle> sizeMap = getSizeMap();
-
-        if (sizeMap.containsKey(targetPDRectangle)) {
-            return sizeMap.get(targetPDRectangle);
-        }
-
-        throw ExceptionUtils.createInvalidPageSizeException(targetPDRectangle);
+      return sourceSize;
     }
 
-    private Map<String, PDRectangle> getSizeMap() {
-        Map<String, PDRectangle> sizeMap = new HashMap<>();
-        // Add A0 - A6
-        sizeMap.put("A0", PDRectangle.A0);
-        sizeMap.put("A1", PDRectangle.A1);
-        sizeMap.put("A2", PDRectangle.A2);
-        sizeMap.put("A3", PDRectangle.A3);
-        sizeMap.put("A4", PDRectangle.A4);
-        sizeMap.put("A5", PDRectangle.A5);
-        sizeMap.put("A6", PDRectangle.A6);
+    Map<String, PDRectangle> sizeMap = getSizeMap();
 
-        // Add other sizes
-        sizeMap.put("LETTER", PDRectangle.LETTER);
-        sizeMap.put("LEGAL", PDRectangle.LEGAL);
-
-        return sizeMap;
+    if (sizeMap.containsKey(targetPDRectangle)) {
+      return sizeMap.get(targetPDRectangle);
     }
+
+    throw new IllegalArgumentException(
+        "Invalid PDRectangle. It must be one of the following: A0, A1, A2, A3, A4, A5, A6, LETTER,"
+            + " LEGAL, KEEP");
+  }
+
+  private Map<String, PDRectangle> getSizeMap() {
+    Map<String, PDRectangle> sizeMap = new HashMap<>();
+    // Add A0 - A6
+    sizeMap.put("A0", PDRectangle.A0);
+    sizeMap.put("A1", PDRectangle.A1);
+    sizeMap.put("A2", PDRectangle.A2);
+    sizeMap.put("A3", PDRectangle.A3);
+    sizeMap.put("A4", PDRectangle.A4);
+    sizeMap.put("A5", PDRectangle.A5);
+    sizeMap.put("A6", PDRectangle.A6);
+
+    // Add other sizes
+    sizeMap.put("LETTER", PDRectangle.LETTER);
+    sizeMap.put("LEGAL", PDRectangle.LEGAL);
+
+    return sizeMap;
+  }
 }
