@@ -12,7 +12,6 @@ import java.util.Map;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.multipdf.Overlay;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,33 +20,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.github.pixee.security.Filenames;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import lombok.RequiredArgsConstructor;
+
 import stirling.software.SPDF.model.api.general.OverlayPdfsRequest;
-import stirling.software.SPDF.service.CustomPDDocumentFactory;
-import stirling.software.SPDF.utils.GeneralUtils;
-import stirling.software.SPDF.utils.WebResponseUtils;
+import stirling.software.common.service.CustomPDFDocumentFactory;
+import stirling.software.common.util.GeneralUtils;
+import stirling.software.common.util.WebResponseUtils;
 
 @RestController
 @RequestMapping("/api/v1/general")
 @Tag(name = "General", description = "General APIs")
+@RequiredArgsConstructor
 public class PdfOverlayController {
 
-    private final CustomPDDocumentFactory pdfDocumentFactory;
+    private final CustomPDFDocumentFactory pdfDocumentFactory;
 
-    @Autowired
-    public PdfOverlayController(CustomPDDocumentFactory pdfDocumentFactory) {
-        this.pdfDocumentFactory = pdfDocumentFactory;
-    }
-
-    @PostMapping(value = "/overlay-pdfs", consumes = "multipart/form-data")
+    @PostMapping(value = "/overlay-pdfs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Overlay PDF files in various modes",
             description =
-                    "Overlay PDF files onto a base PDF with different modes: Sequential, Interleaved, or"
-                            + " Fixed Repeat. Input:PDF Output:PDF Type:MIMO")
+                    "Overlay PDF files onto a base PDF with different modes: Sequential,"
+                            + " Interleaved, or Fixed Repeat. Input:PDF Output:PDF Type:MIMO")
     public ResponseEntity<byte[]> overlayPdfs(@ModelAttribute OverlayPdfsRequest request)
             throws IOException {
         MultipartFile baseFile = request.getFileInput();
@@ -67,7 +63,8 @@ public class PdfOverlayController {
             int[] counts = request.getCounts(); // Used for FixedRepeatOverlay mode
 
             try (PDDocument basePdf = pdfDocumentFactory.load(baseFile);
-                    Overlay overlay = new Overlay()) {
+                    Overlay overlay = new Overlay();
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 Map<Integer, String> overlayGuide =
                         prepareOverlayGuide(
                                 basePdf.getNumberOfPages(),
@@ -83,13 +80,11 @@ public class PdfOverlayController {
                     overlay.setOverlayPosition(Overlay.Position.BACKGROUND);
                 }
 
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 overlay.overlay(overlayGuide).save(outputStream);
                 byte[] data = outputStream.toByteArray();
                 String outputFilename =
-                        Filenames.toSimpleFileName(baseFile.getOriginalFilename())
-                                        .replaceFirst("[.][^.]+$", "")
-                                + "_overlayed.pdf"; // Remove file extension and append .pdf
+                        GeneralUtils.generateFilename(
+                                baseFile.getOriginalFilename(), "_overlayed.pdf");
 
                 return WebResponseUtils.bytesToWebResponse(
                         data, outputFilename, MediaType.APPLICATION_PDF);
@@ -145,12 +140,11 @@ public class PdfOverlayController {
                 overlayFileIndex = (overlayFileIndex + 1) % overlayFiles.length;
             }
 
-            try (PDDocument overlayPdf = Loader.loadPDF(overlayFiles[overlayFileIndex])) {
-                PDDocument singlePageDocument = new PDDocument();
+            try (PDDocument overlayPdf = Loader.loadPDF(overlayFiles[overlayFileIndex]);
+                    PDDocument singlePageDocument = new PDDocument()) {
                 singlePageDocument.addPage(overlayPdf.getPage(pageCountInCurrentOverlay));
                 File tempFile = Files.createTempFile("overlay-page-", ".pdf").toFile();
                 singlePageDocument.save(tempFile);
-                singlePageDocument.close();
 
                 overlayGuide.put(basePageIndex, tempFile.getAbsolutePath());
                 tempFiles.add(tempFile); // Keep track of the temporary file for cleanup
@@ -207,6 +201,3 @@ public class PdfOverlayController {
         }
     }
 }
-
-// Additional classes like OverlayPdfsRequest, WebResponseUtils, etc. are assumed to be defined
-// elsewhere.

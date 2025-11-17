@@ -558,8 +558,7 @@ public class ScannerEffectController {
     @Operation(
             summary = "Apply scanner effect to PDF",
             description =
-                    "Applies various effects to simulate a scanned document, including rotation, noise, and"
-                            + " edge softening. Input:PDF Output:PDF Type:SISO")
+                    "Applies various effects to simulate a scanned document, including rotation, noise, and edge softening. Input:PDF Output:PDF Type:SISO")
     public ResponseEntity<byte[]> scannerEffect(@Valid @ModelAttribute ScannerEffectRequest request)
             throws IOException {
         MultipartFile file = request.getFileInput();

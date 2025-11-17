@@ -4,10 +4,6 @@ import java.awt.Color;
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_Profile;
 import java.io.*;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -15,15 +11,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -78,17 +65,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import stirling.software.common.configuration.RuntimePathConfig;
+import lombok.RequiredArgsConstructor;
 
 import io.github.pixee.security.Filenames;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import stirling.software.SPDF.model.api.converters.PdfToPdfARequest;
-import stirling.software.common.configuration.RuntimePathConfig;
 import stirling.software.common.util.ExceptionUtils;
 import stirling.software.common.util.ProcessExecutor;
 import stirling.software.common.util.ProcessExecutor.ProcessExecutorResult;
@@ -352,32 +339,32 @@ public class ConvertPDFToPDFA {
         String pdfaDefContent =
                 String.format(
                         """
-            %% This is a sample prefix file for creating a PDF/A document.
-            %% Feel free to modify entries marked with "Customize".
+                %% This is a sample prefix file for creating a PDF/A document.
+                %% Feel free to modify entries marked with "Customize".
 
-            %% Define entries in the document Info dictionary.
-            [/Title (%s)
-             /DOCINFO pdfmark
+                %% Define entries in the document Info dictionary.
+                [/Title (%s)
+                 /DOCINFO pdfmark
 
-            %% Define an ICC profile.
-            [/_objdef {icc_PDFA} /type /stream /OBJ pdfmark
-            [{icc_PDFA} <<
-              /N 3
-            >> /PUT pdfmark
-            [{icc_PDFA} (%s) (r) file /PUT pdfmark
+                %% Define an ICC profile.
+                [/_objdef {icc_PDFA} /type /stream /OBJ pdfmark
+                [{icc_PDFA} <<
+                  /N 3
+                >> /PUT pdfmark
+                [{icc_PDFA} (%s) (r) file /PUT pdfmark
 
-            %% Define the output intent dictionary.
-            [/_objdef {OutputIntent_PDFA} /type /dict /OBJ pdfmark
-            [{OutputIntent_PDFA} <<
-              /Type /OutputIntent
-              /S /GTS_PDFA1
-              /DestOutputProfile {icc_PDFA}
-              /OutputConditionIdentifier (sRGB IEC61966-2.1)
-              /Info (sRGB IEC61966-2.1)
-              /RegistryName (http://www.color.org)
-            >> /PUT pdfmark
-            [{Catalog} <</OutputIntents [ {OutputIntent_PDFA} ]>> /PUT pdfmark
-            """,
+                %% Define the output intent dictionary.
+                [/_objdef {OutputIntent_PDFA} /type /dict /OBJ pdfmark
+                [{OutputIntent_PDFA} <<
+                  /Type /OutputIntent
+                  /S /GTS_PDFA1
+                  /DestOutputProfile {icc_PDFA}
+                  /OutputConditionIdentifier (sRGB IEC61966-2.1)
+                  /Info (sRGB IEC61966-2.1)
+                  /RegistryName (http://www.color.org)
+                >> /PUT pdfmark
+                [{Catalog} <</OutputIntents [ {OutputIntent_PDFA} ]>> /PUT pdfmark
+                """,
                         title, rgbProfilePath);
 
         Files.writeString(pdfaDefFile, pdfaDefContent);
@@ -485,10 +472,7 @@ public class ConvertPDFToPDFA {
     @Operation(
             summary = "Convert a PDF to a PDF/A or PDF/X",
             description =
-                    "This endpoint converts a PDF file to a PDF/A or PDF/X file using Ghostscript (preferred)"
-                            + " or PDFBox/LibreOffice (fallback). PDF/A is a format designed for long-term"
-                            + " archiving, while PDF/X is optimized for print production. Input:PDF Output:PDF"
-                            + " Type:SISO")
+                    "This endpoint converts a PDF file to a PDF/A or PDF/X file using Ghostscript (preferred) or PDFBox/LibreOffice (fallback). PDF/A is a format designed for long-term archiving, while PDF/X is optimized for print production. Input:PDF Output:PDF Type:SISO")
     public ResponseEntity<byte[]> pdfToPdfA(@ModelAttribute PdfToPdfARequest request)
             throws Exception {
         MultipartFile inputFile = request.getFileInput();

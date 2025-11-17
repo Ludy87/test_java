@@ -3,17 +3,14 @@ package stirling.software.SPDF.controller.api;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,51 +19,48 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.github.pixee.security.Filenames;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import stirling.software.SPDF.model.api.PDFWithPageNums;
-import stirling.software.SPDF.service.CustomPDDocumentFactory;
-import stirling.software.SPDF.utils.WebResponseUtils;
+import stirling.software.common.service.CustomPDFDocumentFactory;
+import stirling.software.common.util.ExceptionUtils;
+import stirling.software.common.util.GeneralUtils;
+import stirling.software.common.util.TempFile;
+import stirling.software.common.util.TempFileManager;
+import stirling.software.common.util.WebResponseUtils;
 
 @RestController
 @RequestMapping("/api/v1/general")
 @Slf4j
 @Tag(name = "General", description = "General APIs")
+@RequiredArgsConstructor
 public class SplitPDFController {
 
-    private final CustomPDDocumentFactory pdfDocumentFactory;
+    private final CustomPDFDocumentFactory pdfDocumentFactory;
+    private final TempFileManager tempFileManager;
 
-    @Autowired
-    public SplitPDFController(CustomPDDocumentFactory pdfDocumentFactory) {
-        this.pdfDocumentFactory = pdfDocumentFactory;
-    }
-
-    @PostMapping(consumes = "multipart/form-data", value = "/split-pages")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, value = "/split-pages")
     @Operation(
             summary = "Split a PDF file into separate documents",
             description =
-                    "This endpoint splits a given PDF file into separate documents based on the specified"
-                            + " page numbers or ranges. Users can specify pages using individual numbers, ranges,"
-                            + " or 'all' for every page. Input:PDF Output:PDF Type:SIMO")
+                    "This endpoint splits a given PDF file into separate documents based on the"
+                            + " specified page numbers or ranges. Users can specify pages using"
+                            + " individual numbers, ranges, or 'all' for every page. Input:PDF"
+                            + " Output:PDF Type:SIMO")
     public ResponseEntity<byte[]> splitPdf(@ModelAttribute PDFWithPageNums request)
             throws IOException {
 
-        PDDocument document = null;
-        Path zipFile = null;
-        List<ByteArrayOutputStream> splitDocumentsBoas = new ArrayList<>();
+        MultipartFile file = request.getFileInput();
 
-        try {
+        try (TempFile outputTempFile = new TempFile(tempFileManager, ".zip");
+                PDDocument document = pdfDocumentFactory.load(file)) {
 
-            MultipartFile file = request.getFileInput();
-            String pages = request.getPageNumbers();
-            // open the pdf document
+            List<ByteArrayOutputStream> splitDocumentsBoas = new ArrayList<>();
 
-            document = Loader.loadPDF(file.getBytes());
-            // PdfMetadata metadata = PdfMetadataService.extractMetadataFromPdf(document);
             int totalPages = document.getNumberOfPages();
             List<Integer> pageNumbers = request.getPageNumbersList(document, false);
             if (!pageNumbers.contains(totalPages - 1)) {
@@ -75,93 +69,65 @@ public class SplitPDFController {
                 pageNumbers.add(totalPages - 1);
             }
 
-            log.info(
+            log.debug(
                     "Splitting PDF into pages: {}",
                     pageNumbers.stream().map(String::valueOf).collect(Collectors.joining(",")));
 
-            // split the document
-            splitDocumentsBoas = new ArrayList<>();
+            splitDocumentsBoas = new ArrayList<>(pageNumbers.size());
             int previousPageNumber = 0;
             for (int splitPoint : pageNumbers) {
                 try (PDDocument splitDocument =
-                        pdfDocumentFactory.createNewDocumentBasedOnOldDocument(document)) {
+                                pdfDocumentFactory.createNewDocumentBasedOnOldDocument(document);
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                     for (int i = previousPageNumber; i <= splitPoint; i++) {
                         PDPage page = document.getPage(i);
                         splitDocument.addPage(page);
-                        log.info("Adding page {} to split document", i);
+                        log.debug("Adding page {} to split document", i);
                     }
                     previousPageNumber = splitPoint + 1;
 
                     // Transfer metadata to split pdf
                     // PdfMetadataService.setMetadataToPdf(splitDocument, metadata);
 
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     splitDocument.save(baos);
-
                     splitDocumentsBoas.add(baos);
                 } catch (Exception e) {
-                    log.error("Failed splitting documents and saving them", e);
+                    ExceptionUtils.logException("document splitting and saving", e);
                     throw e;
                 }
             }
 
-            // closing the original document
-            document.close();
+            String baseFilename = GeneralUtils.removeExtension(file.getOriginalFilename());
 
-            zipFile = Files.createTempFile("split_documents", ".zip");
+            try (ZipOutputStream zipOut =
+                    new ZipOutputStream(Files.newOutputStream(outputTempFile.getPath()))) {
+                int splitDocumentsSize = splitDocumentsBoas.size();
+                for (int i = 0; i < splitDocumentsSize; i++) {
+                    StringBuilder sb = new StringBuilder(baseFilename.length() + 10);
+                    sb.append(baseFilename).append('_').append(i + 1).append(".pdf");
+                    String fileName = sb.toString();
 
-            String filename =
-                    Filenames.toSimpleFileName(file.getOriginalFilename())
-                            .replaceFirst("[.][^.]+$", "");
-            try (ZipOutputStream zipOut = new ZipOutputStream(Files.newOutputStream(zipFile))) {
-                // loop through the split documents and write them to the zip file
-                for (int i = 0; i < splitDocumentsBoas.size(); i++) {
-                    String fileName = filename + "_" + (i + 1) + ".pdf";
                     ByteArrayOutputStream baos = splitDocumentsBoas.get(i);
                     byte[] pdf = baos.toByteArray();
 
-                    // Add PDF file to the zip
                     ZipEntry pdfEntry = new ZipEntry(fileName);
                     zipOut.putNextEntry(pdfEntry);
                     zipOut.write(pdf);
                     zipOut.closeEntry();
 
-                    log.info("Wrote split document {} to zip file", fileName);
+                    log.debug("Wrote split document {} to zip file", fileName);
                 }
-            } catch (Exception e) {
-                log.error("Failed writing to zip", e);
-                throw e;
             }
 
-            log.info("Successfully created zip file with split documents: {}", zipFile.toString());
-            byte[] data = Files.readAllBytes(zipFile);
-            Files.deleteIfExists(zipFile);
+            log.debug(
+                    "Successfully created zip file with split documents: {}",
+                    outputTempFile.getPath().toString());
+            byte[] data = Files.readAllBytes(outputTempFile.getPath());
 
-            // return the Resource in the response
+            String zipFilename =
+                    GeneralUtils.generateFilename(file.getOriginalFilename(), "_split.zip");
             return WebResponseUtils.bytesToWebResponse(
-                    data, filename + ".zip", MediaType.APPLICATION_OCTET_STREAM);
-
-        } finally {
-            try {
-                // Close the main document
-                if (document != null) {
-                    document.close();
-                }
-
-                // Close all ByteArrayOutputStreams
-                for (ByteArrayOutputStream baos : splitDocumentsBoas) {
-                    if (baos != null) {
-                        baos.close();
-                    }
-                }
-
-                // Delete temporary zip file
-                if (zipFile != null) {
-                    Files.deleteIfExists(zipFile);
-                }
-            } catch (Exception e) {
-                log.error("Error while cleaning up resources", e);
-            }
+                    data, zipFilename, MediaType.APPLICATION_OCTET_STREAM);
         }
     }
 }
