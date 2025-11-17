@@ -94,7 +94,9 @@ RUN apk add --no-cache bash \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
     # Configure URW Base 35 fonts
-    ln -s /usr/share/fontconfig/conf.avail/69-urw-*.conf /etc/fonts/conf.d/ && \
+    if ls /usr/share/fontconfig/conf.avail/69-urw-*.conf >/dev/null 2>&1; then \
+       ln -s /usr/share/fontconfig/conf.avail/69-urw-*.conf /etc/fonts/conf.d/;  \
+    fi && \
     fc-cache -f -v && \
     chmod +x /scripts/* && \
     # User permissions
@@ -102,6 +104,10 @@ RUN apk add --no-cache bash \
     chown -R stirlingpdfuser:stirlingpdfgroup $HOME /scripts /usr/share/fonts/opentype/noto /configs /customFiles /pipeline /tmp/stirling-pdf && \
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     ln -sf /bin/busybox /bin/sh
+
+# Make ebook-convert available in PATH
+RUN ln -sf /opt/calibre/ebook-convert /usr/bin/ebook-convert \
+    && /opt/calibre/ebook-convert --version
 
 EXPOSE 8080/tcp
 
