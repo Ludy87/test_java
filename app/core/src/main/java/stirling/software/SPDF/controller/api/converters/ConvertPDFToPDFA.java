@@ -237,7 +237,7 @@ public class ConvertPDFToPDFA {
                     new ArrayList<>(
                             Arrays.asList(
                                     runtimePathConfig.getSOfficePath(),
-                                    "--env:UserInstallation="
+                                    "-env:UserInstallation="
                                             + libreOfficeProfile.toUri().toString(),
                                     "--headless",
                                     "--nologo",
