@@ -42,10 +42,10 @@ ENV DISABLE_ADDITIONAL_FEATURES=true \
 RUN apk add --no-cache bash \
     && ln -sf /bin/bash /bin/sh \
     && printf '%s\n' \
-      'https://dl-cdn.alpinelinux.org/alpine/edge/main' \
-      'https://dl-cdn.alpinelinux.org/alpine/edge/community' \
-      'https://dl-cdn.alpinelinux.org/alpine/edge/testing' \
-      > /etc/apk/repositories && \
+    'https://dl-cdn.alpinelinux.org/alpine/edge/main' \
+    'https://dl-cdn.alpinelinux.org/alpine/edge/community' \
+    'https://dl-cdn.alpinelinux.org/alpine/edge/testing' \
+    > /etc/apk/repositories && \
     apk upgrade --no-cache -a && \
     apk add --no-cache \
     ca-certificates \
@@ -94,9 +94,7 @@ RUN apk add --no-cache bash \
     mv /usr/share/tessdata /usr/share/tessdata-original && \
     mkdir -p $HOME /configs /logs /customFiles /pipeline/watchedFolders /pipeline/finishedFolders /tmp/stirling-pdf && \
     # Configure URW Base 35 fonts
-    if ls /usr/share/fontconfig/conf.avail/69-urw-*.conf >/dev/null 2>&1; then \
-       ln -s /usr/share/fontconfig/conf.avail/69-urw-*.conf /etc/fonts/conf.d/;  \
-    fi && \
+    ln -s /usr/share/fontconfig/conf.avail/69-urw-*.conf /etc/fonts/conf.d/ && \
     fc-cache -f -v && \
     chmod +x /scripts/* && \
     # User permissions
@@ -105,9 +103,12 @@ RUN apk add --no-cache bash \
     chown stirlingpdfuser:stirlingpdfgroup /app.jar && \
     ln -sf /bin/busybox /bin/sh
 
-# Make ebook-convert available in PATH
-RUN ln -sf /opt/calibre/ebook-convert /usr/bin/ebook-convert \
-    && /opt/calibre/ebook-convert --version
+RUN mkdir -p /opt/calibre \
+    && if command -v ebook-convert >/dev/null 2>&1; then \
+    ln -sf "$(command -v ebook-convert)" /opt/calibre/ebook-convert; \
+    else \
+    echo "ebook-convert not found in PATH" >&2; exit 1; \
+    fi
 
 EXPOSE 8080/tcp
 
