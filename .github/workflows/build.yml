@@ -5,7 +5,8 @@ on:
   # push:
   #   branches: ['main', 'docker_test']
   pull_request:
-    branches: ['main', 'docker_test']
+    # branches: ['main', 'docker_test']
+    branches: ['docker_test']
 
 # cancel in-progress jobs if a new job is triggered
 # This is useful to avoid running multiple builds for the same branch if a new commit is pushed
@@ -29,11 +30,11 @@ jobs:
     timeout-minutes: 3
     # Map a step output to a job output
     outputs:
-      build: ${{ steps.changes.outputs.build }}
-      app: ${{ steps.changes.outputs.app }}
-      project: ${{ steps.changes.outputs.project }}
-      openapi: ${{ steps.changes.outputs.openapi }}
-      docker: ${{ steps.changes.outputs.docker }}
+      build: true # ${{ steps.changes.outputs.build }}
+      app: true # ${{ steps.changes.outputs.app }}
+      project: true # ${{ steps.changes.outputs.project }}
+      openapi: true # ${{ steps.changes.outputs.openapi }}
+      docker: true # ${{ steps.changes.outputs.docker }}
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
