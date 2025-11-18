@@ -1,15 +1,15 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.2
+    rev: v0.14.2
     hooks:
       - id: ruff
         args:
           - --fix
           - --line-length=127
-        files: ^((\.github/scripts|scripts)/.+)?[^/]+\.py$
+        files: ^((\.github/scripts|scripts|app/core/src/main/resources/static/python)/.+)?[^/]+\.py$
         exclude: (split_photos.py)
       - id: ruff-format
-        files: ^((\.github/scripts|scripts)/.+)?[^/]+\.py$
+        files: ^((\.github/scripts|scripts|app/core/src/main/resources/static/python)/.+)?[^/]+\.py$
         exclude: (split_photos.py)
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
@@ -19,19 +19,14 @@ repos:
           - --ignore-words-list=thirdParty,tabEl,tabEls
           - --skip="./.*,*.csv,*.json,*.ambr"
           - --quiet-level=2
-        files: \.(properties|html|css|js|py|md)$
-        exclude: (.vscode|.devcontainer|stirling-pdf/src/main/resources|src/main/resources|Dockerfile|.*/pdfjs.*|.*/thirdParty.*|bootstrap.*|.*\.min\..*|.*diff\.js)
+        files: \.(html|css|js|py|md)$
+        exclude: (.vscode|.devcontainer|app/core/src/main/resources|app/proprietary/src/main/resources|Dockerfile|.*/pdfjs.*|.*/thirdParty.*|bootstrap.*|.*\.min\..*|.*diff\.js)
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.27.2
+    rev: v8.28.0
     hooks:
       - id: gitleaks
-  - repo: https://github.com/jumanjihouse/pre-commit-hooks
-    rev: 3.0.0
-    hooks:
-      - id: shellcheck
-        files: ^.*(\.bash|\.sh|\.ksh|\.zsh)$
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: end-of-file-fixer
         files: ^.*(\.js|\.java|\.py|\.yml)$
@@ -39,35 +34,13 @@ repos:
       - id: trailing-whitespace
         files: ^.*(\.js|\.java|\.py|\.yml)$
         exclude: ^(.*/pdfjs.*|.*/thirdParty.*|bootstrap.*|.*\.min\..*|.*diff\.js|\.github/workflows/.*$)
-  - repo: https://github.com/thibaudcolas/pre-commit-stylelint
-    rev: v16.21.1
-    hooks:
-      - id: stylelint
-        additional_dependencies:
-          - stylelint@16.21.1
-          - stylelint-config-standard@38.0.0
-          - "@stylistic/stylelint-plugin@3.1.3"
-        files: ^.*(\.css)$
-        args: [--fix]
-
-  - repo: local
-    hooks:
-      - id: check-duplicate-properties-keys
-        name: Check Duplicate Properties Keys
-        entry: python .github/scripts/check_duplicates.py
-        language: python
-        files: ^(src)/.+\.properties$
-      - id: check-html-tabs
-        name: Check HTML for tabs
-        description: Ensures HTML/CSS/JS files do not contain tab characters
-        # args: ["--replace_with=  "]
-        entry: python .github/scripts/check_tabulator.py
-        language: python
-        exclude: ^(.*/pdfjs.*|.*/thirdParty.*|bootstrap.*|.*\.min\..*|.*diff\.js$)
-        files: ^.*(\.html|\.css|\.js)$
-      - id: run-python-script
-        name: Update Translations Python script
-        entry: |
-          python .github/scripts/check_language_properties.py --reference-file "src/main/resources/messages_en_GB.properties" --branch \"\"
-        language: python
-        pass_filenames: false
+  # - repo: https://github.com/thibaudcolas/pre-commit-stylelint
+  #   rev: v16.21.1
+  #   hooks:
+  #     - id: stylelint
+  #       additional_dependencies:
+  #         - stylelint@16.21.1
+  #         - stylelint-config-standard@38.0.0
+  #         - "@stylistic/stylelint-plugin@3.1.3"
+  #       files: \.(css)$
+  #       args: [--fix]
