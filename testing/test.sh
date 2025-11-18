@@ -18,26 +18,38 @@ PROJECT_ROOT=$(find_root)
 
 # Function to check the health of the service with a timeout of 80 seconds
 check_health() {
-    local service_name=$1
+    local container_name=$1
     local compose_file=$2
-    local end=$((SECONDS+360))
+    local timeout=80       # Timeout in seconds
+    local interval=3       # Seconds between checks
+    local end=$((SECONDS + timeout))
 
-    echo -n "Waiting for $service_name to become healthy..."
-    until [ "$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}healthy{{end}}' "$service_name")" == "healthy" ] || [ $SECONDS -ge $end ]; do
-        sleep 3
-        echo -n "."
+    echo "Waiting for ${container_name} to become healthy (timeout ${timeout}s)..."
+
+    while true; do
+        # Get current health status from Docker
+        local status
+        status=$(docker inspect --format='{{.State.Health.Status}}' "$container_name" 2>/dev/null || echo "not-found")
+
+        if [ "$status" = "healthy" ]; then
+            echo "${container_name} is healthy!"
+            echo "Printing logs for ${container_name}:"
+            docker logs "$container_name" || true
+            return 0
+        fi
+
         if [ $SECONDS -ge $end ]; then
-            echo -e "\n$service_name health check timed out after 80 seconds."
-            echo "Printing logs for $service_name:"
-            docker logs "$service_name"
+            echo "${container_name} health check timed out after ${timeout} seconds (last status: ${status})."
+            echo "Printing logs for ${container_name}:"
+            docker logs "$container_name" || true
             return 1
         fi
+
+        echo "  Current health status for ${container_name}: ${status}"
+        sleep "$interval"
     done
-    echo -e "\n$service_name is healthy!"
-    echo "Printing logs for $service_name:"
-    docker logs "$service_name"
-    return 0
 }
+
 
 # Function to capture file list from a Docker container
 capture_file_list() {
@@ -223,21 +235,31 @@ test_compose() {
     local service_name=$2
     local status=0
 
-    echo "Testing $compose_file configuration..."
+    echo "Testing ${compose_file} configuration..."
 
     # Start up the Docker Compose service
     docker-compose -f "$compose_file" up -d
 
+    # Resolve actual container id created by docker-compose
+    local container_id
+    container_id=$(docker-compose -f "$compose_file" ps -q | head -n1)
+
+    if [ -z "$container_id" ]; then
+        echo "ERROR: No container found for ${compose_file}"
+        return 1
+    fi
+
     # Wait for the service to become healthy
-    if check_health "$service_name" "$compose_file"; then
-        echo "$service_name test passed."
+    if check_health "$container_id" "$compose_file"; then
+        echo "${service_name} test passed."
     else
-        echo "$service_name test failed."
+        echo "${service_name} test failed."
         status=1
     fi
 
     return $status
 }
+
 
 # Keep track of which tests passed and failed
 declare -a passed_tests
