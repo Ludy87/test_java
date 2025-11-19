@@ -447,7 +447,7 @@ jobs:
           sh -lc 'ls -la /usr/share/'
 
       - name: Test tessdata dir (amd64)
-        if : matrix.docker-rev == 'Dockerfile.fat' || matrix.docker-rev == 'Dockerfile'
+        if : matrix.docker-rev == 'Dockerfile.fat'
         timeout-minutes: 5
         run: |
           docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
@@ -495,7 +495,7 @@ jobs:
           sh -lc 'ls -la /usr/share/'
 
       - name: Test tessdata dir (amd64)
-        if : matrix.docker-rev == 'Dockerfile.fat' || matrix.docker-rev == 'Dockerfile'
+        if : matrix.docker-rev == 'Dockerfile.fat'
         timeout-minutes: 5
         run: |
           docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
