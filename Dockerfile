@@ -137,7 +137,7 @@ ENV PATH="/opt/venv/bin:/opt/unoserver-venv/bin:${PATH}"
 RUN set -eux; \
     TESS_PATH="$(find /usr/share/tesseract-ocr -type d -name tessdata | head -1 || true)"; \
     [ -n "$TESS_PATH" ] || { echo "ERROR: tessdata directory not found!" >&2; exit 1; }; \
-    ln -sf "$TESS_PATH" /usr/share/tessdata; \
+    ln -s "$TESS_PATH" /usr/share/tessdata; \
     echo "Linked tessdata: $TESS_PATH → /usr/share/tessdata"
 
 # ==============================================================================
