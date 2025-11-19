@@ -419,15 +419,15 @@ main() {
             # Compare file lists
             if compare_file_lists "$BEFORE_FILE" "$AFTER_FILE" "$DIFF_FILE" "$CONTAINER_NAME"; then
                 echo "No unexpected temporary files found."
-                passed_tests+=("Stirling-PDF-Regression")
+                passed_tests+=("Stirling-PDF-Regression $CONTAINER_NAME")
             else
                 echo "WARNING: Unexpected temporary files detected after behave tests!"
                 failed_tests+=("Stirling-PDF-Regression-Temp-Files")
             fi
 
-            passed_tests+=("Stirling-PDF-Regression")
+            passed_tests+=("Stirling-PDF-Regression $CONTAINER_NAME")
         else
-            failed_tests+=("Stirling-PDF-Regression")
+            failed_tests+=("Stirling-PDF-Regression $CONTAINER_NAME")
             echo "Printing docker logs of failed regression"
             docker logs "$CONTAINER_NAME"
             echo "Printed docker logs of failed regression"
