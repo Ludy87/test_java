@@ -40,25 +40,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # Install Calibre from official installer script
     && curl -fsSL https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin \
     \
-    &&  \
-       mkdir -p "$TESS_BASE_PATH" \
-       && if [ -z "$(ls -A "$TESS_BASE_PATH"/*.traineddata 2>/dev/null || true)" ]; then \
-            echo "tessdata is empty – downloading from GitHub..."; \
-            curl -fsSL -o "$TESS_BASE_PATH/eng.traineddata"     https://github.com/tesseract-ocr/tessdata_best/raw/main/eng.traineddata \
-            && curl -fsSL -o "$TESS_BASE_PATH/deu.traineddata"   https://github.com/tesseract-ocr/tessdata_best/raw/main/deu.traineddata \
-            && curl -fsSL -o "$TESS_BASE_PATH/fra.traineddata"   https://github.com/tesseract-ocr/tessdata_best/raw/main/fra.traineddata \
-            && curl -fsSL -o "$TESS_BASE_PATH/por.traineddata"   https://github.com/tesseract-ocr/tessdata_best/raw/main/por.traineddata \
-            && curl -fsSL -o "$TESS_BASE_PATH/chi_sim.traineddata" https://github.com/tesseract-ocr/tessdata_best/raw/main/chi_sim.traineddata \
-            && echo "Downloaded tessdata files successfully."; \
-          else \
-            echo "tessdata already populated via APT."; \
-          fi \
-    && tesseract --list-langs  # Verify installation \
-    \
     # Clean up installer-only packages
     && apt-get purge -y xz-utils gpgv curl xdg-utils \
     && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/lib/apt/lists/*
 
 # Make ebook-convert available in PATH
 RUN ln -sf /opt/calibre/ebook-convert /usr/bin/ebook-convert \
@@ -150,16 +135,16 @@ RUN ln -sf /opt/unoserver-venv/bin/unoconvert /opt/venv/bin/unoconvert \
 ENV PATH="/opt/venv/bin:/opt/unoserver-venv/bin:${PATH}"
 
 # Symlink Tesseract language data to expected location
-RUN set -eux; \
-    if [ -d /usr/share/tesseract-ocr/5/tessdata ]; then \
-      TESS_PATH=/usr/share/tesseract-ocr/5/tessdata; \
-    else \
-      TESS_PATH="$(find /usr/share/tesseract-ocr -type d -name tessdata | head -1 || true)"; \
-    fi; \
-    [ -n "$TESS_PATH" ] || { echo "ERROR: tessdata directory not found!" >&2; exit 1; }; \
-    rm -f /usr/share/tessdata || true; \
-    ln -s "$TESS_PATH" /usr/share/tessdata; \
-    echo "Linked tessdata: $TESS_PATH → /usr/share/tessdata"
+# RUN set -eux; \
+#     if [ -d /usr/share/tesseract-ocr/5/tessdata ]; then \
+#       TESS_PATH=/usr/share/tesseract-ocr/5/tessdata; \
+#     else \
+#       TESS_PATH="$(find /usr/share/tesseract-ocr -type d -name tessdata | head -1 || true)"; \
+#     fi; \
+#     [ -n "$TESS_PATH" ] || { echo "ERROR: tessdata directory not found!" >&2; exit 1; }; \
+#     rm -f /usr/share/tessdata || true; \
+#     ln -s "$TESS_PATH" /usr/share/tessdata; \
+#     echo "Linked tessdata: $TESS_PATH → /usr/share/tessdata"
 
 # ==============================================================================
 # Final permissions, directories and font cache
