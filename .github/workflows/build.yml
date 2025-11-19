@@ -361,9 +361,9 @@ jobs:
           flavor: |
             latest=false
           tags: |
-            type=raw,value=alpha,enable=true
-            type=raw,value=dev-{{branch}}-{{sha}},enable=true
-            type=raw,value=${{ steps.variant.outputs.variant }}-{{branch}}-{{sha}},enable=true
+            type=raw,value=alpha,enable=${{ matrix.docker-rev == 'Dockerfile.fat' }}
+            type=raw,value=dev-{{sha}},enable=true
+            type=raw,value=${{ steps.variant.outputs.variant }},enable=true
             # # Full-SHA: sha-77e20f11c
             # # PR-Tag: ci-pr123
             # type=ref,event=pr,prefix=ci-,suffix=,enable=true
