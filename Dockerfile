@@ -22,6 +22,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 python3-venv python3-uno \
     tesseract-ocr tesseract-ocr-eng tesseract-ocr-deu tesseract-ocr-fra \
     tesseract-ocr-por tesseract-ocr-chi-sim \
+    tesseract-ocr-data-eng tesseract-ocr-data-deu tesseract-ocr-data-fra \
+    tesseract-ocr-data-por tesseract-ocr-data-chi-sim \
     libcairo2 libpango-1.0-0 libpangoft2-1.0-0 libgdk-pixbuf-2.0-0 \
     gosu unpaper \
     # AWT headless support (required for some Java graphics operations)
@@ -135,8 +137,13 @@ ENV PATH="/opt/venv/bin:/opt/unoserver-venv/bin:${PATH}"
 
 # Symlink Tesseract language data to expected location
 RUN set -eux; \
-    TESS_PATH="$(find /usr/share/tesseract-ocr -type d -name tessdata | head -1 || true)"; \
+    if [ -d /usr/share/tesseract-ocr/5/tessdata ]; then \
+      TESS_PATH=/usr/share/tesseract-ocr/5/tessdata; \
+    else \
+      TESS_PATH="$(find /usr/share/tesseract-ocr -type d -name tessdata | head -1 || true)"; \
+    fi; \
     [ -n "$TESS_PATH" ] || { echo "ERROR: tessdata directory not found!" >&2; exit 1; }; \
+    rm -f /usr/share/tessdata || true; \
     ln -s "$TESS_PATH" /usr/share/tessdata; \
     echo "Linked tessdata: $TESS_PATH → /usr/share/tessdata"
 
