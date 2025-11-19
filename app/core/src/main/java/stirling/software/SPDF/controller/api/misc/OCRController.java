@@ -75,6 +75,7 @@ public class OCRController {
         String tessdataDir = applicationProperties.getSystem().getTessdataDir();
         log.warn("Tessdata dir: {}", tessdataDir);
         File[] files = new File(tessdataDir).listFiles();
+        log.warn("Tessdata files: {}", (Object) files);
         if (files == null) {
             return Collections.emptyList();
         }
