@@ -16,39 +16,51 @@ find_root() {
 
 PROJECT_ROOT=$(find_root)
 
-# Function to check the health of the service with a timeout of 80 seconds
+# Function to check application readiness via HTTP instead of Docker's health status
 check_health() {
-    local container_name=$1
+    local service_name=$1
     local compose_file=$2
-    local timeout=80       # Timeout in seconds
-    local interval=3       # Seconds between checks
+
+    local timeout=80          # total timeout in seconds
+    local interval=3          # poll interval in seconds
     local end=$((SECONDS + timeout))
+    local last_code="000"
 
-    echo "Waiting for ${container_name} to become healthy (timeout ${timeout}s)..."
+    echo "Waiting for $service_name to become reachable on http://localhost:8080/ (timeout ${timeout}s)..."
 
-    while true; do
-        # Get current health status from Docker
-        local status
-        status=$(docker inspect --format='{{.State.Health.Status}}' "$container_name" 2>/dev/null || echo "not-found")
+    while [ $SECONDS -lt $end ]; do
+        # Optional: check if container is running at all (nice for debugging)
+        if ! docker ps --format '{{.Names}}' | grep -q "$service_name"; then
+            echo "  Container $service_name not running yet (still waiting)..."
+        fi
 
-        if [ "$status" = "healthy" ]; then
-            echo "${container_name} is healthy!"
-            echo "Printing logs for ${container_name}:"
-            docker logs "$container_name" || true
+        # Try simple HTTP GET on the root page
+        last_code=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8080/") || last_code="000"
+
+        # Treat any 2xx or 3xx as "ready"
+        if [ "$last_code" -ge 200 ] && [ "$last_code" -lt 400 ]; then
+            echo "$service_name is reachable over HTTP (status $last_code)."
+            echo "Printing logs for $service_name:"
+            docker logs "$service_name" || true
             return 0
         fi
 
-        if [ $SECONDS -ge $end ]; then
-            echo "${container_name} health check timed out after ${timeout} seconds (last status: ${status})."
-            echo "Printing logs for ${container_name}:"
-            docker logs "$container_name" || true
-            return 1
-        fi
-
-        echo "  Current health status for ${container_name}: ${status}"
+        echo "  Still waiting for HTTP readiness, current status: $last_code"
         sleep "$interval"
     done
+
+    echo "$service_name did not become HTTP-ready within ${timeout}s (last HTTP status: $last_code)."
+
+    # For extra debugging: show Docker health status, but DO NOT depend on it
+    local docker_health
+    docker_health=$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}(no healthcheck){{end}}' "$service_name" 2>/dev/null || echo "inspect failed")
+    echo "Docker-reported health status for $service_name: $docker_health"
+
+    echo "Printing logs for $service_name:"
+    docker logs "$service_name" || true
+    return 1
 }
+
 
 
 # Function to capture file list from a Docker container

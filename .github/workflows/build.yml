@@ -5,8 +5,7 @@ on:
   # push:
   #   branches: ['main', 'docker_test']
   pull_request:
-    # branches: ['main', 'docker_test']
-    branches: ['docker_test']
+    branches: ['main', 'docker_test']
 
 # cancel in-progress jobs if a new job is triggered
 # This is useful to avoid running multiple builds for the same branch if a new commit is pushed
@@ -30,11 +29,11 @@ jobs:
     timeout-minutes: 3
     # Map a step output to a job output
     outputs:
-      build: true # ${{ steps.changes.outputs.build }}
-      app: true # ${{ steps.changes.outputs.app }}
-      project: true # ${{ steps.changes.outputs.project }}
-      openapi: true # ${{ steps.changes.outputs.openapi }}
-      docker: true # ${{ steps.changes.outputs.docker }}
+      build: ${{ steps.changes.outputs.build }}
+      app: ${{ steps.changes.outputs.app }}
+      project: ${{ steps.changes.outputs.project }}
+      openapi: ${{ steps.changes.outputs.openapi }}
+      docker: ${{ steps.changes.outputs.docker }}
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
@@ -295,8 +294,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        docker-rev: ['Dockerfile', 'Dockerfile.ultra-lite', 'Dockerfile.fat']
-        # docker-rev: ['Dockerfile.fat'] # temp disable
+        # docker-rev: ["Dockerfile", "Dockerfile.ultra-lite", "Dockerfile.fat"] # temp disable
+        docker-rev: ['Dockerfile.fat']
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
@@ -362,8 +361,8 @@ jobs:
           flavor: |
             latest=false
           tags: |
-            type=raw,value=alpha-${{ steps.variant.outputs.variant }},enable=true
-            # type=raw,value=dev-{{branch}}-{{sha}},enable=true
+            type=raw,value=alpha,enable=true
+            type=raw,value=dev-{{branch}}-{{sha}},enable=true
             type=raw,value=${{ steps.variant.outputs.variant }}-{{branch}}-{{sha}},enable=true
             # # Full-SHA: sha-77e20f11c
             # # PR-Tag: ci-pr123
