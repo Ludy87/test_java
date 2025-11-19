@@ -39,11 +39,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # Install Calibre from official installer script
     && curl -fsSL https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin \
     \
-    # Clean up installer-only packages
-    && apt-get purge -y xz-utils gpgv curl xdg-utils \
-    && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/* \
-    \
     && TESS_BASE_PATH="/usr/share/tesseract-ocr/5/tessdata" \
        mkdir -p "$TESS_BASE_PATH" \
        && if [ -z "$(ls -A "$TESS_BASE_PATH"/*.traineddata 2>/dev/null || true)" ]; then \
@@ -57,7 +52,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
           else \
             echo "tessdata already populated via APT."; \
           fi \
-    && tesseract --list-langs  # Verify installation
+    && tesseract --list-langs  # Verify installation \
+    \
+    # Clean up installer-only packages
+    && apt-get purge -y xz-utils gpgv curl xdg-utils \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/* \
 
 # Make ebook-convert available in PATH
 RUN ln -sf /opt/calibre/ebook-convert /usr/bin/ebook-convert \
