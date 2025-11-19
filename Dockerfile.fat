@@ -152,13 +152,11 @@ ENV DISABLE_ADDITIONAL_FEATURES=true \
 # Python virtual environment for additional Python tools (WeasyPrint, OpenCV, etc.)
 # ==============================================================================
 RUN python3 -m venv /opt/venv --system-site-packages \
-    && /opt/venv/bin/pip install --no-cache-dir --upgrade pip \
     && /opt/venv/bin/pip install --no-cache-dir weasyprint pdf2image opencv-python-headless \
     && /opt/venv/bin/python -c "import cv2; print('OpenCV version:', cv2.__version__)"
 
 # Separate venv for unoserver (keeps it isolated)
 RUN python3 -m venv /opt/unoserver-venv --system-site-packages \
-    && /opt/unoserver-venv/bin/pip install --no-cache-dir --upgrade pip \
     && /opt/unoserver-venv/bin/pip install --no-cache-dir unoserver
 
 # Make unoserver tools available in main venv PATH
