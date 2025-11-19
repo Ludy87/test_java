@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg poppler-utils ocrmypdf \
     libreoffice-nogui libreoffice-java-common \
     python3 python3-venv python3-uno \
-    tesseract-ocr-eng tesseract-ocr-deu tesseract-ocr-fra \
+    tesseract-ocr tesseract-ocr-eng tesseract-ocr-deu tesseract-ocr-fra \
     tesseract-ocr-por tesseract-ocr-chi-sim \
     libcairo2 libpango-1.0-0 libpangoft2-1.0-0 libgdk-pixbuf-2.0-0 \
     gosu unpaper \
