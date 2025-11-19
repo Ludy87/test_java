@@ -17,10 +17,12 @@ import lombok.RequiredArgsConstructor;
 
 import stirling.software.common.model.ApplicationProperties;
 import stirling.software.common.util.CheckProgramInstall;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Tag(name = "Misc", description = "Miscellaneous APIs")
 @RequiredArgsConstructor
+@Slf4j
 public class OtherWebController {
 
     private final ApplicationProperties applicationProperties;
@@ -121,7 +123,9 @@ public class OtherWebController {
 
     public List<String> getAvailableTesseractLanguages() {
         String tessdataDir = applicationProperties.getSystem().getTessdataDir();
+        log.warn("Tessdata dir: {}", tessdataDir);
         File[] files = new File(tessdataDir).listFiles();
+        log.warn("Tessdata files: {}", (Object) files);
         if (files == null) {
             return Collections.emptyList();
         }
