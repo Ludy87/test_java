@@ -411,122 +411,122 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
-      - name: Build and push amd64 image
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          file: ./${{ matrix.docker-rev }}
-          # push: true
-          push: false
-          load: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: ${{ steps.meta.outputs.tags }} # ALLE Tags publishen
-          labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64
-          provenance: false
-          sbom: false
+      # - name: Build and push amd64 image
+      #   uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+      #   with:
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     context: .
+      #     file: ./${{ matrix.docker-rev }}
+      #     # push: true
+      #     push: false
+      #     load: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+      #     tags: ${{ steps.meta.outputs.tags }} # ALLE Tags publishen
+      #     labels: ${{ steps.meta.outputs.labels }}
+      #     platforms: linux/amd64
+      #     provenance: false
+      #     sbom: false
 
-      # - name: Show amd64 image size
+      # # - name: Show amd64 image size
+      # #   run: |
+      # #     SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
+      # #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
+      # #     echo "Image size (amd64): ${FORMATTED}"
+
+      # - name: Test Java works (amd64)
+      #   timeout-minutes: 5
       #   run: |
-      #     SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
-      #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
-      #     echo "Image size (amd64): ${FORMATTED}"
+      #     docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+      #     sh -lc 'java -version'
 
-      - name: Test Java works (amd64)
-        timeout-minutes: 5
-        run: |
-          docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
-          sh -lc 'java -version'
-
-      - name: Test share dir (amd64)
-        timeout-minutes: 5
-        run: |
-          docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
-          sh -lc 'ls -la /usr/share/'
-
-      - name: Test tessdata dir (amd64)
-        if : matrix.docker-rev == 'Dockerfile.fat'
-        timeout-minutes: 5
-        run: |
-          docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
-          sh -lc 'ls -la /usr/share/tessdata/'
-
-      - name: Prune amd64 image and cache
-        if: always()
-        run: |
-          docker image rm -f ${{ steps.testtag.outputs.tag }} || true
-          docker builder prune --force || true
-
-      - name: Build and push arm64 image
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          file: ./${{ matrix.docker-rev }}
-          # push: true
-          push: false
-          load: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: ${{ steps.meta.outputs.tags }} # ALLE Tags publishen
-          labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/arm64/v8
-          provenance: false
-          sbom: false
-
-      # - name: Show arm64 image size
+      # - name: Test share dir (amd64)
+      #   timeout-minutes: 5
       #   run: |
-      #     SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
-      #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
-      #     echo "Image size (arm64): ${FORMATTED}"
+      #     docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+      #     sh -lc 'ls -la /usr/share/'
 
-      - name: Test Java works (arm64)
-        timeout-minutes: 5
-        run: |
-          docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.testtag.outputs.tag }} \
-          sh -lc 'java -version'
+      # - name: Test tessdata dir (amd64)
+      #   if : matrix.docker-rev == 'Dockerfile.fat'
+      #   timeout-minutes: 5
+      #   run: |
+      #     docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+      #     sh -lc 'ls -la /usr/share/tessdata/'
 
-      - name: Test share dir (arm64)
-        timeout-minutes: 5
-        run: |
-          docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.testtag.outputs.tag }} \
-          sh -lc 'ls -la /usr/share/'
+      # - name: Prune amd64 image and cache
+      #   if: always()
+      #   run: |
+      #     docker image rm -f ${{ steps.testtag.outputs.tag }} || true
+      #     docker builder prune --force || true
 
-      - name: Test tessdata dir (arm64)
-        if : matrix.docker-rev == 'Dockerfile.fat'
-        timeout-minutes: 5
-        run: |
-          docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.testtag.outputs.tag }} \
-          sh -lc 'ls -la /usr/share/tessdata/'
+      # - name: Build and push arm64 image
+      #   uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+      #   with:
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     context: .
+      #     file: ./${{ matrix.docker-rev }}
+      #     # push: true
+      #     push: false
+      #     load: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+      #     tags: ${{ steps.meta.outputs.tags }} # ALLE Tags publishen
+      #     labels: ${{ steps.meta.outputs.labels }}
+      #     platforms: linux/arm64/v8
+      #     provenance: false
+      #     sbom: false
 
-      - name: Test app.jar exists (arm64)
-        timeout-minutes: 2
-        run: |
-          docker run --rm --platform linux/arm64 --entrypoint sh ${{ steps.testtag.outputs.tag }} \
-            -lc 'test -f /app.jar && echo "app.jar OK" || (echo "ERROR: app.jar missing!" && exit 1)'
+      # # - name: Show arm64 image size
+      # #   run: |
+      # #     SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
+      # #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
+      # #     echo "Image size (arm64): ${FORMATTED}"
 
-      - name: Deep arm64 tests (fat image only)
-        if: matrix.docker-rev == 'Dockerfile.fat'
-        timeout-minutes: 5
-        run: |
-          TAG="${{ steps.testtag.outputs.tag }}"
-          echo "Running deep tests on arm64 for fat image..."
+      # - name: Test Java works (arm64)
+      #   timeout-minutes: 5
+      #   run: |
+      #     docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+      #     sh -lc 'java -version'
 
-          docker run --rm --platform linux/arm64 --entrypoint sh "$TAG" -lc \
-            'ldd /usr/lib/libreoffice/program/soffice.bin >/dev/null && echo "LibreOffice binary linked OK"' || \
-            (echo "LibreOffice binary broken on arm64!" && exit 1)
+      # - name: Test share dir (arm64)
+      #   timeout-minutes: 5
+      #   run: |
+      #     docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+      #     sh -lc 'ls -la /usr/share/'
 
-          docker run --rm --platform linux/arm64 --entrypoint python3 "$TAG" -c \
-            'import uno; print("uno import OK")' || \
-            (echo "Python uno import failed on arm64!" && exit 1)
+      # - name: Test tessdata dir (arm64)
+      #   if : matrix.docker-rev == 'Dockerfile.fat'
+      #   timeout-minutes: 5
+      #   run: |
+      #     docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+      #     sh -lc 'ls -la /usr/share/tessdata/'
 
-      - name: Cleanup arm64 image and cache
-        if: always()
-        run: |
-          docker image rm -f ${{ steps.testtag.outputs.tag }} || true
-          docker builder prune --force || true
+      # - name: Test app.jar exists (arm64)
+      #   timeout-minutes: 2
+      #   run: |
+      #     docker run --rm --platform linux/arm64 --entrypoint sh ${{ steps.testtag.outputs.tag }} \
+      #       -lc 'test -f /app.jar && echo "app.jar OK" || (echo "ERROR: app.jar missing!" && exit 1)'
+
+      # - name: Deep arm64 tests (fat image only)
+      #   if: matrix.docker-rev == 'Dockerfile.fat'
+      #   timeout-minutes: 5
+      #   run: |
+      #     TAG="${{ steps.testtag.outputs.tag }}"
+      #     echo "Running deep tests on arm64 for fat image..."
+
+      #     docker run --rm --platform linux/arm64 --entrypoint sh "$TAG" -lc \
+      #       'ldd /usr/lib/libreoffice/program/soffice.bin >/dev/null && echo "LibreOffice binary linked OK"' || \
+      #       (echo "LibreOffice binary broken on arm64!" && exit 1)
+
+      #     docker run --rm --platform linux/arm64 --entrypoint python3 "$TAG" -c \
+      #       'import uno; print("uno import OK")' || \
+      #       (echo "Python uno import failed on arm64!" && exit 1)
+
+      # - name: Cleanup arm64 image and cache
+      #   if: always()
+      #   run: |
+      #     docker image rm -f ${{ steps.testtag.outputs.tag }} || true
+      #     docker builder prune --force || true
 
       - name: Build and push multi-arch image
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
