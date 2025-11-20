@@ -379,7 +379,6 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.source=${{ github.repository }}
 
-      # NEW: exakt 1 Tag für Tests auswählen (variant-branch-shortsha bevorzugen)
       - name: Choose primary tag for tests
         id: testtag
         shell: bash
@@ -437,27 +436,20 @@ jobs:
       # - name: Test Java works (amd64)
       #   timeout-minutes: 5
       #   run: |
-      #     docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+      #     docker run --rm ${{ steps.testtag.outputs.tag }} \
       #     sh -lc 'java -version'
 
       # - name: Test share dir (amd64)
       #   timeout-minutes: 5
       #   run: |
-      #     docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+      #     docker run --rm ${{ steps.testtag.outputs.tag }} \
       #     sh -lc 'ls -la /usr/share/'
 
-      # - name: Test tessdata dir (amd64)
-      #   if : matrix.docker-rev == 'Dockerfile.fat'
-      #   timeout-minutes: 5
-      #   run: |
-      #     docker run --rm --entrypoint "" ${{ steps.testtag.outputs.tag }} \
-      #     sh -lc 'ls -la /usr/share/tessdata/'
-
-      # - name: Prune amd64 image and cache
-      #   if: always()
-      #   run: |
-      #     docker image rm -f ${{ steps.testtag.outputs.tag }} || true
-      #     docker builder prune --force || true
+      - name: Prune amd64 image and cache
+        if: always()
+        run: |
+          docker image rm -f ${{ steps.testtag.outputs.tag }} || true
+          docker builder prune --force || true
 
       # - name: Build and push arm64 image
       #   uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
@@ -485,21 +477,14 @@ jobs:
       # - name: Test Java works (arm64)
       #   timeout-minutes: 5
       #   run: |
-      #     docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+      #     docker run --rm --platform linux/arm64 ${{ steps.testtag.outputs.tag }} \
       #     sh -lc 'java -version'
 
       # - name: Test share dir (arm64)
       #   timeout-minutes: 5
       #   run: |
-      #     docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.testtag.outputs.tag }} \
+      #     docker run --rm --platform linux/arm64 ${{ steps.testtag.outputs.tag }} \
       #     sh -lc 'ls -la /usr/share/'
-
-      # - name: Test tessdata dir (arm64)
-      #   if : matrix.docker-rev == 'Dockerfile.fat'
-      #   timeout-minutes: 5
-      #   run: |
-      #     docker run --rm --platform linux/arm64 --entrypoint "" ${{ steps.testtag.outputs.tag }} \
-      #     sh -lc 'ls -la /usr/share/tessdata/'
 
       # - name: Test app.jar exists (arm64)
       #   timeout-minutes: 2
@@ -554,3 +539,17 @@ jobs:
             build/reports/problems/
           retention-days: 3
           if-no-files-found: warn
+
+      - name: Test tessdata dir (arm64)
+        if: matrix.docker-rev != 'Dockerfile.ultra-lite'
+        timeout-minutes: 5
+        run: |
+          docker run --rm --platform linux/arm64 ${{ steps.testtag.outputs.tag }} \
+          sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'
+
+      - name: Test tessdata dir (amd64)
+        if: always() &&  matrix.docker-rev != 'Dockerfile.ultra-lite'
+        timeout-minutes: 5
+        run: |
+          docker run --rm  ${{ steps.testtag.outputs.tag }} \
+          sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'
