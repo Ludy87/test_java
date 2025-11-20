@@ -356,7 +356,7 @@ jobs:
         uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
         with:
           images: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/stirling-pdf-test
+            # ${{ secrets.DOCKER_HUB_USERNAME }}/stirling-pdf-test
             ghcr.io/${{ steps.repoowner.outputs.lowercase }}/stirling-pdf-test
           flavor: |
             latest=false
@@ -398,11 +398,11 @@ jobs:
           echo "tag=$SELECTED" >> $GITHUB_OUTPUT
           echo "Using test tag: $SELECTED"
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_API }}
+      # - name: Log in to Docker Hub
+      #   uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
+      #   with:
+      #     username: ${{ secrets.DOCKER_HUB_USERNAME }}
+      #     password: ${{ secrets.DOCKER_HUB_API }}
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
