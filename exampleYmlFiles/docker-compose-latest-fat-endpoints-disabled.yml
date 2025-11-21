@@ -3,7 +3,7 @@ services:
   stirling-pdf:
     container_name: Stirling-PDF-Fat-Disable-Endpoints
     # image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest-fat
-    image: ghcr.io/ludy87/stirling-pdf-test:alpha
+    image: ghcr.io/ludy87/stirling-pdf-test:fat
     deploy:
       resources:
         limits:
@@ -16,7 +16,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      # - ./stirling/latest/data:/usr/share/tessdata:rw
+      - ./stirling/latest/data:/usr/share/tessdata:rw
       - ./stirling/latest/config:/configs:rw
       - ./stirling/latest/logs:/logs:rw
       - ../testing/allEndpointsRemovedSettings.yml:/configs/settings.yml:rw
