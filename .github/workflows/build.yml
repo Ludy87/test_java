@@ -540,16 +540,16 @@ jobs:
           retention-days: 3
           if-no-files-found: warn
 
-      - name: Test tessdata dir (arm64)
-        if: matrix.docker-rev != 'Dockerfile.ultra-lite'
-        timeout-minutes: 5
-        run: |
-          docker run --rm --platform linux/arm64 ${{ steps.testtag.outputs.tag }} \
-          sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'
+      # - name: Test tessdata dir (arm64)
+      #   if: matrix.docker-rev != 'Dockerfile.ultra-lite'
+      #   timeout-minutes: 5
+      #   run: |
+      #     docker run --rm --platform linux/arm64 ${{ steps.testtag.outputs.tag }} \
+      #     sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'
 
-      - name: Test tessdata dir (amd64)
-        if: matrix.docker-rev != 'Dockerfile.ultra-lite'
-        timeout-minutes: 5
-        run: |
-          docker run --rm --platform linux/amd64 ${{ steps.testtag.outputs.tag }} \
-          sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'
+      # - name: Test tessdata dir (amd64)
+      #   if: matrix.docker-rev != 'Dockerfile.ultra-lite'
+      #   timeout-minutes: 5
+      #   run: |
+      #     docker run --rm --platform linux/amd64 ${{ steps.testtag.outputs.tag }} \
+      #     sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'

@@ -84,7 +84,7 @@ if [ -d /usr/share/tessdata ]; then
 fi
 
 if [ ! -L /usr/share/tessdata ]; then
-  rm -rf /usr/share/tessdata
+#   rm -rf /usr/share/tessdata
   ln -s /usr/share/tesseract-ocr/5/tessdata /usr/share/tessdata
 fi
 
