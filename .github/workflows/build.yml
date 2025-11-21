@@ -551,5 +551,5 @@ jobs:
         if: always() &&  matrix.docker-rev != 'Dockerfile.ultra-lite'
         timeout-minutes: 5
         run: |
-          docker run --rm  ${{ steps.testtag.outputs.tag }} \
+          docker run --rm --platform linux/amd64 ${{ steps.testtag.outputs.tag }} \
           sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'
