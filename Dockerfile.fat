@@ -167,11 +167,11 @@ RUN ln -sf /opt/unoserver-venv/bin/unoconvert /opt/venv/bin/unoconvert \
 ENV PATH="/opt/venv/bin:/opt/unoserver-venv/bin:${PATH}"
 
 # Symlink Tesseract language data to expected location
-RUN set -eux; \
-    TESS_PATH="$(find /usr/share/tesseract-ocr -type d -name tessdata | head -1 || true)"; \
-    [ -n "$TESS_PATH" ] || { echo "ERROR: tessdata directory not found!" >&2; exit 1; }; \
-    ln -s "$TESS_PATH" /usr/share/tessdata; \
-    echo "Linked tessdata: $TESS_PATH → /usr/share/tessdata"
+# RUN set -eux; \
+#     TESS_PATH="$(find /usr/share/tesseract-ocr -type d -name tessdata | head -1 || true)"; \
+#     [ -n "$TESS_PATH" ] || { echo "ERROR: tessdata directory not found!" >&2; exit 1; }; \
+#     ln -s "$TESS_PATH" /usr/share/tessdata; \
+#     echo "Linked tessdata: $TESS_PATH → /usr/share/tessdata"
 
 # ==============================================================================
 # Final permissions, directories and font cache

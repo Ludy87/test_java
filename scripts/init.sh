@@ -68,18 +68,25 @@ fi
 
 # # === tessdata ===
 # # Prepare Tesseract OCR data directory.
-# mkdir -p /usr/share/tessdata
+mkdir -p /usr/share/tesseract-ocr/5/tessdata
 
-# # Copy original tesseract data files if present.
-# if [ -d /usr/share/tessdata-original ]; then
-#   cp -rn /usr/share/tessdata-original/. /usr/share/tessdata/ || true
-# fi
+# Copy original tesseract data files if present.
+if [ -d /usr/share/tessdata-original ]; then
+  cp -rn /usr/share/tessdata-original/. /usr/share/tesseract-ocr/5/tessdata/ || true
+fi
 
-# # Merge tessdata from different Tesseract versions if available.
-# for version in 4.00 5; do
-#   SRC="/usr/share/tesseract-ocr/${version}/tessdata"
-#   [ -d "$SRC" ] && cp -rn "$SRC"/* /usr/share/tessdata/ 2>/dev/null || true
-# done
+if [ -d /usr/share/tesseract-ocr/4.00/tessdata ]; then
+  cp -rn /usr/share/tesseract-ocr/4.00/tessdata/. /usr/share/tesseract-ocr/5/tessdata/ || true
+fi
+
+if [ -d /usr/share/tessdata ]; then
+  cp -rn /usr/share/tessdata/. /usr/share/tesseract-ocr/5/tessdata/ || true
+fi
+
+if [ ! -L /usr/share/tessdata ]; then
+  rm -rf /usr/share/tessdata
+  ln -s /usr/share/tesseract-ocr/5/tessdata /usr/share/tessdata
+fi
 
 # === Temp dir ===
 # Ensure the temporary directory exists and has proper permissions.
