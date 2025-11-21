@@ -548,7 +548,7 @@ jobs:
           sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'
 
       - name: Test tessdata dir (amd64)
-        if: always() &&  matrix.docker-rev != 'Dockerfile.ultra-lite'
+        if: matrix.docker-rev != 'Dockerfile.ultra-lite'
         timeout-minutes: 5
         run: |
           docker run --rm --platform linux/amd64 ${{ steps.testtag.outputs.tag }} \
