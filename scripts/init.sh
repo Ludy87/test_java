@@ -86,6 +86,8 @@ fi
 if [ "$(readlink /usr/share/tessdata)" != "/usr/share/tesseract-ocr/5/tessdata" ]; then
     ln -sf /usr/share/tesseract-ocr/5/tessdata /usr/share/tessdata
 fi
+chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/5/tessdata || true
+chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
 export TESSDATA_PREFIX="$REAL_TESSDATA"
 
 # === Temp dir ===

@@ -167,6 +167,10 @@ ENV QT_QPA_PLATFORM=offscreen \
 # Expose web UI port
 EXPOSE 8080/tcp
 
+USER stirlingpdfuser
+
+STOPSIGNAL SIGTERM
+
 # Use tini as init (handles signals and zombies correctly)
 ENTRYPOINT ["tini", "--", "/scripts/init.sh"]
 
