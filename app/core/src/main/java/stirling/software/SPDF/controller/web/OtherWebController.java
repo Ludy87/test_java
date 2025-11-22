@@ -14,10 +14,11 @@ import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import stirling.software.common.configuration.RuntimePathConfig;
 import stirling.software.common.model.ApplicationProperties;
 import stirling.software.common.util.CheckProgramInstall;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Tag(name = "Misc", description = "Miscellaneous APIs")
@@ -26,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OtherWebController {
 
     private final ApplicationProperties applicationProperties;
+    private final RuntimePathConfig runtimePathConfig;
 
     @GetMapping("/compress-pdf")
     @Hidden
@@ -122,7 +124,7 @@ public class OtherWebController {
     }
 
     public List<String> getAvailableTesseractLanguages() {
-        String tessdataDir = applicationProperties.getSystem().getTessdataDir();
+        String tessdataDir = runtimePathConfig.getTessDataPath();
         log.warn("Tessdata dir: {}", tessdataDir);
         File[] files = new File(tessdataDir).listFiles();
         log.warn("Tessdata files: {}", (Object) files);
