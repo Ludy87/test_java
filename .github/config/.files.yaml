@@ -1,40 +1,42 @@
 build: &build
   - build.gradle
-  # - app/(common|core|proprietary)/build.gradle
-  - '**/**'
+  - app/(common|core|proprietary)/build.gradle
 
 app: &app
   - app/(common|core|proprietary)/src/main/java/**
 
 openapi: &openapi
-  - build.gradle
-  - app/(common|core|proprietary)/build.gradle
-  - app/(common|core|proprietary)/src/main/java/**
+  - *build
+  - *app
+
+docker: &docker
+  - Dockerfile
+  - Dockerfile.fat
+  - Dockerfile.ultra-lite
+  - ".github/workflows/build.yml"
+  - scripts/init.sh
+  - scripts/init-without-ocr.sh
+  - exampleYmlFiles/**
 
 project: &project
   - app/(common|core|proprietary)/src/(main|test)/java/**
-  - app/(common|core|proprietary)/build.gradle
+  - *build
   - 'app/(common|core|proprietary)/src/(main|test)/resources/**/!(messages_*.properties|*.md)*'
   - exampleYmlFiles/**
   - gradle/**
   - libs/**
-  - testing/**
-  - build.gradle
-  - Dockerfile
-  - Dockerfile.fat
-  - Dockerfile.ultra-lite
+  - 'testing/**/!(requirements*.txt|requirements*.in)*'
+  - *docker
   - gradle.properties
   - gradlew
   - gradlew.bat
   - launch4jConfig.xml
   - settings.gradle
+  - frontend/**
+  - docker/**
 
 frontend: &frontend
   - frontend/**
   - .github/workflows/testdriver.yml
   - testing/**
-
-frontend-any: &frontend-any
-  - test1.txt
-  - test2.txt
-  - test3.txt
+  - docker/**
