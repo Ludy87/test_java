@@ -69,6 +69,7 @@ fi
 # # === tessdata ===
 # # Prepare Tesseract OCR data directory.
 REAL_TESSDATA="/usr/share/tesseract-ocr/5/tessdata"
+TEST_TESSDATA="/usr/share/tessdata"
 INIT_UID=$(id -u)
 
 log_warn() {
@@ -80,6 +81,11 @@ if [ -d "$REAL_TESSDATA" ] && [ -w "$REAL_TESSDATA" ]; then
   can_modify_tessdata=true
 else
   log_warn "Skipping tessdata adjustments; directory missing or not writable: $REAL_TESSDATA"
+fi
+if [ -d "$TEST_TESSDATA" ] && [ -w "$TEST_TESSDATA" ]; then
+  log_warn "Skipping tessdata adjustments; directory missing or not writable: $TEST_TESSDATA"
+else
+  log_warn "Skipping tessdata adjustments; directory missing or not writable: $TEST_TESSDATA"
 fi
 
 if [ "$can_modify_tessdata" = true ]; then
