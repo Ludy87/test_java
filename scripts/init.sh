@@ -88,10 +88,13 @@ fi
 
 if [ -d /usr/share/tessdata ]; then
   REAL_TESSDATA="/usr/share/tessdata"
+  log_warn "Using /usr/share/tessdata as TESSDATA_PREFIX"
 elif [ -d /tessdata ]; then
   REAL_TESSDATA="/tessdata"
+  log_warn "Using /tessdata as TESSDATA_PREFIX"
 elif [ -d /usr/share/tesseract-ocr/5/tessdata ]; then
   REAL_TESSDATA="/usr/share/tesseract-ocr/5/tessdata"
+  log_warn "Using /usr/share/tesseract-ocr/5/tessdata as TESSDATA_PREFIX"
 else
   REAL_TESSDATA=""
   log_warn "No tessdata directory found"
@@ -125,7 +128,6 @@ fi
 # fi
 # chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/5/tessdata || true
 # chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
-export TESSDATA_PREFIX="$REAL_TESSDATA"
 
 # === Temp dir ===
 # Ensure the temporary directory exists and has proper permissions.
