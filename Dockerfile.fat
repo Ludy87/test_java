@@ -209,7 +209,7 @@ ENV QT_QPA_PLATFORM=offscreen \
 # Expose web UI port
 EXPOSE 8080/tcp
 
-USER stirlingpdfuser
+# USER stirlingpdfuser
 
 STOPSIGNAL SIGTERM
 
