@@ -312,7 +312,7 @@ main() {
 
     # Building Docker images
     # docker build --no-cache --pull --build-arg VERSION_TAG=alpha -t stirlingtools/stirling-pdf:latest -f ./Dockerfile .
-    docker build --build-arg VERSION_TAG=alpha -t stirling-pdf-test:ultra-lite -f ./Dockerfile.ultra-lite .
+    docker build --build-arg VERSION_TAG=alpha -t stirlingtools/stirling-pdf:ultra-lite -f ./Dockerfile.ultra-lite .
 
     # Test each configuration
     run_tests "Stirling-PDF-Ultra-Lite" "./exampleYmlFiles/docker-compose-latest-ultra-lite.yml"
@@ -356,7 +356,7 @@ main() {
     # Building Docker images with security enabled
     # docker build --no-cache --pull --build-arg VERSION_TAG=alpha -t stirlingtools/stirling-pdf:latest -f ./Dockerfile .
     # docker build --no-cache --pull --build-arg VERSION_TAG=alpha -t stirlingtools/stirling-pdf:latest-ultra-lite -f ./Dockerfile.ultra-lite .
-    docker build --no-cache --pull --build-arg VERSION_TAG=alpha -t stirling-pdf-test:alpha -f ./Dockerfile.fat .
+    docker build --no-cache --pull --build-arg VERSION_TAG=alpha -t stirlingtools/stirling-pdf:alpha -f ./Dockerfile.fat .
 
 
     # Test each configuration with security
