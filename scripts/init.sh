@@ -86,15 +86,15 @@ else
   log_warn "Skipping tessdata adjustments; directory missing or not writable: $TEST_TESSDATA"
 fi
 
-if [ -d /usr/share/tessdata ]; then
+if [ -d /usr/share/tesseract-ocr/5/tessdata ]; then
+  REAL_TESSDATA="/usr/share/tesseract-ocr/5/tessdata"
+  log_warn "Using /usr/share/tesseract-ocr/5/tessdata as TESSDATA_PREFIX"
+elif [ -d /usr/share/tessdata ]; then
   REAL_TESSDATA="/usr/share/tessdata"
   log_warn "Using /usr/share/tessdata as TESSDATA_PREFIX"
 elif [ -d /tessdata ]; then
   REAL_TESSDATA="/tessdata"
   log_warn "Using /tessdata as TESSDATA_PREFIX"
-elif [ -d /usr/share/tesseract-ocr/5/tessdata ]; then
-  REAL_TESSDATA="/usr/share/tesseract-ocr/5/tessdata"
-  log_warn "Using /usr/share/tesseract-ocr/5/tessdata as TESSDATA_PREFIX"
 else
   REAL_TESSDATA=""
   log_warn "No tessdata directory found"
