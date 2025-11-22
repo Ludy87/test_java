@@ -308,254 +308,254 @@ jobs:
         with:
           egress-policy: audit
 
-      - name: Checkout Repository
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      # - name: Checkout Repository
+      #   uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: gradle
+      # - name: Set up JDK 17
+      #   uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+      #   with:
+      #     java-version: '17'
+      #     distribution: 'temurin'
+      #     cache: gradle
 
-      - name: Permissions for Gradle Wrapper
-        run: chmod +x ./gradlew
+      # - name: Permissions for Gradle Wrapper
+      #   run: chmod +x ./gradlew
 
-      - name: Build application
-        run: ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
-        env:
-          DISABLE_ADDITIONAL_FEATURES: true
-          STIRLING_PDF_DESKTOP_UI: false
+      # - name: Build application
+      #   run: ./gradlew clean build -x spotlessApply -x spotlessCheck -x test -x sonarqube
+      #   env:
+      #     DISABLE_ADDITIONAL_FEATURES: true
+      #     STIRLING_PDF_DESKTOP_UI: false
 
-      - name: Free disk space on runner
-        run: |
-          echo "Disk space before cleanup:" && df -h
-          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android /usr/local/share/boost
-          docker system prune -af || true
-          echo "Disk space after cleanup:" && df -h
+      # - name: Free disk space on runner
+      #   run: |
+      #     echo "Disk space before cleanup:" && df -h
+      #     sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android /usr/local/share/boost
+      #     docker system prune -af || true
+      #     echo "Disk space after cleanup:" && df -h
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
-        with:
-          platforms: linux/amd64,linux/arm64/v8
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
+      #   with:
+      #     platforms: linux/amd64,linux/arm64/v8
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
-        with:
-          platforms: linux/amd64,linux/arm64/v8
+      # - name: Set up Docker Buildx
+      #   id: buildx
+      #   uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
+      #   with:
+      #     platforms: linux/amd64,linux/arm64/v8
 
-      - name: Convert repository owner to lowercase
-        id: repoowner
-        run: echo "lowercase=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+      # - name: Convert repository owner to lowercase
+      #   id: repoowner
+      #   run: echo "lowercase=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
-      - name: Derive image variant
-        id: variant
-        shell: bash
-        run: |
-          RAW="${{ matrix.docker-rev }}"
-          VARIANT=$(echo "$RAW" | tr '[:upper:]' '[:lower:]' | sed -E 's#^dockerfile\.##')
-          echo "variant=$VARIANT" >> $GITHUB_OUTPUT
+      # - name: Derive image variant
+      #   id: variant
+      #   shell: bash
+      #   run: |
+      #     RAW="${{ matrix.docker-rev }}"
+      #     VARIANT=$(echo "$RAW" | tr '[:upper:]' '[:lower:]' | sed -E 's#^dockerfile\.##')
+      #     echo "variant=$VARIANT" >> $GITHUB_OUTPUT
 
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
-        with:
-          images: |
-            # ${{ secrets.DOCKER_HUB_USERNAME }}/stirling-pdf-test
-            ghcr.io/${{ steps.repoowner.outputs.lowercase }}/stirling-pdf-test
-          flavor: |
-            latest=false
-          tags: |
-            type=raw,value=alpha,enable=${{ matrix.docker-rev == 'Dockerfile.fat' }}
-            type=raw,value=dev-{{sha}},enable=true
-            type=raw,value=${{ steps.variant.outputs.variant }},enable=true
-            # # Full-SHA: sha-77e20f11c
-            # # PR-Tag: ci-pr123
-            # type=ref,event=pr,prefix=ci-,suffix=,enable=true
-            # # Branch-Tag: ci-docker_test
-            # type=ref,event=branch,prefix=ci-,suffix=,enable=true
-            # # Kurz-SHA: sha-77e20f11
-            # type=sha,format=short,prefix=sha-
-            # # Custom: <variant>-<branch>-<sha>
-            # type=raw,value=${{ steps.variant.outputs.variant }}-{{branch}}-{{sha}},enable=true
-          labels: |
-            org.opencontainers.image.title=stirling-pdf-test
-            org.opencontainers.image.description=CI test image for Stirling PDF
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.source=${{ github.repository }}
+      # - name: Docker meta
+      #   id: meta
+      #   uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
+      #   with:
+      #     images: |
+      #       # ${{ secrets.DOCKER_HUB_USERNAME }}/stirling-pdf-test
+      #       ghcr.io/${{ steps.repoowner.outputs.lowercase }}/stirling-pdf-test
+      #     flavor: |
+      #       latest=false
+      #     tags: |
+      #       type=raw,value=alpha,enable=${{ matrix.docker-rev == 'Dockerfile.fat' }}
+      #       type=raw,value=dev-{{sha}},enable=true
+      #       type=raw,value=${{ steps.variant.outputs.variant }},enable=true
+      #       # # Full-SHA: sha-77e20f11c
+      #       # # PR-Tag: ci-pr123
+      #       # type=ref,event=pr,prefix=ci-,suffix=,enable=true
+      #       # # Branch-Tag: ci-docker_test
+      #       # type=ref,event=branch,prefix=ci-,suffix=,enable=true
+      #       # # Kurz-SHA: sha-77e20f11
+      #       # type=sha,format=short,prefix=sha-
+      #       # # Custom: <variant>-<branch>-<sha>
+      #       # type=raw,value=${{ steps.variant.outputs.variant }}-{{branch}}-{{sha}},enable=true
+      #     labels: |
+      #       org.opencontainers.image.title=stirling-pdf-test
+      #       org.opencontainers.image.description=CI test image for Stirling PDF
+      #       org.opencontainers.image.revision=${{ github.sha }}
+      #       org.opencontainers.image.source=${{ github.repository }}
 
-      - name: Choose primary tag for tests
-        id: testtag
-        shell: bash
-        run: |
-          IMAGE="ghcr.io/${{ steps.repoowner.outputs.lowercase }}/stirling-pdf-test"
-          VARIANT="${{ steps.variant.outputs.variant }}"
-          BRANCH="$(echo "${GITHUB_REF_NAME:-${{ github.ref_name }}}" | tr '[:upper:]' '[:lower:]')"
-          SHA_SHORT="$(echo "${GITHUB_SHA}" | cut -c1-8)"
-          CANDIDATE="$IMAGE:$VARIANT-$BRANCH-$SHA_SHORT"
-          ALL_TAGS="$(echo '${{ steps.meta.outputs.tags }}' | tr ' ' '\n')"
-          if echo "$ALL_TAGS" | grep -qx "$CANDIDATE"; then
-            SELECTED="$CANDIDATE"
-          else
-            SELECTED="$(echo "$ALL_TAGS" | head -n1)"
-          fi
-          echo "tag=$SELECTED" >> $GITHUB_OUTPUT
-          echo "Using test tag: $SELECTED"
+      # - name: Choose primary tag for tests
+      #   id: testtag
+      #   shell: bash
+      #   run: |
+      #     IMAGE="ghcr.io/${{ steps.repoowner.outputs.lowercase }}/stirling-pdf-test"
+      #     VARIANT="${{ steps.variant.outputs.variant }}"
+      #     BRANCH="$(echo "${GITHUB_REF_NAME:-${{ github.ref_name }}}" | tr '[:upper:]' '[:lower:]')"
+      #     SHA_SHORT="$(echo "${GITHUB_SHA}" | cut -c1-8)"
+      #     CANDIDATE="$IMAGE:$VARIANT-$BRANCH-$SHA_SHORT"
+      #     ALL_TAGS="$(echo '${{ steps.meta.outputs.tags }}' | tr ' ' '\n')"
+      #     if echo "$ALL_TAGS" | grep -qx "$CANDIDATE"; then
+      #       SELECTED="$CANDIDATE"
+      #     else
+      #       SELECTED="$(echo "$ALL_TAGS" | head -n1)"
+      #     fi
+      #     echo "tag=$SELECTED" >> $GITHUB_OUTPUT
+      #     echo "Using test tag: $SELECTED"
 
-      # - name: Log in to Docker Hub
+      # # - name: Log in to Docker Hub
+      # #   uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
+      # #   with:
+      # #     username: ${{ secrets.DOCKER_HUB_USERNAME }}
+      # #     password: ${{ secrets.DOCKER_HUB_API }}
+
+      # - name: Log in to GitHub Container Registry
       #   uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
       #   with:
-      #     username: ${{ secrets.DOCKER_HUB_USERNAME }}
-      #     password: ${{ secrets.DOCKER_HUB_API }}
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ github.token }}
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ github.token }}
+      # # - name: Build and push amd64 image
+      # #   uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+      # #   with:
+      # #     builder: ${{ steps.buildx.outputs.name }}
+      # #     context: .
+      # #     file: ./${{ matrix.docker-rev }}
+      # #     # push: true
+      # #     push: false
+      # #     load: true
+      # #     cache-from: type=gha
+      # #     cache-to: type=gha,mode=max
+      # #     tags: ${{ steps.meta.outputs.tags }} # ALLE Tags publishen
+      # #     labels: ${{ steps.meta.outputs.labels }}
+      # #     platforms: linux/amd64
+      # #     provenance: false
+      # #     sbom: false
 
-      # - name: Build and push amd64 image
-      #   uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
-      #   with:
-      #     builder: ${{ steps.buildx.outputs.name }}
-      #     context: .
-      #     file: ./${{ matrix.docker-rev }}
-      #     # push: true
-      #     push: false
-      #     load: true
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
-      #     tags: ${{ steps.meta.outputs.tags }} # ALLE Tags publishen
-      #     labels: ${{ steps.meta.outputs.labels }}
-      #     platforms: linux/amd64
-      #     provenance: false
-      #     sbom: false
+      # # # - name: Show amd64 image size
+      # # #   run: |
+      # # #     SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
+      # # #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
+      # # #     echo "Image size (amd64): ${FORMATTED}"
 
-      # # - name: Show amd64 image size
+      # # - name: Test Java works (amd64)
+      # #   timeout-minutes: 5
       # #   run: |
-      # #     SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
-      # #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
-      # #     echo "Image size (amd64): ${FORMATTED}"
+      # #     docker run --rm ${{ steps.testtag.outputs.tag }} \
+      # #     sh -lc 'java -version'
 
-      # - name: Test Java works (amd64)
-      #   timeout-minutes: 5
-      #   run: |
-      #     docker run --rm ${{ steps.testtag.outputs.tag }} \
-      #     sh -lc 'java -version'
-
-      # - name: Test share dir (amd64)
-      #   timeout-minutes: 5
-      #   run: |
-      #     docker run --rm ${{ steps.testtag.outputs.tag }} \
-      #     sh -lc 'ls -la /usr/share/'
-
-      - name: Prune amd64 image and cache
-        if: always()
-        run: |
-          docker image rm -f ${{ steps.testtag.outputs.tag }} || true
-          docker builder prune --force || true
-
-      # - name: Build and push arm64 image
-      #   uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
-      #   with:
-      #     builder: ${{ steps.buildx.outputs.name }}
-      #     context: .
-      #     file: ./${{ matrix.docker-rev }}
-      #     # push: true
-      #     push: false
-      #     load: true
-      #     cache-from: type=gha
-      #     cache-to: type=gha,mode=max
-      #     tags: ${{ steps.meta.outputs.tags }} # ALLE Tags publishen
-      #     labels: ${{ steps.meta.outputs.labels }}
-      #     platforms: linux/arm64/v8
-      #     provenance: false
-      #     sbom: false
-
-      # # - name: Show arm64 image size
+      # # - name: Test share dir (amd64)
+      # #   timeout-minutes: 5
       # #   run: |
-      # #     SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
-      # #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
-      # #     echo "Image size (arm64): ${FORMATTED}"
+      # #     docker run --rm ${{ steps.testtag.outputs.tag }} \
+      # #     sh -lc 'ls -la /usr/share/'
 
-      # - name: Test Java works (arm64)
-      #   timeout-minutes: 5
-      #   run: |
-      #     docker run --rm --platform linux/arm64 ${{ steps.testtag.outputs.tag }} \
-      #     sh -lc 'java -version'
-
-      # - name: Test share dir (arm64)
-      #   timeout-minutes: 5
-      #   run: |
-      #     docker run --rm --platform linux/arm64 ${{ steps.testtag.outputs.tag }} \
-      #     sh -lc 'ls -la /usr/share/'
-
-      # - name: Test app.jar exists (arm64)
-      #   timeout-minutes: 2
-      #   run: |
-      #     docker run --rm --platform linux/arm64 --entrypoint sh ${{ steps.testtag.outputs.tag }} \
-      #       -lc 'test -f /app.jar && echo "app.jar OK" || (echo "ERROR: app.jar missing!" && exit 1)'
-
-      # - name: Deep arm64 tests (fat image only)
-      #   if: matrix.docker-rev == 'Dockerfile.fat'
-      #   timeout-minutes: 5
-      #   run: |
-      #     TAG="${{ steps.testtag.outputs.tag }}"
-      #     echo "Running deep tests on arm64 for fat image..."
-
-      #     docker run --rm --platform linux/arm64 --entrypoint sh "$TAG" -lc \
-      #       'ldd /usr/lib/libreoffice/program/soffice.bin >/dev/null && echo "LibreOffice binary linked OK"' || \
-      #       (echo "LibreOffice binary broken on arm64!" && exit 1)
-
-      #     docker run --rm --platform linux/arm64 --entrypoint python3 "$TAG" -c \
-      #       'import uno; print("uno import OK")' || \
-      #       (echo "Python uno import failed on arm64!" && exit 1)
-
-      # - name: Cleanup arm64 image and cache
+      # - name: Prune amd64 image and cache
       #   if: always()
       #   run: |
       #     docker image rm -f ${{ steps.testtag.outputs.tag }} || true
       #     docker builder prune --force || true
 
-      - name: Build and push multi-arch image
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          file: ./${{ matrix.docker-rev }}
-          push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64/v8
-          provenance: false
-          sbom: false
+      # # - name: Build and push arm64 image
+      # #   uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+      # #   with:
+      # #     builder: ${{ steps.buildx.outputs.name }}
+      # #     context: .
+      # #     file: ./${{ matrix.docker-rev }}
+      # #     # push: true
+      # #     push: false
+      # #     load: true
+      # #     cache-from: type=gha
+      # #     cache-to: type=gha,mode=max
+      # #     tags: ${{ steps.meta.outputs.tags }} # ALLE Tags publishen
+      # #     labels: ${{ steps.meta.outputs.labels }}
+      # #     platforms: linux/arm64/v8
+      # #     provenance: false
+      # #     sbom: false
 
-      - name: Upload Docker build reports
-        if: always()
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: reports-docker-${{ matrix.docker-rev }}
-          path: |
-            build/reports/
-            build/test-results/
-            build/reports/problems/
-          retention-days: 3
-          if-no-files-found: warn
+      # # # - name: Show arm64 image size
+      # # #   run: |
+      # # #     SIZE=$(docker image inspect ${{ steps.meta.outputs.tags }} --format='{{.Size}}')
+      # # #     FORMATTED=$(numfmt --to=iec --suffix=B "${SIZE}")
+      # # #     echo "Image size (arm64): ${FORMATTED}"
 
-      # - name: Test tessdata dir (arm64)
-      #   if: matrix.docker-rev != 'Dockerfile.ultra-lite'
-      #   timeout-minutes: 5
-      #   run: |
-      #     docker run --rm --platform linux/arm64 ${{ steps.testtag.outputs.tag }} \
-      #     sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'
+      # # - name: Test Java works (arm64)
+      # #   timeout-minutes: 5
+      # #   run: |
+      # #     docker run --rm --platform linux/arm64 ${{ steps.testtag.outputs.tag }} \
+      # #     sh -lc 'java -version'
 
-      # - name: Test tessdata dir (amd64)
-      #   if: matrix.docker-rev != 'Dockerfile.ultra-lite'
-      #   timeout-minutes: 5
-      #   run: |
-      #     docker run --rm --platform linux/amd64 ${{ steps.testtag.outputs.tag }} \
-      #     sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'
+      # # - name: Test share dir (arm64)
+      # #   timeout-minutes: 5
+      # #   run: |
+      # #     docker run --rm --platform linux/arm64 ${{ steps.testtag.outputs.tag }} \
+      # #     sh -lc 'ls -la /usr/share/'
+
+      # # - name: Test app.jar exists (arm64)
+      # #   timeout-minutes: 2
+      # #   run: |
+      # #     docker run --rm --platform linux/arm64 --entrypoint sh ${{ steps.testtag.outputs.tag }} \
+      # #       -lc 'test -f /app.jar && echo "app.jar OK" || (echo "ERROR: app.jar missing!" && exit 1)'
+
+      # # - name: Deep arm64 tests (fat image only)
+      # #   if: matrix.docker-rev == 'Dockerfile.fat'
+      # #   timeout-minutes: 5
+      # #   run: |
+      # #     TAG="${{ steps.testtag.outputs.tag }}"
+      # #     echo "Running deep tests on arm64 for fat image..."
+
+      # #     docker run --rm --platform linux/arm64 --entrypoint sh "$TAG" -lc \
+      # #       'ldd /usr/lib/libreoffice/program/soffice.bin >/dev/null && echo "LibreOffice binary linked OK"' || \
+      # #       (echo "LibreOffice binary broken on arm64!" && exit 1)
+
+      # #     docker run --rm --platform linux/arm64 --entrypoint python3 "$TAG" -c \
+      # #       'import uno; print("uno import OK")' || \
+      # #       (echo "Python uno import failed on arm64!" && exit 1)
+
+      # # - name: Cleanup arm64 image and cache
+      # #   if: always()
+      # #   run: |
+      # #     docker image rm -f ${{ steps.testtag.outputs.tag }} || true
+      # #     docker builder prune --force || true
+
+      # - name: Build and push multi-arch image
+      #   uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+      #   with:
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     context: .
+      #     file: ./${{ matrix.docker-rev }}
+      #     push: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     labels: ${{ steps.meta.outputs.labels }}
+      #     platforms: linux/amd64,linux/arm64/v8
+      #     provenance: false
+      #     sbom: false
+
+      # - name: Upload Docker build reports
+      #   if: always()
+      #   uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+      #   with:
+      #     name: reports-docker-${{ matrix.docker-rev }}
+      #     path: |
+      #       build/reports/
+      #       build/test-results/
+      #       build/reports/problems/
+      #     retention-days: 3
+      #     if-no-files-found: warn
+
+      # # - name: Test tessdata dir (arm64)
+      # #   if: matrix.docker-rev != 'Dockerfile.ultra-lite'
+      # #   timeout-minutes: 5
+      # #   run: |
+      # #     docker run --rm --platform linux/arm64 ${{ steps.testtag.outputs.tag }} \
+      # #     sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'
+
+      # # - name: Test tessdata dir (amd64)
+      # #   if: matrix.docker-rev != 'Dockerfile.ultra-lite'
+      # #   timeout-minutes: 5
+      # #   run: |
+      # #     docker run --rm --platform linux/amd64 ${{ steps.testtag.outputs.tag }} \
+      # #     sh -lc 'tesseract --list-langs || (echo "Tesseract not found or broken!" && exit 1)'
