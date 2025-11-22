@@ -125,9 +125,7 @@ public class OtherWebController {
 
     public List<String> getAvailableTesseractLanguages() {
         String tessdataDir = runtimePathConfig.getTessDataPath();
-        log.warn("Tessdata dir: {}", tessdataDir);
         File[] files = new File(tessdataDir).listFiles();
-        log.warn("Tessdata files: {}", (Object) files);
         if (files == null) {
             return Collections.emptyList();
         }

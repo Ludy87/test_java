@@ -73,9 +73,7 @@ public class OCRController {
     /** Gets the list of available Tesseract languages from the tessdata directory */
     public List<String> getAvailableTesseractLanguages() {
         String tessdataDir = runtimePathConfig.getTessDataPath();
-        log.warn("Tessdata dir: {}", tessdataDir);
         File[] files = new File(tessdataDir).listFiles();
-        log.warn("Tessdata files: {}", (Object) files);
         if (files == null) {
             return Collections.emptyList();
         }
