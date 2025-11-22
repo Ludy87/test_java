@@ -69,31 +69,50 @@ fi
 # # === tessdata ===
 # # Prepare Tesseract OCR data directory.
 REAL_TESSDATA="/usr/share/tesseract-ocr/5/tessdata"
-chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/5/tessdata || true
+INIT_UID=$(id -u)
 
-# Copy original tesseract data files if present.
-if [ -d /usr/share/tessdata-original ]; then
-  chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata-original || true
-  cp -rn /usr/share/tessdata-original/* /usr/share/tesseract-ocr/5/tessdata || true
+log_warn() {
+  echo "[init][warn] $*" >&2
+}
+
+can_modify_tessdata=false
+if [ -d "$REAL_TESSDATA" ] && [ -w "$REAL_TESSDATA" ]; then
+  can_modify_tessdata=true
+else
+  log_warn "Skipping tessdata adjustments; directory missing or not writable: $REAL_TESSDATA"
 fi
 
-if [ -d /usr/share/tesseract-ocr/4.00/tessdata ]; then
-  chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/4.00/tessdata || true
-  cp -rn /usr/share/tesseract-ocr/4.00/tessdata/* /usr/share/tesseract-ocr/5/tessdata || true
+if [ "$can_modify_tessdata" = true ]; then
+  if [ "$INIT_UID" -eq 0 ]; then
+    chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/5/tessdata || true
+    chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
+  else
+    log_warn "Skipping tessdata ownership changes; not running as root"
+  fi
+
+  # Copy original tesseract data files if present.
+  if [ -d /usr/share/tessdata-original ]; then
+    cp -rn /usr/share/tessdata-original/* /usr/share/tesseract-ocr/5/tessdata || true
+  fi
+
+  if [ -d /usr/share/tesseract-ocr/4.00/tessdata ]; then
+    cp -rn /usr/share/tesseract-ocr/4.00/tessdata/* /usr/share/tesseract-ocr/5/tessdata || true
+  fi
+
+  if [ -d /usr/share/tessdata ]; then
+    cp -rn /usr/share/tessdata/* /usr/share/tesseract-ocr/5/tessdata || true
+  fi
+
+  if [ -w /usr/share ] && [ "$(readlink /usr/share/tessdata 2>/dev/null)" != "/usr/share/tesseract-ocr/5/tessdata" ]; then
+      ln -sf /usr/share/tesseract-ocr/5/tessdata /usr/share/tessdata
+  elif [ ! -w /usr/share ]; then
+    log_warn "Skipping tessdata symlink; /usr/share is not writable"
+  fi
 fi
 
-if [ -d /usr/share/tessdata ]; then
-  chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
-  cp -rn /usr/share/tessdata/* /usr/share/tesseract-ocr/5/tessdata || true
+if [ -d "$REAL_TESSDATA" ]; then
+  export TESSDATA_PREFIX="$REAL_TESSDATA"
 fi
-
-if [ "$(readlink /usr/share/tessdata)" != "/usr/share/tesseract-ocr/5/tessdata" ]; then
-  chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
-  ln -sf /usr/share/tesseract-ocr/5/tessdata /usr/share/tessdata
-fi
-chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/5/tessdata || true
-chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
-export TESSDATA_PREFIX="$REAL_TESSDATA"
 
 # === Temp dir ===
 # Ensure the temporary directory exists and has proper permissions.
