@@ -139,8 +139,6 @@ LABEL maintainer="Stirling-Tools"
 LABEL org.opencontainers.image.authors="Stirling-Tools"
 LABEL org.opencontainers.image.version="${VERSION_TAG}"
 LABEL org.opencontainers.image.keywords="PDF, manipulation, merge, split, convert, OCR, watermark"
-LABEL org.opencontainers.image.created="${BUILD_DATE}"
-LABEL org.opencontainers.image.revision="${VCS_REF}"
 
 # ==============================================================================
 # Runtime environment variables
