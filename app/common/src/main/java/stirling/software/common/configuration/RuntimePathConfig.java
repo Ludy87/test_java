@@ -109,6 +109,6 @@ public class RuntimePathConfig {
     }
 
     private boolean isRunningInDocker() {
-        return Files.exists(Path.of("/.dockerenv").toAbsolutePath());
+        return Files.exists(Path.of("/.dockerenv"));
     }
 }
