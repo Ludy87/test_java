@@ -2,7 +2,10 @@ services:
   stirling-pdf:
     container_name: Stirling-PDF-Ultra-Lite-Security
     # image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest-ultra-lite
-    image: ghcr.io/ludy87/stirling-pdf-test:ultra-lite
+    # image: ghcr.io/ludy87/stirling-pdf-test:ultra-lite
+    build:
+      context: .
+      dockerfile: Dockerfile.ultra-lite
     deploy:
       resources:
         limits:
