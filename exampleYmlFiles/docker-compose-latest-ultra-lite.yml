@@ -4,8 +4,8 @@ services:
     # image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest-ultra-lite
     # image: ghcr.io/ludy87/stirling-pdf-test:ultra-lite
     build:
-      context: .
-      dockerfile: Dockerfile.ultra-lite
+      context: ..
+      dockerfile: ../Dockerfile.ultra-lite
     deploy:
       resources:
         limits:
