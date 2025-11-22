@@ -85,30 +85,46 @@ if [ -d "$TEST_TESSDATA" ] && [ -w "$TEST_TESSDATA" ]; then
 else
   log_warn "Skipping tessdata adjustments; directory missing or not writable: $TEST_TESSDATA"
 fi
-chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/5/tessdata || true
-
-# Copy original tesseract data files if present.
-if [ -d /usr/share/tessdata-original ]; then
-  chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata-original || true
-  cp -rn /usr/share/tessdata-original/* /usr/share/tesseract-ocr/5/tessdata || true
-fi
-
-if [ -d /usr/share/tesseract-ocr/4.00/tessdata ]; then
-  chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/4.00/tessdata || true
-  cp -rn /usr/share/tesseract-ocr/4.00/tessdata/* /usr/share/tesseract-ocr/5/tessdata || true
-fi
 
 if [ -d /usr/share/tessdata ]; then
-  chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
-  cp -rn /usr/share/tessdata/* /usr/share/tesseract-ocr/5/tessdata || true
+  REAL_TESSDATA="/usr/share/tessdata"
+elif [ -d /tessdata ]; then
+  REAL_TESSDATA="/tessdata"
+elif [ -d /usr/share/tesseract-ocr/5/tessdata ]; then
+  REAL_TESSDATA="/usr/share/tesseract-ocr/5/tessdata"
+else
+  REAL_TESSDATA=""
+  log_warn "No tessdata directory found"
 fi
 
-if [ "$(readlink /usr/share/tessdata)" != "/usr/share/tesseract-ocr/5/tessdata" ]; then
-  chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
-  ln -sf /usr/share/tesseract-ocr/5/tessdata /usr/share/tessdata
+if [ -n "$REAL_TESSDATA" ]; then
+  export TESSDATA_PREFIX="$REAL_TESSDATA"
 fi
-chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/5/tessdata || true
-chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
+
+# chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/5/tessdata || true
+
+# # Copy original tesseract data files if present.
+# if [ -d /usr/share/tessdata-original ]; then
+#   chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata-original || true
+#   cp -rn /usr/share/tessdata-original/* /usr/share/tesseract-ocr/5/tessdata || true
+# fi
+
+# if [ -d /usr/share/tesseract-ocr/4.00/tessdata ]; then
+#   chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/4.00/tessdata || true
+#   cp -rn /usr/share/tesseract-ocr/4.00/tessdata/* /usr/share/tesseract-ocr/5/tessdata || true
+# fi
+
+# if [ -d /usr/share/tessdata ]; then
+#   chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
+#   cp -rn /usr/share/tessdata/* /usr/share/tesseract-ocr/5/tessdata || true
+# fi
+
+# if [ "$(readlink /usr/share/tessdata)" != "/usr/share/tesseract-ocr/5/tessdata" ]; then
+#   chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
+#   ln -sf /usr/share/tesseract-ocr/5/tessdata /usr/share/tessdata
+# fi
+# chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tesseract-ocr/5/tessdata || true
+# chown -R stirlingpdfuser:stirlingpdfgroup /usr/share/tessdata || true
 export TESSDATA_PREFIX="$REAL_TESSDATA"
 
 # === Temp dir ===
