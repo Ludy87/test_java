@@ -127,6 +127,21 @@ COPY --from=build /tmp/version_tag /etc/stirling_version
 # Optional version tag (can be passed at build time)
 ARG VERSION_TAG
 
+# Metadata labels
+LABEL org.opencontainers.image.title="Stirling-PDF"
+LABEL org.opencontainers.image.description="A powerful locally hosted web-based PDF manipulation tool supporting 50+ operations including merging, splitting, conversion, OCR, watermarking, and more."
+LABEL org.opencontainers.image.source="https://github.com/Stirling-Tools/Stirling-PDF"
+LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.vendor="Stirling-Tools"
+LABEL org.opencontainers.image.url="https://www.stirlingpdf.com"
+LABEL org.opencontainers.image.documentation="https://docs.stirlingpdf.com"
+LABEL maintainer="Stirling-Tools"
+LABEL org.opencontainers.image.authors="Stirling-Tools"
+LABEL org.opencontainers.image.version="${VERSION_TAG}"
+LABEL org.opencontainers.image.keywords="PDF, manipulation, merge, split, convert, OCR, watermark"
+LABEL org.opencontainers.image.created="${BUILD_DATE}"
+LABEL org.opencontainers.image.revision="${VCS_REF}"
+
 # ==============================================================================
 # Runtime environment variables
 # ==============================================================================
@@ -193,6 +208,10 @@ ENV QT_QPA_PLATFORM=offscreen \
 
 # Expose web UI port
 EXPOSE 8080/tcp
+
+USER stirlingpdfuser
+
+STOPSIGNAL SIGTERM
 
 # Use tini as init (handles signals and zombies correctly)
 ENTRYPOINT ["tini", "--", "/scripts/init.sh"]

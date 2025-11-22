@@ -68,7 +68,7 @@ fi
 
 # # === tessdata ===
 # # Prepare Tesseract OCR data directory.
-mkdir -p /usr/share/tesseract-ocr/5/tessdata
+REAL_TESSDATA="/usr/share/tesseract-ocr/5/tessdata"
 
 # Copy original tesseract data files if present.
 if [ -d /usr/share/tessdata-original ]; then
@@ -86,6 +86,7 @@ fi
 if [ "$(readlink /usr/share/tessdata)" != "/usr/share/tesseract-ocr/5/tessdata" ]; then
     ln -sf /usr/share/tesseract-ocr/5/tessdata /usr/share/tessdata
 fi
+export TESSDATA_PREFIX="$REAL_TESSDATA"
 
 # === Temp dir ===
 # Ensure the temporary directory exists and has proper permissions.
