@@ -72,20 +72,19 @@ mkdir -p /usr/share/tesseract-ocr/5/tessdata
 
 # Copy original tesseract data files if present.
 if [ -d /usr/share/tessdata-original ]; then
-  cp -rn /usr/share/tessdata-original/. /usr/share/tesseract-ocr/5/tessdata/ || true
+  cp -rn /usr/share/tessdata-original/* /usr/share/tesseract-ocr/5/tessdata || true
 fi
 
 if [ -d /usr/share/tesseract-ocr/4.00/tessdata ]; then
-  cp -rn /usr/share/tesseract-ocr/4.00/tessdata/. /usr/share/tesseract-ocr/5/tessdata/ || true
+  cp -rn /usr/share/tesseract-ocr/4.00/tessdata/* /usr/share/tesseract-ocr/5/tessdata || true
 fi
 
 if [ -d /usr/share/tessdata ]; then
-  cp -rn /usr/share/tessdata/. /usr/share/tesseract-ocr/5/tessdata/ || true
+  cp -rn /usr/share/tessdata/* /usr/share/tesseract-ocr/5/tessdata || true
 fi
 
-if [ ! -L /usr/share/tessdata ]; then
-#   rm -rf /usr/share/tessdata
-  ln -s /usr/share/tesseract-ocr/5/tessdata /usr/share/tessdata
+if [ "$(readlink /usr/share/tessdata)" != "/usr/share/tesseract-ocr/5/tessdata" ]; then
+    ln -sf /usr/share/tesseract-ocr/5/tessdata /usr/share/tessdata
 fi
 
 # === Temp dir ===
